@@ -18,7 +18,7 @@
 ## Namespaces
 
 - MANY things are in the  `std::` namespace
-  * **std::cout**, **std::cin**, **std::lower_bound**
+  - **std::cout**, **std::cin**, **std::lower_bound**
 - DON’T always use the `using namespace std;` declaration
 
 ## C++ is a statically typed language
@@ -28,14 +28,14 @@
 
 ## Struct
 
-**Definition:** a group of named  variables each with their  own type. **A way to bundle  different types together**. 
+**Definition:** a group of named  variables each with their  own type. **A way to bundle  different types together**.
 
 ```C++
 // struct definition
 struct Student {
-	string name; // these are called fields
-	string state; // separate these by semicolons
-	int age;
+    string name; // these are called fields
+    string state; // separate these by semicolons
+    int age;
 };
 ```
 
@@ -53,24 +53,24 @@ Student s = {"Frankie", "MN", 21};
 ```C++
 // 操作struct类型变量的方法
 void printStudentInfo(Student student) {
-	cout << student.name << " from " << student.state;
-	cout << " (" << student.age << ")" << endl;
+    cout << student.name << " from " << student.state;
+    cout << " (" << student.age << ")" << endl;
 }
 ```
 
 ## std::pair
 
-**Definition:** An STL built-in struct with two fields of any type. 
+**Definition:** An STL built-in struct with two fields of any type.
 
-- `std::pair` is a **template**: You specify the types of the fields  inside <> for each pair object you make 
-- The fields in `std::pair` are named **first** and **second** 
+- `std::pair` is a **template**: You specify the types of the fields  inside <> for each pair object you make
+- The fields in `std::pair` are named **first** and **second**
 
 ```C++
 std::pair<int, string> numSuffix = {1,"st"};
 std::cout << numSuffix.first << numSuffix.second;
 ```
 
-To avoid specifying the types of pair, use `std::make_pair(field1, field2)` 
+To avoid specifying the types of pair, use `std::make_pair(field1, field2)`
 
 ```C++
 int n = 1;
@@ -90,7 +90,7 @@ std::cout << "The value of p2 is "
 
 ## Type Deduction with `auto`
 
-**Definition:** `auto` is a KEYWORD used in lieu of type when declaring a variable, tells the compilers to deduce the type. 
+**Definition:** `auto` is a KEYWORD used in lieu of type when declaring a variable, tells the compilers to deduce the type.
 
 ```C++
 auto a = 3;
@@ -103,10 +103,9 @@ auto com_pair = std::make_pair(true, "Hangzhou");
 
 ## Recapitulation
 
-- Everything with a name in program has a **type** 
-- **Strong type systems** prevent errors before your code runs! 
-- **Structs** are a way to bundle a bunch of variables of many types 
-- `std::pair` is a type of struct that had been defined for you and is in the STL 
-- So you access it through the `std::` namespace (std::pair) 
-- `auto` is a keyword that tells the compiler to deduce the type of a variable, it should be used when the type is obvious or very  cumbersome to write out 
-
+- Everything with a name in program has a **type**
+- **Strong type systems** prevent errors before your code runs!
+- **Structs** are a way to bundle a bunch of variables of many types
+- `std::pair` is a type of struct that had been defined for you and is in the STL
+- So you access it through the `std::` namespace (std::pair)
+- `auto` is a keyword that tells the compiler to deduce the type of a variable, it should be used when the type is obvious or very  cumbersome to write out

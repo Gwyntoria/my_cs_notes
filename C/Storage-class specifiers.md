@@ -9,4 +9,3 @@ Specify storage duration and linkage of objects and functions:
 - **_Thread_local** - thread storage duration (since C11)
 
 ## storage duration
-

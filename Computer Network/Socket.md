@@ -45,7 +45,7 @@ Socket编程的基本原理就是通过Socket API来进行网络通信，实现�
 
 ### API
 
-1. `socket()` 函数：创建一个新的套接字。
+#### 1. `socket()` 函数：创建一个新的套接字
 
 ```c
 int socket(int domain, int type, int protocol);
@@ -55,7 +55,7 @@ int socket(int domain, int type, int protocol);
 - `type`: 指定套接字类型，如`SOCK_STREAM`表示面向连接的TCP套接字。
 - `protocol`: 指定协议类型，一般为0，表示自动选择协议。
 
-2. bind() 函数：将套接字绑定到指定的IP地址和端口号。
+#### 2. bind() 函数：将套接字绑定到指定的IP地址和端口号
 
 ```c
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -65,7 +65,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 - `addr`: 指向包含IP地址和端口号的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-3. `listen()` 函数：监听套接字上的连接请求。
+#### 3. `listen()` 函数：监听套接字上的连接请求
 
 ```c
 int listen(int sockfd, int backlog);
@@ -74,7 +74,7 @@ int listen(int sockfd, int backlog);
 - `sockfd`: 套接字描述符。
 - `backlog`: 等待连接队列的最大长度。
 
-4. `accept()` 函数：接受客户端的连接请求。
+#### 4. `accept()` 函数：接受客户端的连接请求
 
 ```c
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
@@ -84,7 +84,7 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 - `addr`: 保存客户端地址信息的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-5. `connect()` 函数：发起TCP连接。
+#### 5. `connect()` 函数：发起TCP连接
 
 ```c
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -94,7 +94,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 - `addr`: 指向目标IP地址和端口号的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-6. `send()` 函数：发送数据。
+#### 6. `send()` 函数：发送数据
 
 ```c
 ssize_t send(int sockfd, const void *buf, size_t len, int flags);
@@ -105,7 +105,7 @@ ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 - `len`: 发送数据的长度。
 - `flags`: 操作标志。
 
-7. `recv()` 函数：接收数据。
+#### 7. `recv()` 函数：接收数据
 
 ```c
 ssize_t recv(int sockfd, void *buf, size_t len, int flags);
@@ -116,7 +116,7 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 - `len`: 接收数据的长度。
 - `flags`: 操作标志。
 
-8. `close()` 函数：关闭套接字。
+#### 8. `close()` 函数：关闭套接字
 
 ```c
 int close(int sockfd);
@@ -139,8 +139,6 @@ int close(int sockfd);
 - `sockaddr_in6`：用于IPv6协议的套接字地址结构体，包括IP地址和端口号。
 
 ### macro
-
-
 
 ## 代码及解释
 
@@ -200,8 +198,6 @@ inet_pton(AF_INET6, "2001:db8::1", &ipv6_addr);
 addr.sin6_addr = ipv6_addr;
 int ret = bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)); // 绑定套接字
 ```
-
-
 
 ## Sample
 
@@ -330,6 +326,3 @@ int main() {
     return 0;
 }
 ```
-
-### 3. 
-

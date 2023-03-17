@@ -1,13 +1,13 @@
 # Streams
 
-**Definition:** an abstraction for input/output. Streams convert between **data** and **the string representation of data** 
+**Definition:** an abstraction for input/output. Streams convert between **data** and **the string representation of data**
 
 ## Output Steams
 
-- `std::cout` is an output stream. It has type  `std::ostream` 
-- `std::cout` can only send data using the `<<` operator 
-  - Converts any type into **string** and sends it to the **stream** 
-- `std::cout` is the output stream that goes to the console 
+- `std::cout` is an output stream. It has type  `std::ostream`
+- `std::cout` can only send data using the `<<` operator
+  - Converts any type into **string** and sends it to the **stream**
+- `std::cout` is the output stream that goes to the console
 
 ```C++
 std::cout << 5 <<std::endl;
@@ -15,14 +15,14 @@ std::cout << 5 <<std::endl;
 // sends “5” to the console output stream
 ```
 
-- `std::cout` is a **global constant object** that you get from `#include <iostream>` 
+- `std::cout` is a **global constant object** that you get from `#include <iostream>`
 
 ## Input Steams
 
-- Have type `std::istream` 
-- Can only receive **strings** using the `>>` operator 
-  - Receives a string from the stream and **converts it to data** 
-- `std::cin` is the input stream that gets input from **console** 
+- Have type `std::istream`
+- Can only receive **strings** using the `>>` operator
+  - Receives a string from the stream and **converts it to data**
+- `std::cin` is the input stream that gets input from **console**
 
 ```C++
 int x;
@@ -31,25 +31,25 @@ std::cin >> x >> str;
 // reads exactly one int then 1 string from console
 ```
 
-- `std::cin` is a **global constant object** that you get from `#include <iostream>` 
+- `std::cin` is a **global constant object** that you get from `#include <iostream>`
 
-### Details: 
+### Details
 
-- First call to `std::cin >>` creates a command line prompt that allows the user to type until they hit enter 
-- Each `>>` ONLY reads until the next **whitespace** 
-  - Whitespace = tab, space, newline 
-- Everything after the first whitespace gets saved and used the next time `std::cin >>` is called 
-  - The place its saved is called a **buffer**! 
+- First call to `std::cin >>` creates a command line prompt that allows the user to type until they hit enter
+- Each `>>` ONLY reads until the next **whitespace**
+  - Whitespace = tab, space, newline
+- Everything after the first whitespace gets saved and used the next time `std::cin >>` is called
+  - The place its saved is called a **buffer**!
 - If there is nothing waiting in the buffer, `std::cin >>` creates a new command line prompt
 - Whitespace is eaten: it won’t show up in output
 - :star: `std::cin` is dangerous to use in its own!
 
-Reading using `>>` extracts a single “word” or type including for strings. 
+Reading using `>>` extracts a single “word” or type including for strings.
 To **read a whole line**, use `std::getline(istream &stream, string &line);`
 
 ### How to use `getline`
 
-- Notice `getline(istream &stream, string &line)` takes in both parameters by reference! 
+- Notice `getline(istream &stream, string &line)` takes in both parameters by reference!
 
 ```C++
 std::string line;
@@ -59,19 +59,19 @@ std::cout << line << std::endl;
 //should print out“Hello World 42!”
 ```
 
-### Don’t mix `>>` with `getline`!
+### Don’t mix `>>` with `getline`
 
 - `>>` reads up to the next **whitespace character** and **does not** go past that whitespace character
 - `getline` reads up to the next **delimiter** (by default, ‘\n’), and **does** go past that delimiter
 
-## File Streams 
+## File Streams
 
 ### Output File Streams
 
-- Have type `std::ofstream` 
-- Only send data using the `<<` operator 
-  - Converts data of any type into a **string** and sends it to the  **file stream** 
-- Must initialize your own `std::ofstream` object linked to your file 
+- Have type `std::ofstream`
+- Only send data using the `<<` operator
+  - Converts data of any type into a **string** and sends it to the  **file stream**
+- Must initialize your own `std::ofstream` object linked to your file
 
 ```C++
 std::ofstream out(“out.txt”);
@@ -94,7 +94,7 @@ writeToStream(std::cout, 5); // to console
 writeToStream(fileOut, 15); // to file
 ```
 
-#### Write a struct to a file：
+#### Write a struct to a file
 
 ```C++
 // struct type definition
@@ -125,7 +125,7 @@ out << t1 << std::endl;
 
 ### Input File Streams
 
-- Have type `std::ifstream` 
+- Have type `std::ifstream`
 - Only receives **strings** using the `>>` operator
   - Receives strings from a **file** and converts it to data of any type
 - Must initialize your own `std::ifstream` object linked to your file
@@ -225,13 +225,13 @@ void readHaikuLine() {
 
 ```C++
 string judgementCall(int age, string name, bool lovesCpp) {
-	std::ostringstream formatter;
-	formatter << name <<", age " << age;
-	if(lovesCpp) 
+    std::ostringstream formatter;
+    formatter << name <<", age " << age;
+    if(lovesCpp) 
         formatter << ", rocks.";
-	else 
+    else 
         formatter << " could be better";
-	return formatter.str();
+    return formatter.str();
 }
 ```
 
@@ -253,7 +253,7 @@ Student reverseJudgementCall(string judgement) {
     converter >> cool;
     if(cool == "rocks") return Student{name, age, "bliss"};
     else return Student{name, age, "misery"};
-}	// returns: {“Frankie”, 22, “bliss”}
+}   // returns: {“Frankie”, 22, “bliss”}
 ```
 
 ```C++
@@ -309,7 +309,7 @@ int getInteger() {
         // 判断是否输入了整数
         if(converter >> result) {
             char remaining;
-			/*
+            /*
               * 判断整数后是否还有其他字符
               * 如果有，则抛出异常
               * 如果没有，则返回整数
@@ -329,6 +329,6 @@ int getInteger() {
 ## Recapitulation
 
 - Streams convert between **data of any type** and **the string representation of that data**
-- Streams have an endpoint: **console** for `cin/cout`, **files** for `i/o fstreams`,  **string variables** for `i/o sstreams` *where they read in a string from or output a string to*. 
+- Streams have an endpoint: **console** for `cin/cout`, **files** for `i/o fstreams`,  **string variables** for `i/o sstreams` *where they read in a string from or output a string to*.
 - To **send data** (in string form) to a stream, use `stream_name << data`
-- To **extract data** from a stream, use `stream_name >> data`, and the stream will try to *convert* a string to whatever type data is 
+- To **extract data** from a stream, use `stream_name >> data`, and the stream will try to *convert* a string to whatever type data is
