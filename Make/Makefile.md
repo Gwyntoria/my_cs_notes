@@ -21,8 +21,8 @@ target: prerequisites ...
 ```
 
 1. **target（目标）：**需要产生的文件。可以是一个object file（目标文件），或者是可执行文件，还可以是一个标签（label），或者叫动作（例如：clean）。
-2.  **prerequisites（依赖列表）：**生成该target所需要的内容。文件和/或target
-3.   **command（命令列表）：**该target要执行的命令（任意的shell命令）
+2. **prerequisites（依赖列表）：**生成该target所需要的内容。文件和/或target
+3. **command（命令列表）：**该target要执行的命令（任意的shell命令）
 
 > prerequisites 中如果有一个以上的文件比 target 文件要新的话，command 所定义的命令就会被执行。
 
@@ -34,13 +34,13 @@ target: prerequisites ...
 
 ```makefile
 main : main.o fun.o # 创建目标main的依赖关系
-	gcc main.o fun.o -o main 
+    gcc main.o fun.o -o main 
 main.o : main.c
-	gcc -c main.c -o main.o
+    gcc -c main.c -o main.o
 fun.o : fun.c
-	gcc -c fun.c -o fun.o
+    gcc -c fun.c -o fun.o
 clean:
-	rm *.o main
+    rm *.o main
 ```
 
 ### 示例二
@@ -83,7 +83,7 @@ clean :
 4. 如果 `edit` 所依赖的 `.o` 文件也不存在，那么`make`会在当前文件中找目标为 `.o` 文件的依赖性，如果找到则再根据那一个规则生成 `.o` 文件。（这有点像一个堆栈的过程）
 5. `.c`文件和`.h`文件是存在的啦，于是`make`会生成 `.o` 文件，然后再用 `.o` 文件生成`make`的终极任务，也就是执行文件 `edit` 了
 
-**make会一层又一层地去找文件的依赖关系，直到最终编译出第一个目标文件**
+### make会一层又一层地去找文件的依赖关系，直到最终编译出第一个目标文件
 
 在找寻的过程中，如果出现错误，比如最后被依赖的文件找不到，那么`make`就会直接退出，并报错，而对于所定义的命令的错误，或是编译不成功，`make`并不关注
 
@@ -117,8 +117,8 @@ clean :
 ```makefile
 # 变量名 = 变量值
 objects = main.o kbd.o command.o display.o \ 
-	insert.o search.o files.o utils.o	# 命令行最前面一定是用TAP来缩进
-	
+    insert.o search.o files.o utils.o # 命令行最前面一定是用TAP来缩进
+    
 # 修改编译器名
 # cc = gcc
 # cc = arm-linux-gcc
@@ -130,18 +130,18 @@ cc = arm-himix200-linux-gcc
 ```makefile
 EXEC = edit
 OBJ = main.o kbd.o command.o display.o \ 
-	insert.o search.o files.o utils.o
-	
+    insert.o search.o files.o utils.o
+    
 cc = arm-himix200-linux-gcc
-	
+    
 # 通过 $(变量名) 的形式引用变量
 $(EXEC) : $(OBJ)
-	$(cc) $(OBJ) -o $(EXEC)
-	
+    $(cc) $(OBJ) -o $(EXEC)
+    
 ......
 
 clean : 
-	rm $(EXEC) $(OBJ)
+    rm $(EXEC) $(OBJ)
 ```
 
 **注意：**
@@ -161,8 +161,8 @@ clean :
 ```makefile
 # pwd 打印工作目录的路径（系统环境变量）
 clean : 
-	rm $(EXEC) $(OBJ)
-	echo "$(pwd)"
+    rm $(EXEC) $(OBJ)
+    echo "$(pwd)"
 ```
 
 ### 预定义变量
@@ -181,13 +181,13 @@ OBJ = main.o fun.o
 cc = arm-himix200-linux-gcc
 
 $(EXEC) : $(OBJ)
-	$(cc) $^ -o $@
+    $(cc) $^ -o $@
 main.o : mian.c
-	$(cc) -c $< -o $@
+    $(cc) -c $< -o $@
 fun.o : fun.c fun.h
-	$(cc) -c $^ -o $@
+    $(cc) -c $^ -o $@
 clean :
-	rm $(EXEC) $(OBJ)
+    rm $(EXEC) $(OBJ)
 ```
 
 ## 让`make`自动推导
@@ -203,7 +203,7 @@ OBJ = main.o kbd.o command.o display.o \
 edit : $(OBJ)
     cc $(OBJ) -o edit
 
-main.o : defs.h		# mian.c 被自动加入
+main.o : defs.h     # mian.c 被自动加入
 kbd.o : defs.h command.h
 command.o : defs.h command.h
 display.o : defs.h buffer.h
@@ -227,7 +227,7 @@ clean :
 
 ```makefile
 clean : 
-	rm edit $(OBJ)
+    rm edit $(OBJ)
 ```
 
 更为稳健的做法：
@@ -235,7 +235,7 @@ clean :
 ```makefile
 .PHONY : clean
 clean :
-	-rm edit $(OBJ)
+    -rm edit $(OBJ)
 ```
 
  `.PHONY` 表示 `clean` 是一个“伪目标”。而在 `rm` 命令前面加了一个小减号的意思就是，也许某些文件出现问题，但不要管，继续做后面的事。
@@ -288,9 +288,9 @@ OBJS := $(SRCS:%.c=%.o)
 OBJS := $(patsubst %.c, %.o, $(SRCS))
 ```
 
-`$(var:<pattern>=<replacement>)` 相当于 `$(patsubst <pattern>,<replacement>,$(var))` 
+`$(var:<pattern>=<replacement>)` 相当于 `$(patsubst <pattern>,<replacement>,$(var))`
 
-`$(var: <suffix>=<replacement>)` 相当于 `$(patsubst %<suffix>,%<replacement>,$(var))` 
+`$(var: <suffix>=<replacement>)` 相当于 `$(patsubst %<suffix>,%<replacement>,$(var))`
 
 ```makefile
 $(SRCS:%.c=%.o)
@@ -302,4 +302,3 @@ $(patsubst %.c, %.o, $(SRCS))
 [GNU make](http://www.gnu.org/software/make/manual/html_node/index.html)
 
 [跟我一起写`Makefile`](https://seisman.github.io/how-to-write-makefile/index.html)
-
