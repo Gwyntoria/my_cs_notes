@@ -8,7 +8,7 @@ sudo apt-get install repo git-core gitk git-gui gcc-arm-linux-gnueabihf u-boot-t
 
 ## Structure of SDK
 
-![image-20220812145145420](../assets/image-20220812145145420.png)
+![image-20220812145145420](../../assets/image-20220812145145420.png)
 
 ### Introduction of Buildroot
 

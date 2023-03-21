@@ -19,7 +19,7 @@ ls -lh /bin/sh
 # 将 /bin/sh 链接到 bash 后，脚本文件第一行声明为 /bin/sh 时，系统将使用bash作为脚本解释器
 ```
 
-![image-20221021170845802](../assets/image-20221021170845802.png)
+![image-20221021170845802](../../assets/image-20221021170845802.png)
 
 或者
 
@@ -37,7 +37,7 @@ sudo apt-get install gcc g++ make cmake vim net-tools tree u-boot-tools lib32z1 
 
 但是有错误结果：
 
-![image-20220629144810420](../assets/image-20220629144810420.png)
+![image-20220629144810420](../../assets/image-20220629144810420.png)
 
 ```bash
 # 后加入的依赖库
@@ -67,11 +67,11 @@ apt show lib32z1 lib32z1-dev
 
 普通包的描述：
 
-![普通包的描述](../assets/image-20220629102756348.png)
+![普通包的描述](../../assets/image-20220629102756348.png)
 
 dev包的描述：
 
-![dev包的描述](../assets/image-20220629103005434.png)
+![dev包的描述](../../assets/image-20220629103005434.png)
 
 ### 安装交叉编译链：
 
@@ -123,7 +123,7 @@ tar -zxvf ...
 
 ### 1. `fseterr.c` 和 `fseeko.c` 需要移植
 
-![image-20220629182549641](../assets/image-20220629182549641.png)
+![image-20220629182549641](../../assets/image-20220629182549641.png)
 
 **Resolution: **添加补丁
 

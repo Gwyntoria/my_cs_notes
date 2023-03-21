@@ -46,7 +46,7 @@ make && make install
 
 ## 新版本FreeType出现的问题
 
-![image-20220929153557732](../assets/image-20220929153557732.png)
+![image-20220929153557732](../../assets/image-20220929153557732.png)
 
 ### zlib
 
