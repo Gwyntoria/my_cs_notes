@@ -14,17 +14,17 @@
 
 1. FreeType和SDL使用相同的配置
 
-```bash
-./configure CC=arm-himix200-linux-gcc --host=arm-himix-linux --prefix=$PWD/HI_INSTALL --enable-shared=no --enable-static=yes
-```
+    ```bash
+    ./configure CC=arm-himix200-linux-gcc --host=arm-himix-linux --prefix=$PWD/HI_INSTALL --enable-shared=no --enable-static=yes
+    ```
 
- `--enable-shared=no`和 `--enable-static=yes`表示只生成静态库
+    **注：** `--enable-shared=no`和 `--enable-static=yes`表示只生成静态库
 
 2. 编译
 
-```bash
-make && make install
-```
+    ```bash
+    make && make install
+    ```
 
 编译结果的最终保存目录为`--prefix`指明的目录
 
@@ -32,17 +32,17 @@ make && make install
 
 1. 配置
 
-```bash
-./configure CC=arm-himix200-linux-gcc --host=arm-himix200-linux --prefix=$PWD/HI_INSTALL --with-freetype-prefix=/home/karl/Desktop/free-sdl/freetype-2.4.10/HI_INSTALL --with-sdl-prefix=/home/karl/Desktop/free-sdl/SDL-1.2.15/HI_INSTALL
-```
+    ```bash
+    ./configure CC=arm-himix200-linux-gcc --host=arm-himix200-linux --prefix=$PWD/HI_INSTALL --with-freetype-prefix=/home/karl/Desktop/free-sdl/freetype-2.4.10/HI_INSTALL --with-sdl-prefix=/home/karl/Desktop/free-sdl/SDL-1.2.15/HI_INSTALL
+    ```
 
-**注意：**`--with-freetype-prefix`和`--with-sdl-prefix`的路径配置，尽量使用绝对路径
+    **注：**`--with-freetype-prefix`和`--with-sdl-prefix`的路径配置，尽量使用绝对路径
 
 2. 编译
 
-```bash
-make && make install
-```
+    ```bash
+    make && make install
+    ```
 
 ## 新版本FreeType出现的问题
 
@@ -60,4 +60,3 @@ make && make install
 sudo cp -drf ./tmp/lib/* /opt/hisi-linux/x86-arm/arm-himix200-linux/target/usr/lib
 sudo cp ./tmp/include/* /opt/hisi-linux/x86-arm/arm-himix200-linux/target/usr/include
 ```
-
