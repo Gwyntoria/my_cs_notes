@@ -15,13 +15,26 @@ sudo launchctl start com.apple.tftpd
 sudo launchctl list | grep tftp
 ```
 
+load之后的结果：
+
+```text
+-   0   com.apple.tftpd
+```
+
+start之后的结果：
+
+```text
+-   1   com.apple.tftpd
+```
+
 关闭 tftp 服务：
 
 ```sh
+sudo launchctl stop com.apple.tftpd
 sudo launchctl unload /System/Library/LaunchDaemons/tftp.plist
 ```
 
-## 关于 `/System/Library/LaunchDaemons/tftp.plist`
+## 关于`/System/Library/LaunchDaemons/tftp.plist`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -76,8 +89,4 @@ sudo launchctl unload /System/Library/LaunchDaemons/tftp.plist
 
 ## more info
 
-在后来的探索中，启动指令只需要：
-
-```sh
-sudo launchctl load -F /System/Library/LaunchDaemons/tftp.plist
-```
+2023/4/25测试，`tftpd`启动之后依然无法使用，局域网内的设备无法访问。之后修改`/private/tftp`的权限为`777`，关闭了firewall，并重启Mac后，`tftpd`可正常使用
