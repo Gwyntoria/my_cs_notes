@@ -1,8 +1,8 @@
 # ko file
 
-## introduction
+## Introduction
 
-**ko –> Kernel Object**
+**ko** –> **Kernel Object**
 
 - **module file** used by the Linux kernel, the central component of the Linux operating system
 - contains program code that extends the functionality of the Linux kernel, such as code for a **computer device driver**
@@ -16,4 +16,3 @@ KO modules may be loaded by using the `insmod` Linux program. Installed kernel m
 As of Linux kernel version 2.6, `.ko` files are used in place of `.o` files and contain additional information that the kernel uses to load modules. The Linux program `modpost` can be used to convert `.o` files into `.ko` files.
 
 **NOTE:** KO files may also be loaded by FreeBSD using the `kldload` program.
-

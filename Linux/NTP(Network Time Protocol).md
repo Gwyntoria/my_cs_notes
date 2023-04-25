@@ -11,10 +11,10 @@
 7. 清华大学 : s1b.time.edu.cn
 8. 北京大学 : s1c.time.edu.cn
 9. 台警大授时中心(台湾)：asia.pool.ntp.org
-10. time.stdtime.gov.tw 
-11. clock.stdtime.gov.tw 
-12. freq_f.stdtime.gov.tw 
-13. tick.stdtime.gov.tw 
+10. time.stdtime.gov.tw
+11. clock.stdtime.gov.tw
+12. freq_f.stdtime.gov.tw
+13. tick.stdtime.gov.tw
 14. time.chttl.com.tw
 15. 阿里云：ntp1.aliyun.com
 16. 阿里云：ntp2.aliyun.com
