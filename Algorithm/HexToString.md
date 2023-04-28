@@ -8,6 +8,7 @@ void HexToString(const uint8_t *data, unsigned long len)
 {
     char line[BP_LEN];
     unsigned long i;
+    static const char hexdig[] = "0123456789abcdef";
 
     if (!data)
         return;
@@ -23,7 +24,7 @@ void HexToString(const uint8_t *data, unsigned long len)
         if (!n)
         {
             if (i)
-                printf("%s", line);
+                printf("%s\n", line);
             memset(line, ' ', sizeof(line) - 2);
             line[sizeof(line) - 2] = '\0';
 
@@ -52,6 +53,6 @@ void HexToString(const uint8_t *data, unsigned long len)
         }
     }
 
-    printf("%s", line);
+    printf("%s\n", line);
 }
 ```
