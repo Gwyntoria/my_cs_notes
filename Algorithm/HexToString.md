@@ -4,12 +4,12 @@
 #define BP_OFFSET 9
 #define BP_GRAPH 60
 #define BP_LEN 80
-void RTMP_LogHexString(int level, const uint8_t *data, unsigned long len)
+void HexToString(const uint8_t *data, unsigned long len)
 {
     char line[BP_LEN];
     unsigned long i;
 
-    if (!data || level > RTMP_debuglevel)
+    if (!data)
         return;
 
     /* in case len is zero */
@@ -23,7 +23,7 @@ void RTMP_LogHexString(int level, const uint8_t *data, unsigned long len)
         if (!n)
         {
             if (i)
-                RTMP_Log(level, "%s", line);
+                printf("%s", line);
             memset(line, ' ', sizeof(line) - 2);
             line[sizeof(line) - 2] = '\0';
 
@@ -52,6 +52,6 @@ void RTMP_LogHexString(int level, const uint8_t *data, unsigned long len)
         }
     }
 
-    RTMP_Log(level, "%s", line);
+    printf("%s", line);
 }
 ```
