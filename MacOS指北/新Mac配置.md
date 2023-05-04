@@ -52,6 +52,13 @@ export HTTPS_PROXY=192.168.3.32:7890
     source ~/.zshrc
     ```
 
+### 4.2 更新`oh-my-zsh`
+
+```sh
+cd ~/.oh-my-zsh
+git pull
+```
+
 ## 5. 使用包管理工具 `Homebrew` 下载工具
 
 ```sh
