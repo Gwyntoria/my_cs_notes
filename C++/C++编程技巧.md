@@ -2,12 +2,12 @@
 
 ## Design Philosophy of C++
 
-* Only add features if they solve an actual problem
-* Programmers should be free to choose their own style
-* Compartmentalization is key
-* Allow the programmer full control if they want it
-* Don’t sacrifice performance except as a last resort
-* Enforce safety at compile time whenever possible
+- Only add features if they solve an actual problem
+- Programmers should be free to choose their own style
+- Compartmentalization is key
+- Allow the programmer full control if they want it
+- Don’t sacrifice performance except as a last resort
+- Enforce safety at compile time whenever possible
 
 ## 判断浮点数a、b是否相等
 

@@ -1,6 +1,6 @@
 # Socket
 
-## 概述
+## 1. 概述
 
 Socket（套接字）是计算机网络编程中的一种抽象概念，它提供了一种通信机制，使得计算机程序能够通过网络进行数据交换。在应用层，Socket是一个应用程序和网络之间的接口，用于建立网络连接、传输数据和关闭连接。
 
@@ -8,7 +8,7 @@ Socket可以看作是一种端点，它包含了网络连接的相关信息，�
 
 Socket（套接字）是用于在计算机网络中进行进程间通信的一种机制。通常，Socket由一个端点（端口）和一个地址（IP地址）组成，它允许应用程序通过网络发送和接收数据。
 
-## 服务器端和客户端
+## 2. 服务器端和客户端
 
 在一个基于Socket的通信系统中，有两种主要的角色：**服务器端**和**客户端**。
 
@@ -18,11 +18,11 @@ Socket（套接字）是用于在计算机网络中进行进程间通信的一�
 
 因此，Socket服务器端和客户端的区别在于它们的角色和职责。服务器端负责等待连接请求并提供服务，而客户端负责向服务器端发送连接请求并接收服务器端提供的服务。
 
-## SOCKET 编程原理
+## 3. SOCKET 编程原理
 
 在实际应用中，Socket通常使用TCP或UDP协议实现数据传输。
 
-### 基本原理
+### 3.1 基本原理
 
 套接口有三种类型：**流式套接口**，**数据报套接口**及**原始套接口**
 
@@ -30,7 +30,7 @@ Socket（套接字）是用于在计算机网络中进行进程间通信的一�
 - 数据报套接口定义了一种无连接的服务，数据通过相互独立的报文进行传输，是无序的，并且不保证可靠，无差错。
 - 原始套接口允许对低层协议如IP或ICMP直接访问，主要用于新的网络协议实现的测试等。
 
-### 基本流程
+### 3.2 基本流程
 
 1. 建立连接：
    在Socket通信中，要进行数据传输，需要先建立连接。对于TCP协议来说，连接是一个可靠的双向通信链路，使用三次握手协议建立连接。对于UDP协议来说，连接是一次简单的单向通信，不需要建立连接。
@@ -41,11 +41,11 @@ Socket（套接字）是用于在计算机网络中进行进程间通信的一�
 
 Socket编程的基本原理就是通过Socket API来进行网络通信，实现客户端和服务器之间的数据交换。在编程中，我们需要使用Socket API提供的函数和结构体，建立Socket连接、发送和接收数据，并在完成数据传输后关闭连接。通过Socket编程，我们可以实现各种网络应用程序，如网页浏览器、邮件客户端、文件传输工具等。
 
-## 相关接口、结构、宏定义
+## 4. 相关接口、结构、宏定义
 
-### API
+### 4.1 相关API
 
-#### 1. `socket()` 函数：创建一个新的套接字
+#### 4.1.1 `socket()` 函数：创建一个新的套接字
 
 ```c
 int socket(int domain, int type, int protocol);
@@ -55,7 +55,7 @@ int socket(int domain, int type, int protocol);
 - `type`: 指定套接字类型，如`SOCK_STREAM`表示面向连接的TCP套接字。
 - `protocol`: 指定协议类型，一般为0，表示自动选择协议。
 
-#### 2. bind() 函数：将套接字绑定到指定的IP地址和端口号
+#### 4.1.2 bind() 函数：将套接字绑定到指定的IP地址和端口号
 
 ```c
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -65,7 +65,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 - `addr`: 指向包含IP地址和端口号的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-#### 3. `listen()` 函数：监听套接字上的连接请求
+#### 4.1.3 `listen()` 函数：监听套接字上的连接请求
 
 ```c
 int listen(int sockfd, int backlog);
@@ -74,7 +74,7 @@ int listen(int sockfd, int backlog);
 - `sockfd`: 套接字描述符。
 - `backlog`: 等待连接队列的最大长度。
 
-#### 4. `accept()` 函数：接受客户端的连接请求
+#### 4.1.4 `accept()` 函数：接受客户端的连接请求
 
 ```c
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
@@ -84,7 +84,7 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 - `addr`: 保存客户端地址信息的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-#### 5. `connect()` 函数：发起TCP连接
+#### 4.1.5 `connect()` 函数：发起TCP连接
 
 ```c
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -94,7 +94,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 - `addr`: 指向目标IP地址和端口号的`sockaddr`结构体指针。
 - `addrlen`: `addr`结构体的长度。
 
-#### 6. `send()` 函数：发送数据
+#### 4.1.6 `send()` 函数：发送数据
 
 ```c
 ssize_t send(int sockfd, const void *buf, size_t len, int flags);
@@ -105,7 +105,7 @@ ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 - `len`: 发送数据的长度。
 - `flags`: 操作标志。
 
-#### 7. `recv()` 函数：接收数据
+#### 4.1.7 `recv()` 函数：接收数据
 
 ```c
 ssize_t recv(int sockfd, void *buf, size_t len, int flags);
@@ -116,7 +116,7 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 - `len`: 接收数据的长度。
 - `flags`: 操作标志。
 
-#### 8. `close()` 函数：关闭套接字
+#### 4.1.8 `close()` 函数：关闭套接字
 
 ```c
 int close(int sockfd);
@@ -132,15 +132,15 @@ int close(int sockfd);
 
 综上所述，`recv`和`send`**更适合用于TCP连接**，而`read`和`write`**更适合用于UDP连接**。但是在实际开发中，为了兼容性和可移植性，也可以使用`recv`和`send`来进行UDP通信。
 
-### struct
+### 4.2 相关结构体
 
 - `sockaddr`：用于存储网络地址和端口号信息。
 - `sockaddr_in`：用于IPv4协议的套接字地址结构体，包括IP地址和端口号。
 - `sockaddr_in6`：用于IPv6协议的套接字地址结构体，包括IP地址和端口号。
 
-### macro
+### 4.3 相关宏定义
 
-## 代码及解释
+## 5. 代码及解释
 
 ```c
 #include <netinet/in.h>
@@ -199,9 +199,9 @@ addr.sin6_addr = ipv6_addr;
 int ret = bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)); // 绑定套接字
 ```
 
-## Sample
+## 6. Sample
 
-### 1. 实现socket服务端
+### 6.1 实现socket服务端
 
 ```c
 #include <stdio.h>
@@ -271,7 +271,7 @@ int main() {
 }
 ```
 
-### 2. 实现socket客户端
+### 6.2 实现socket客户端
 
 ```c
 #include <stdio.h>
