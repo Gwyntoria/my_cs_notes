@@ -2,11 +2,11 @@
 
 ## Introduction
 
-**ko** –> **Kernel Object**
+**KO** is the abbreviation for **Kernel Object**
 
-- **module file** used by the Linux kernel, the central component of the Linux operating system
-- contains program code that extends the functionality of the Linux kernel, such as code for a **computer device driver**
-- can be loaded without restarting the operating system
+- **Module file** used by the Linux kernel, the central component of the Linux operating system.
+- contains program code that extends the functionality of the Linux kernel, such as code for a **computer device driver**.
+- can be loaded without restarting the operating system.
 - may have other required module dependencies that must be loaded first.
 
 ## More Information
