@@ -1,5 +1,10 @@
 # FreeRTOS
 
+|               |               |
+|:--:           |:--:           |
+|Version        |1.1            |
+|Date           |2023-6-28      |
+
 ## Introduction
 
 FreeRTOS is a **real-time operating system** kernel for embedded devices.
@@ -69,93 +74,116 @@ FreeRTOS implements multiple threads by having the host program call a thread ti
 ## Example of FreeRTOS usage process
 
 ```c
-#include <stdio.h>
-#include "FreeRTOS.h"
-#include "task.h"
+#include <FreeRTOS.h>
+#include <task.h>
 
 // 任务句柄
-TaskHandle_t xTask1Handle, xTask2Handle;
+TaskHandle_t taskHandle1;
+TaskHandle_t taskHandle2;
 
 // 任务1
-void vTask1(void *pvParameters)
-{
-    while (1)
-    {
-        printf("Task 1 is running\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));  // 延时1秒
-    }
+void task1(void *pvParameters) {
+  while (1) {
+    // 任务1的代码
+    vTaskDelay(pdMS_TO_TICKS(1000));  // 延迟1秒
+  }
 }
 
 // 任务2
-void vTask2(void *pvParameters)
-{
-    while (1)
-    {
-        printf("Task 2 is running\n");
-        vTaskDelay(pdMS_TO_TICKS(500));  // 延时500毫秒
+void task2(void *pvParameters) {
+  while (1) {
+    // 任务2的代码
+    vTaskDelay(pdMS_TO_TICKS(500));  // 延迟500毫秒
+  }
+}
+
+void setup() {
+  // 初始化FreeRTOS内核
+  // 在这里进行内核的配置，例如堆栈分配器、时间片调度器等
+
+  // 创建任务1
+  xTaskCreate(task1, "Task 1", configMINIMAL_STACK_SIZE, NULL, 1, &taskHandle1);
+
+  // 创建任务2
+  xTaskCreate(task2, "Task 2", configMINIMAL_STACK_SIZE, NULL, 2, &taskHandle2);
+
+  // 启动调度器，开始任务调度
+  vTaskStartScheduler();
+}
+
+void loop() {
+  // 此处的代码不会被执行，因为任务调度器已经在启动时接管了控制权
+}
+
+// 删除任务
+void deleteTasks() {
+  vTaskDelete(taskHandle1);
+  vTaskDelete(taskHandle2);
+}
+
+int main() {
+  setup();
+
+  while (1) {
+    // 主循环中可以进行其他操作
+    // 例如检查输入、处理中断等
+
+    // 当满足某些条件时，删除任务
+    if (condition) {
+      deleteTasks();
     }
+  }
 }
 
-int main(void)
-{
-    // FreeRTOS初始化
-    BaseType_t status = xTaskCreate(vTask1, "Task 1", configMINIMAL_STACK_SIZE, NULL, 1, &xTask1Handle);
-    if (status != pdPASS)
-    {
-        printf("Failed to create Task 1\n");
-        return -1;
-    }
-
-    status = xTaskCreate(vTask2, "Task 2", configMINIMAL_STACK_SIZE, NULL, 1, &xTask2Handle);
-    if (status != pdPASS)
-    {
-        printf("Failed to create Task 2\n");
-        return -1;
-    }
-
-    // 启动调度器
-    vTaskStartScheduler();
-
-    // 如果调度器启动失败，则会执行到这里
-    printf("Failed to start FreeRTOS scheduler\n");
-
-    return -1;
-}
-
-// 空闲任务钩子函数
-void vApplicationIdleHook(void)
-{
-    // 空闲任务钩子函数
-}
-
-// 硬件定时器中断服务例程
-void vApplicationTickHook(void)
-{
-    // 定时器中断服务例程
-}
-
-// 硬件异常中断服务例程
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
-{
-    // 栈溢出处理
-}
 ```
 
-以上示例包含两个简单的任务（Task 1和Task 2），每个任务在循环中打印一条消息，并通过调用`vTaskDelay()`函数实现不同的延时。
+在这个示例中，我们使用了两个简单的任务：task1和task2。任务函数中的代码可以根据需求进行编写。在示例中，每个任务都在一个无限循环中执行，并使用 `vTaskDelay` 函数添加了延迟。
 
-在`main()`函数中，首先使用`xTaskCreate()`函数创建两个任务，并指定任务的*处理函数*、*任务名*、*堆栈大小*、*优先级*和*任务句柄*。然后，通过调用`vTaskStartScheduler()`函数启动FreeRTOS调度器。
+在 `setup` 函数中，进行了FreeRTOS内核的初始化，并使用 `xTaskCreate` 函数创建了任务1和任务2。创建任务时，我们指定了*任务函数*、*任务名称*、*堆栈大小*、*传递给任务函数的参数*、*任务优先级（优先级数值越高表示优先级越高，最大优先级为 configMAX_PRIORITIES - 1）*和*任务句柄*。
 
-在调度器启动后，任务将按照其优先级进行调度，`vTask1()`和`vTask2()`将交替执行。
+然后，调用 `vTaskStartScheduler` 函数**启动调度器**，开始任务调度。一旦调度器启动，它将根据任务的优先级和调度算法来决定任务的执行顺序。
 
-此外，示例中还包含了几个可选的FreeRTOS钩子函数，例如`vApplicationIdleHook()`、`vApplicationTickHook()`和`vApplicationStackOverflowHook()`。这些钩子函数*提供了额外的功能扩展和错误处理机制*。
+在 `main` 函数中，我们在一个主循环中执行其他操作，例如检查输入或处理中断。根据某些条件，我们可以调用 `deleteTasks` 函数来删除任务。
 
-请注意，以上示例仅提供了基本的使用流程，具体的应用场景和硬件平台可能需要进一步的适配和配置。在实际开发中，您还需要包含适当的FreeRTOS头文件，并根据实际需求进行更多的配置和任务管理。
+`deleteTasks` 函数使用 `vTaskDelete` 函数来删除任务，通过传递任务句柄作为参数。
+
+请注意，示例中的代码是一个简化的版本，实际的应用程序可能需要更多的配置和任务。你可以根据自己的需求进行修改和扩展。
+
+### Stack allocation
+
+- 在FreeRTOS中，默认情况下使用的是**静态堆栈分配**。这意味着在编译时为每个任务分配固定大小的堆栈空间。
+- 你可以在 `FreeRTOSConfig.h` 文件中进行堆栈大小的配置。通过修改 `configMINIMAL_STACK_SIZE` 宏定义，可以设置堆栈的最小大小。还可以根据需要修改其他堆栈相关的宏定义，如 `configTOTAL_HEAP_SIZE` 来设置总的堆大小。
+
+示例：
+
+```c
+// FreeRTOSConfig.h
+
+#define configMINIMAL_STACK_SIZE    (128)  // 堆栈的最小大小
+#define configTOTAL_HEAP_SIZE       (4096) // 总的堆大小
+```
+
+### Time slice scheduling
+
+- FreeRTOS中的时间片调度是**基于优先级的抢占式调度**。较高优先级的任务将抢占较低优先级的任务，以确保优先级更高的任务能够及时执行。
+- 默认情况下，FreeRTOS使用抢占式调度算法，任务的优先级越高，调度器给予的执行时间越多。
+- 如果要进行时间片调度的配置，可以在 `FreeRTOSConfig.h` 文件中修改 `configUSE_TIME_SLICING` 宏定义。
+
+示例：
+
+```c
+// FreeRTOSConfig.h
+
+#define configUSE_TIME_SLICING    1  // 启用时间片调度
+```
+
+**NOTES:** 堆栈分配和时间片调度的配置需要在 FreeRTOSConfig.h 文件中进行修改，并在编译时生效。
 
 ## Reference
 
 1. [Mastering the FreeRTOS Real Time Kernel - a Hands On Tutorial Guide](https://www.freertos.org/fr-content-src/uploads/2018/07/161204_Mastering_the_FreeRTOS_Real_Time_Kernel-A_Hands-On_Tutorial_Guide.pdf)
 2. [FreeRTOS V10.0.0 Reference Manual](https://www.freertos.org/fr-content-src/uploads/2018/07/FreeRTOS_Reference_Manual_V10.0.0.pdf)
-3. [Wiki-FreeRTOS](https://en.wikipedia.org/wiki/FreeRTOS)
+3. [Wikipedia-FreeRTOS](https://en.wikipedia.org/wiki/FreeRTOS)
 4. [FreeRTOS 内核基础知识](https://docs.aws.amazon.com/zh_cn/freertos/latest/userguide/dev-guide-freertos-kernel.html)
 5. [FreeRTOS基础篇教程目录汇总](https://www.cnblogs.com/yangguang-it/p/7233591.html)
 6. [野火-FreeRTOS视频教学](https://www.bilibili.com/video/av57449565/?vd_source=234174c1ff815dc17ba5ea7ee11a6e81)
