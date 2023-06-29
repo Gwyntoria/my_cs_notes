@@ -2,8 +2,8 @@
 
 |               |               |
 |:--:           |:--:           |
-|Version        |1.1            |
-|Date           |2023-6-28      |
+|Version        |1.2            |
+|Date           |2023-6-29      |
 
 ## Introduction
 
@@ -55,23 +55,7 @@ FreeRTOS implements multiple threads by having the host program call a thread ti
     - 确保正确设置编译器选项，并将FreeRTOS的源文件和你的应用程序文件一起编译。
     - 使用调试工具进行调试，并根据需要进行迭代和优化。
 
-## Multitasking vs Multithreading
-
-### Similarities
-
-1. 并发执行：无论是多任务还是多线程，都**允许多个任务或线程并发地执行**，提高系统的吞吐量和响应性。
-2. 分时调度：多任务和多线程都需要通过调度器或操作系统来进行任务或线程的调度，确定任务或线程的执行顺序和时间片。
-3. 共享资源：多任务和多线程都可能需要访问共享的资源，需要使用同步机制（如互斥量、信号量）来保护共享资源，以防止竞态条件和数据损坏。
-4. 并行性：在某些情况下，多任务和多线程可以在多个处理器核心上并行执行，以进一步提高系统的性能。
-
-### Differences
-
-1. 上下文切换：多任务在切换任务之间需要保存和恢复任务的完整上下文，包括寄存器值和堆栈。多线程则在切换线程时只需保存和恢复线程的部分上下文，因为它们通常在同一进程中共享相同的地址空间。
-2. 调度策略：多任务和多线程的调度策略可能不同。多任务通常使用抢占式调度，其中任务按照优先级进行调度，具有更高优先级的任务可以打断正在执行的低优先级任务。多线程的调度策略可以是抢占式或协作式，协作式调度依赖于线程主动释放CPU的控制权。
-3. 系统开销：多线程通常具有较低的系统开销，因为线程之间切换的开销相对较小。相比之下，多任务在任务之间切换时需要更多的系统开销，因为需要保存和恢复更多的上下文信息。
-4. 实时性能：多任务通常用于实时嵌入式系统，提供精确的任务调度和响应时间保证。多线程通常在通用操作系统中使用，实时性能可能相对较差。
-
-## Example of FreeRTOS usage process
+### Sample Code
 
 ```c
 #include <FreeRTOS.h>
@@ -137,7 +121,7 @@ int main() {
 
 ```
 
-在这个示例中，我们使用了两个简单的任务：task1和task2。任务函数中的代码可以根据需求进行编写。在示例中，每个任务都在一个无限循环中执行，并使用 `vTaskDelay` 函数添加了延迟。
+本实例中使用了两个简单的任务：task1 和 task2。任务函数中的代码可以根据需求进行编写。在示例中，每个任务都在一个无限循环中执行，并使用 `vTaskDelay` 函数添加了延迟。
 
 在 `setup` 函数中，进行了FreeRTOS内核的初始化，并使用 `xTaskCreate` 函数创建了任务1和任务2。创建任务时，我们指定了*任务函数*、*任务名称*、*堆栈大小*、*传递给任务函数的参数*、*任务优先级（优先级数值越高表示优先级越高，最大优先级为 configMAX_PRIORITIES - 1）*和*任务句柄*。
 
@@ -147,9 +131,25 @@ int main() {
 
 `deleteTasks` 函数使用 `vTaskDelete` 函数来删除任务，通过传递任务句柄作为参数。
 
-请注意，示例中的代码是一个简化的版本，实际的应用程序可能需要更多的配置和任务。你可以根据自己的需求进行修改和扩展。
+**NOTES：** 实际的应用程序需要更多的配置和任务，需要根据特定的需求进行修改和扩展。
 
-### Stack allocation
+## Multitasking vs Multithreading
+
+### Similarities
+
+1. 并发执行：无论是多任务还是多线程，都**允许多个任务或线程并发地执行**，提高系统的吞吐量和响应性。
+2. 分时调度：多任务和多线程都需要通过调度器或操作系统来进行任务或线程的调度，确定任务或线程的执行顺序和时间片。
+3. 共享资源：多任务和多线程都可能需要访问共享的资源，需要使用同步机制（如互斥量、信号量）来保护共享资源，以防止竞态条件和数据损坏。
+4. 并行性：在某些情况下，多任务和多线程可以在多个处理器核心上并行执行，以进一步提高系统的性能。
+
+### Differences
+
+1. 上下文切换：多任务在切换任务之间需要保存和恢复任务的完整上下文，包括寄存器值和堆栈。多线程则在切换线程时只需保存和恢复线程的部分上下文，因为它们通常在同一进程中共享相同的地址空间。
+2. 调度策略：多任务和多线程的调度策略可能不同。多任务通常使用抢占式调度，其中任务按照优先级进行调度，具有更高优先级的任务可以打断正在执行的低优先级任务。多线程的调度策略可以是抢占式或协作式，协作式调度依赖于线程主动释放CPU的控制权。
+3. 系统开销：多线程通常具有较低的系统开销，因为线程之间切换的开销相对较小。相比之下，多任务在任务之间切换时需要更多的系统开销，因为需要保存和恢复更多的上下文信息。
+4. 实时性能：多任务通常用于实时嵌入式系统，提供精确的任务调度和响应时间保证。多线程通常在通用操作系统中使用，实时性能可能相对较差。
+
+## Stack allocation
 
 - 在FreeRTOS中，默认情况下使用的是**静态堆栈分配**。这意味着在编译时为每个任务分配固定大小的堆栈空间。
 - 你可以在 `FreeRTOSConfig.h` 文件中进行堆栈大小的配置。通过修改 `configMINIMAL_STACK_SIZE` 宏定义，可以设置堆栈的最小大小。还可以根据需要修改其他堆栈相关的宏定义，如 `configTOTAL_HEAP_SIZE` 来设置总的堆大小。
@@ -163,7 +163,7 @@ int main() {
 #define configTOTAL_HEAP_SIZE       (4096) // 总的堆大小
 ```
 
-### Time slice scheduling
+## Time slice scheduling
 
 - FreeRTOS中的时间片调度是**基于优先级的抢占式调度**。较高优先级的任务将抢占较低优先级的任务，以确保优先级更高的任务能够及时执行。
 - 默认情况下，FreeRTOS使用抢占式调度算法，任务的优先级越高，调度器给予的执行时间越多。
@@ -177,13 +177,13 @@ int main() {
 #define configUSE_TIME_SLICING    1  // 启用时间片调度
 ```
 
-**NOTES:** 堆栈分配和时间片调度的配置需要在 FreeRTOSConfig.h 文件中进行修改，并在编译时生效。
+**NOTES:** 堆栈分配和时间片调度的配置需要在 `FreeRTOSConfig.h` 文件中进行修改，并在编译时生效。
 
 ## Reference
 
-1. [Mastering the FreeRTOS Real Time Kernel - a Hands On Tutorial Guide](https://www.freertos.org/fr-content-src/uploads/2018/07/161204_Mastering_the_FreeRTOS_Real_Time_Kernel-A_Hands-On_Tutorial_Guide.pdf)
-2. [FreeRTOS V10.0.0 Reference Manual](https://www.freertos.org/fr-content-src/uploads/2018/07/FreeRTOS_Reference_Manual_V10.0.0.pdf)
-3. [Wikipedia-FreeRTOS](https://en.wikipedia.org/wiki/FreeRTOS)
+1. [Wikipedia-FreeRTOS](https://en.wikipedia.org/wiki/FreeRTOS)
+2. [Mastering the FreeRTOS Real Time Kernel - a Hands On Tutorial Guide](https://www.freertos.org/fr-content-src/uploads/2018/07/161204_Mastering_the_FreeRTOS_Real_Time_Kernel-A_Hands-On_Tutorial_Guide.pdf)
+3. [FreeRTOS V10.0.0 Reference Manual](https://www.freertos.org/fr-content-src/uploads/2018/07/FreeRTOS_Reference_Manual_V10.0.0.pdf)
 4. [FreeRTOS 内核基础知识](https://docs.aws.amazon.com/zh_cn/freertos/latest/userguide/dev-guide-freertos-kernel.html)
 5. [FreeRTOS基础篇教程目录汇总](https://www.cnblogs.com/yangguang-it/p/7233591.html)
 6. [野火-FreeRTOS视频教学](https://www.bilibili.com/video/av57449565/?vd_source=234174c1ff815dc17ba5ea7ee11a6e81)
