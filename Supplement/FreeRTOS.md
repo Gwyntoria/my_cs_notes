@@ -1,8 +1,8 @@
 # FreeRTOS
 
-| Version | Date      | Description                                            |
-| :------ | :-------- | :----------------------------------------------------- |
-| 1.0     | 2023-6-27 | Initial release                                        |
+| Version | Date      | Description     |
+| :------ | :-------- | :---------      |
+| 1.0     | 2023-6-27 | Initial release |
 | 1.1     | 2023-6-29 | 1. 调整目录结构<br />2. 新增堆栈分配和时间片调度的介绍 |
 
 ## Introduction
@@ -11,7 +11,7 @@ FreeRTOS is a **real-time operating system** kernel for embedded devices.
 
 [FreeRTOS official site](https://www.freertos.org/)
 
-## Process management
+## Process Management
 
 FreeRTOS provides methods for **multiple threads** or **tasks**, **mutexes**, **semaphores** and **software timers**.
 
@@ -149,7 +149,7 @@ int main() {
 3. 系统开销：多线程通常具有较低的系统开销，因为线程之间切换的开销相对较小。相比之下，多任务在任务之间切换时需要更多的系统开销，因为需要保存和恢复更多的上下文信息。
 4. 实时性能：多任务通常用于实时嵌入式系统，提供精确的任务调度和响应时间保证。多线程通常在通用操作系统中使用，实时性能可能相对较差。
 
-## Stack allocation
+## Stack Allocation
 
 - 在FreeRTOS中，默认情况下使用的是**静态堆栈分配**。这意味着在编译时为每个任务分配固定大小的堆栈空间。
 - 你可以在 `FreeRTOSConfig.h` 文件中进行堆栈大小的配置。通过修改 `configMINIMAL_STACK_SIZE` 宏定义，可以设置堆栈的最小大小。还可以根据需要修改其他堆栈相关的宏定义，如 `configTOTAL_HEAP_SIZE` 来设置总的堆大小。
@@ -163,7 +163,7 @@ int main() {
 #define configTOTAL_HEAP_SIZE       (4096) // 总的堆大小
 ```
 
-## Time slice scheduling
+## Time Slice Scheduling
 
 - FreeRTOS中的时间片调度是**基于优先级的抢占式调度**。较高优先级的任务将抢占较低优先级的任务，以确保优先级更高的任务能够及时执行。
 - 默认情况下，FreeRTOS使用抢占式调度算法，任务的优先级越高，调度器给予的执行时间越多。
