@@ -1,10 +1,8 @@
-# Understander Prompt
+# Understand Prompt
 
 ## ChatGPT Simple Cheatsheet
 
 ![prompt-simple-cheatsheet](../assets/prompt-simple-cheatsheet.jpg)
-
-## 
 
 ## Reference
 
