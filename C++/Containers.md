@@ -1,8 +1,8 @@
 # Containers
 
-## Standard Template  Library (STL): The core of modern C++!
+## Standard Template  Library (STL): The core of modern C++
 
-### What is in STL? 
+### What is in STL?
 
 - **Containers**
 - **Iterators**
@@ -19,4 +19,3 @@ All containers can hold almost all elements
 - Associative Containers
   - Ordered
   - Unordered
-
