@@ -2,7 +2,7 @@
 
 ## bash 的运行模式
 
-**bash的运行模式可分为login shell和non-login shell**
+**NOTE:** bash的运行模式可分为`login shell`和`non-login shell`
 
 **login shell：**
 
