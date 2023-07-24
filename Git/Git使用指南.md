@@ -66,7 +66,7 @@ git pull origin branch_name
 
 1. 首先，添加第一个远程仓库地址：
 
-    ```
+    ```bash
     git remote add origin1 <URL1>
     ```
 
@@ -74,7 +74,7 @@ git pull origin branch_name
 
 2. 接下来，添加第二个远程仓库地址：
 
-    ```
+    ```bash
     git remote add origin2 <URL2>
     ```
 
@@ -84,7 +84,7 @@ git pull origin branch_name
 
 要推送到特定的远程仓库，可以使用以下命令：
 
-```
+```bash
 git push <remote-name> <branch-name>
 ```
 
@@ -94,8 +94,16 @@ git push <remote-name> <branch-name>
 
 您可以使用以下命令查看远程仓库的列表：
 
-```
+```bash
 git remote -v
 ```
 
 这将显示所有已配置的远程仓库及其对应的 URL 地址。
+
+## 修改远程仓库地址
+
+```bash
+git remote set-url origin https://github.com/your-username/your-repo.git
+```
+
+**NOTE:** 将命令中的origin替换为你实际使用的远程仓库名称，并将新地址替换为你希望使用的新仓库地址。
