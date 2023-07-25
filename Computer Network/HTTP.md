@@ -88,3 +88,39 @@ HTTP请求方法指定了客户端对服务器资源执行的操作类型。以�
 5. **PATCH**：用于*对服务器上的资源进行部分更新*。PATCH请求用于对已有资源进行局部修改，而不是替换整个资源。PATCH请求是非幂等的，即多次发送相同的PATCH请求可能会产生不同的结果。
 
 6. **HEAD**：*类似于GET请求，但只请求获取资源的头部信息，不返回资源的实际内容*。HEAD请求通常用于检查资源的元数据或验证资源是否存在，而无需传输完整的响应内容。
+
+## HTTP status codes
+
+HTTP (Hypertext Transfer Protocol) is the underlying protocol used for communication on the World Wide Web. HTTP status codes are three-digit numbers returned by web servers to indicate the status of a client's request. Each status code conveys a specific meaning about the request or the response. Here are some common HTTP status codes and their explanations:
+
+1. Informational 1xx:
+
+    - 100 Continue: The server received the initial part of the request, and the client should proceed with the rest of the request.
+
+2. Successful 2xx:
+
+    - 200 OK: The request was successful, and the server has returned the requested data.
+    - 201 Created: The request was successful, and the server has created a new resource as a result.
+    - 204 No Content: The request was successful, but there is no data to return (e.g., in response to a successful DELETE request).
+
+3. Redirection 3xx:
+
+    - 301 Moved Permanently: The requested resource has moved to a new URL, and future requests should use the new URL.
+    - 302 Found (or 307 Temporary Redirect): The requested resource temporarily resides at a different URL, and the client should use the new URL for future requests.
+    - 304 Not Modified: The client's cached copy of the resource is still valid, and the server does not need to send the requested resource again.
+
+4. Client Error 4xx:
+
+    - 400 Bad Request: The server cannot understand the request due to client error (e.g., malformed request syntax).
+    - 401 Unauthorized: Authentication is required, and the client must provide valid credentials to access the requested resource.
+    - 403 Forbidden: The client does not have the necessary permissions to access the requested resource.
+    - 404 Not Found: The requested resource could not be found on the server.
+
+5. Server Error 5xx:
+
+    - 500 Internal Server Error: An unexpected condition was encountered on the server, preventing it from fulfilling the request.
+    - 502 Bad Gateway: The server acting as a gateway or proxy received an invalid response from the upstream server.
+    - 503 Service Unavailable: The server is currently unable to handle the request due to maintenance or overload.
+    - 504 Gateway Timeout: The server acting as a gateway or proxy did not receive a timely response from the upstream server.
+
+Please note that this is not an exhaustive list, as there are many other HTTP status codes with specific purposes and meanings. However, these are some of the most commonly encountered status codes in web development.
