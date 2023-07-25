@@ -107,3 +107,26 @@ git remote set-url origin https://github.com/your-username/your-repo.git
 ```
 
 **NOTE:** 将命令中的origin替换为你实际使用的远程仓库名称，并将新地址替换为你希望使用的新仓库地址。
+
+## 添加Tag，以及Tag Message
+
+1. 切换到需要添加Tag的分支。
+
+2. 添加Tag
+
+    ```bash
+    git tag tag_name
+    ```
+
+    如果需要添加Tag Message，可以使用 `-a` 参数来创建一个带有消息的标签。执行以下命令：
+
+    ```bash
+    git tag -a tag_name -m "Your tag message here"
+    ```
+
+3. 将本地Tag推送到远程仓库
+
+    ```bash
+    git push origin --tags   # 推送到origin仓库
+    git push upstream --tags # 推送到upstream仓库
+    ```
