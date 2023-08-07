@@ -1,4 +1,8 @@
-# `Makefile`  
+# Makefile 使用指南
+
+| Version | Date      | Description     |
+| :------ | :-------- | :-------------- |
+| 1.0     | 2023-7-20 | Initial release |
 
 ## 概述
 
