@@ -1,0 +1,365 @@
+@startuml SRS_librtmp
+ 
+hide footbox
+skinparam {
+    ' defaultFontName Abyssinica SIL
+    Shadowing false  
+    backgroundColor white
+    NoteFontColor #Black
+    NoteFontSize 16
+    NoteTextAlignment left
+    NoteBackgroundColor WhiteSmoke
+    NoteColor transparent
+    NoteBorderThickness 0
+    NoteBorderColor transparent
+    NoteBorderThickness 0
+    NoteShadowing false
+    ParticipantPadding 0
+    BoxPadding 20
+    dpi 96
+    ClassBackgroundColor transparent
+    ClassHeaderBackgroundColor lightgreen
+    ClassStereotypeFontColor transparent
+    SequenceBoxBordercolor sienna
+    SequenceBoxFontSize 24
+    SequenceBoxFontColor Black
+    SequenceBoxBackgroundColor WhiteSmoke
+    SequenceLifeLineBackgroundColor WhiteSmoke
+    SequenceMessageAlignment center
+    SequenceGroupHeaderFontColor White
+    SequenceGroupHeaderFontSize 20
+    SequenceGroupBackgroundColor DarkOliveGreen
+    SequenceGroupBodyBackgroundColor transparent
+    SequenceGroupBorderThickness 4
+    SequenceGroupBorderColor DarkOliveGreen
+    ' transparent
+    sequence {
+        ParticipantBackgroundColor WhiteSmoke
+        ParticipantBorderColor Gray
+        ParticipantFontStyle Bold
+        ParticipantFontSize 12
+        ParticipantPadding 0
+ 
+        LifeLineBorderColor DimGray
+        ArrowColor Black
+        ArrowThickness 0.8
+        ColorArrowSeparationSpace 30
+    }
+}
+
+' participant RtmpPullStream
+box INTERFACE
+participant srs_rtmp
+participant Context
+participant SrsCommonMessage
+end box
+
+box PROTOCOL
+participant SrsRtmpClient
+participant SrsProtocol
+participant SrsFastBuffer
+' participant SrsChunkStream
+participant SrsSimpleHandshake
+participant SrsPacket
+participant SrsHandshakeBytes
+end box
+
+' participant SrsAmf0Object
+' participant SrsUnSortedHashtable
+' participant SrsAmf0ObjectEOF
+box CONNECTION
+participant SimpleSocketStreamImpl
+participant srs_hijack_io
+participant socket
+end box
+
+' create RtmpPullStream
+' ->RtmpPullStream:networkLoop()
+' activate RtmpPullStream
+create srs_rtmp
+' RtmpPullStream->srs_rtmp:srs_rtmp_create()
+->srs_rtmp:srs_rtmp_create()
+activate srs_rtmp
+create Context
+srs_rtmp-->Context:NEW
+create SimpleSocketStreamImpl
+srs_rtmp--> SimpleSocketStreamImpl:NEW
+SimpleSocketStreamImpl-->o Context:skt
+srs_rtmp->SimpleSocketStreamImpl:create_socket()
+deactivate srs_rtmp
+activate SimpleSocketStreamImpl
+create srs_hijack_io
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_create_socket()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+create socket
+srs_hijack_io->socket:::socket()
+deactivate srs_hijack_io
+' Context-->o RtmpPullStream:m_rtmpInst
+' srs_rtmp-->RtmpPullStream:RETURN
+
+' RtmpPullStream->srs_rtmp:srs_rtmp_handshake()
+->srs_rtmp:srs_rtmp_handshake()
+activate srs_rtmp
+srs_rtmp->srs_rtmp:srs_rtmp_dns_resolve()
+activate srs_rtmp
+srs_rtmp->srs_rtmp:srs_librtmp_context_parse_uri()
+activate srs_rtmp
+srs_rtmp->srs_rtmp:srs_discovery_tc_url()
+activate srs_rtmp
+deactivate srs_rtmp
+deactivate srs_rtmp
+srs_rtmp->srs_rtmp:srs_librtmp_context_resolve_host()
+activate srs_rtmp
+deactivate srs_rtmp
+deactivate srs_rtmp
+
+srs_rtmp->srs_rtmp:srs_rtmp_connect_server()
+activate srs_rtmp
+srs_rtmp->SimpleSocketStreamImpl:set_send_timeout()
+activate SimpleSocketStreamImpl
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_set_send_timeout()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+srs_hijack_io->socket:setsockopt()
+deactivate srs_hijack_io
+srs_rtmp->SimpleSocketStreamImpl:set_recv_timeout()
+srs_rtmp->srs_rtmp:srs_librtmp_context_connect()
+activate srs_rtmp
+srs_rtmp->SimpleSocketStreamImpl:connect()
+deactivate srs_rtmp
+deactivate srs_rtmp
+activate SimpleSocketStreamImpl
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_connect()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+srs_hijack_io->socket:::connect()
+deactivate srs_hijack_io
+
+srs_rtmp->srs_rtmp:srs_rtmp_do_simple_handshake()
+activate srs_rtmp
+create SrsRtmpClient
+srs_rtmp-->SrsRtmpClient:NEW
+activate SrsRtmpClient
+SrsRtmpClient-->o srs_rtmp:rtmp
+create SrsProtocol
+SrsRtmpClient-->SrsProtocol:NEW
+create SrsFastBuffer
+SrsProtocol-->SrsFastBuffer:new 
+SrsFastBuffer-->o SrsProtocol:in_buffer
+SimpleSocketStreamImpl-->o SrsProtocol:skt
+SrsProtocol-->o SrsRtmpClient:protocol
+' create SrsChunkStream
+' SrsRtmpClient-->SrsChunkStream:NEW
+' SrsChunkStream-->o SrsRtmpClient:cs_cache[]
+create SrsHandshakeBytes
+SrsRtmpClient-->SrsHandshakeBytes:NEW
+SrsHandshakeBytes-->o SrsRtmpClient:hs_bytes
+deactivate SrsRtmpClient
+
+srs_rtmp->SrsRtmpClient:simple_handshake()
+deactivate srs_rtmp
+deactivate srs_rtmp
+activate SrsRtmpClient
+create SrsSimpleHandshake
+SrsRtmpClient-->SrsSimpleHandshake:NEW
+SrsRtmpClient->SrsSimpleHandshake:handshake_with_server()
+deactivate SrsRtmpClient
+activate SrsSimpleHandshake
+SrsSimpleHandshake->SrsHandshakeBytes:create_c0c1()
+group SEND
+SrsSimpleHandshake->SimpleSocketStreamImpl:write()
+activate SimpleSocketStreamImpl
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_write()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+srs_hijack_io->socket::send()
+deactivate srs_hijack_io
+end group
+SrsSimpleHandshake->SrsHandshakeBytes:read_s0s1s2()
+activate SrsHandshakeBytes
+group RECIEVE
+SrsHandshakeBytes->SimpleSocketStreamImpl:read_fully()
+deactivate SrsHandshakeBytes
+activate SimpleSocketStreamImpl
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_read_fully()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+group WHILE
+srs_hijack_io->srs_hijack_io:srs_hijack_io_read()
+activate srs_hijack_io
+srs_hijack_io->socket:::recv()
+deactivate srs_hijack_io
+end group
+deactivate srs_hijack_io
+
+end group
+
+SrsSimpleHandshake->SrsHandshakeBytes:create_c2()
+SrsSimpleHandshake->socket:**SEND**
+deactivate SrsSimpleHandshake
+
+' RtmpPullStream->srs_rtmp:srs_rtmp_connect_app()
+->srs_rtmp:srs_rtmp_connect_app()
+activate srs_rtmp
+srs_rtmp->srs_rtmp:srs_generate_tc_url()
+srs_rtmp->SrsRtmpClient:connect_app()
+deactivate srs_rtmp
+activate SrsRtmpClient
+SrsRtmpClient->SrsRtmpClient:connect_app2()
+activate SrsRtmpClient
+create SrsPacket
+SrsRtmpClient-->SrsPacket:NEW
+note left:**SrsConnectAppPacket**
+' create SrsAmf0Object
+' SrsConnectAppPacket-->SrsAmf0Object:NEW
+' activate SrsAmf0Object
+' SrsAmf0Object-->SrsUnSortedHashtable:NEW
+' SrsUnSortedHashtable-->o SrsAmf0Object:properties
+' create SrsAmf0ObjectEOF
+' SrsAmf0Object-->SrsAmf0ObjectEOF:NEW
+' SrsAmf0ObjectEOF-->o SrsAmf0Object:eof
+' SrsAmf0Object-->o SrsConnectAppPacket:command_object
+' deactivate SrsAmf0Object
+group SEND_PACKET
+SrsRtmpClient->SrsProtocol:send_and_free_packet()
+activate SrsProtocol
+SrsProtocol->SrsProtocol:do_send_and_free_packet()
+activate SrsProtocol
+SrsProtocol->SrsPacket:encode()
+SrsProtocol->SrsPacket:get_message_type()
+SrsProtocol->SrsPacket:get_prefer_cid()
+group SIMPLE_SEND()
+SrsProtocol->SrsProtocol:do_simple_send()
+activate SrsProtocol
+SrsProtocol->SrsProtocol:srs_chunk_header_c0()
+SrsProtocol->SrsProtocol:srs_chunk_header_c3()
+group SENDV()
+SrsProtocol->SimpleSocketStreamImpl:writev()
+deactivate SrsProtocol
+deactivate SrsProtocol
+activate SimpleSocketStreamImpl
+SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_writev()
+deactivate SimpleSocketStreamImpl
+activate srs_hijack_io
+srs_hijack_io->socket:::writev()
+deactivate srs_hijack_io
+end group
+end group
+end gourp
+
+SrsProtocol->SrsProtocol:manual_response_flush()
+activate SrsProtocol
+deactivate SrsProtocol
+deactivate SrsProtocol
+
+' SrsRtmpClient-->SrsSetWindowAckSizePacket:NEW
+SrsRtmpClient->socket:**SEND_PACKET()**
+note left:**SrsSetWindowAckSizePacket**
+
+SrsRtmpClient->SrsRtmpClient:expect_message()
+activate SrsRtmpClient
+note left:**SrsConnectAppResPacket**
+group EXPECT_MESSAGE()
+SrsRtmpClient->SrsProtocol:expect_message()
+deactivate SrsRtmpClient
+activate SrsProtocol
+group RECV_MESSAGE()
+group WHILE
+SrsProtocol->SrsProtocol:recv_message()
+activate SrsProtocol
+group WHILE
+SrsProtocol->SrsProtocol:recv_interlaced_message()
+activate SrsProtocol
+SrsProtocol->SrsProtocol:read_basic_header()
+activate SrsProtocol
+SrsProtocol->SrsFastBuffer:grow()
+activate SrsFastBuffer
+SrsFastBuffer->SimpleSocketStreamImpl:read()
+activate SimpleSocketStreamImpl
+socket->SimpleSocketStreamImpl:**RECIEVE()**
+deactivate SimpleSocketStreamImpl
+SrsProtocol->SrsFastBuffer:read_1byte()
+deactivate SrsFastBuffer
+deactivate SrsProtocol
+
+SrsProtocol->SrsProtocol:read_message_header()
+activate SrsProtocol
+deactivate SrsProtocol
+SrsProtocol->SrsProtocol:read_message_payload()
+activate SrsProtocol
+deactivate SrsProtocol
+deactivate SrsProtocol
+end group
+deactivate SrsProtocol
+
+SrsProtocol->SrsProtocol:decode_message()
+activate SrsProtocol
+SrsProtocol->SrsProtocol:do_decode_message()
+activate SrsProtocol
+SrsProtocol->SrsProtocol:srs_amf0_read_string()
+activate SrsProtocol
+' SrsProtocol->SrsStream:new
+' SrsProtocol->SrsStream:read_1bytes()
+
+deactivate SrsProtocol
+deactivate SrsProtocol
+
+SrsProtocol-->SrsRtmpClient:RET
+deactivate SrsProtocol
+deactivate SrsProtocol
+
+end group
+end group
+end group
+
+deactivate SrsRtmpClient
+deactivate SrsRtmpClient
+
+' RtmpPullStream->srs_rtmp:srs_rtmp_play_stream()
+->srs_rtmp:srs_rtmp_play_stream()
+activate srs_rtmp
+srs_rtmp->SrsRtmpClient:create_stream()
+activate SrsRtmpClient
+SrsRtmpClient->socket:<font color=green>**SEND_PACKET()**</font>
+note left:**SrsCreateStreamPacket**
+socket->SrsRtmpClient:<font color=green>**EXPECT_MESSAGE()**</font>
+note left:**SrsCreateStreamResPacket**
+deactivate SrsRtmpClient
+
+
+srs_rtmp->SrsRtmpClient:play()
+deactivate srs_rtmp
+activate SrsRtmpClient
+SrsRtmpClient->socket:<font color=green>**SEND_PACKET()**</font>
+note left:**SrsPlayPacket**
+
+SrsRtmpClient->socket:<font color=green>**SEND_PACKET()**</font>
+note left:**SrsUserControlPacket**\n\
+[SrcPCUCSetBufferLength]
+
+SrsRtmpClient->socket:<font color=green>**SEND_PACKET()**</font>
+note left:**SrsSetChunkSizePacket**
+deactivate SrsRtmpClient
+
+->srs_rtmp:srs_rtmp_read_packet()
+activate srs_rtmp
+srs_rtmp->SrsRtmpClient:recv_message()
+activate SrsRtmpClient
+SrsRtmpClient->SrsProtocol:recv_message()
+deactivate SrsRtmpClient
+activate SrsProtocol
+socket->SrsProtocol:<font color=green>**RECV_MESSAGE()**</font>
+create SrsCommonMessage
+SrsProtocol-->SrsCommonMessage:READED
+deactivate SrsProtocol
+
+srs_rtmp->srs_rtmp:srs_rtmp_go_packet()
+activate srs_rtmp
+srs_rtmp-->SrsCommonMessage:REF
+
+' <--srs_rtmp:RETURN
+deactivate srs_rtmp
+deactivate srs_rtmp
+
+@enduml
