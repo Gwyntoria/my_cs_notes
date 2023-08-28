@@ -1,14 +1,8 @@
-# Difference between select, poll and epoll
+# I/O multiplexing
 
 select，poll，epoll都是IO多路复用的机制。I/O多路复用就通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。**但select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的**，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。关于这三种IO多路复用的用法，前面三篇总结写的很清楚，并用服务器回射echo程序进行了测试。连接如下所示：
 
-select：[http://www.cnblogs.com/Anker/archive/2013/08/14/3258674.html](http://www.cnblogs.com/Anker/archive/2013/08/14/3258674.html)
-
-poll：[http://www.cnblogs.com/Anker/archive/2013/08/15/3261006.html](http://www.cnblogs.com/Anker/archive/2013/08/15/3261006.html)
-
-epoll：[http://www.cnblogs.com/Anker/archive/2013/08/17/3263780.html](http://www.cnblogs.com/Anker/archive/2013/08/17/3263780.html)
-
-今天对这三种IO多路复用进行对比，参考网上和书上面的资料，整理如下：
+[Dale工作学习笔记](http://www.cnblogs.com/Anker/archive/2013/08/14/3258674.html)
 
 ## 1. select实现
 
@@ -67,3 +61,4 @@ poll的实现和select非常相似，只是描述fd集合的方式不同，poll�
 
 1. [select 实现分析](http://www.cnblogs.com/apprentice89/archive/2013/05/09/3070051.html)
 2. [select、poll、epoll使用小结](http://blog.csdn.net/kkxgx/article/details/7717125)
+3. [CS-Notes 面试笔记：Socket](https://www.cyc2018.xyz/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/Socket/Socket.html#%E4%B8%80%E3%80%81i-o-%E6%A8%A1%E5%9E%8B)
