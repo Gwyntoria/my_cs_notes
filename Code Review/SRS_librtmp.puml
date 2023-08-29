@@ -1,9 +1,9 @@
 @startuml SRS_librtmp
- 
+
 hide footbox
 skinparam {
     ' defaultFontName Abyssinica SIL
-    Shadowing false  
+    Shadowing false
     backgroundColor white
     NoteFontColor #Black
     NoteFontSize 16
@@ -39,7 +39,7 @@ skinparam {
         ParticipantFontStyle Bold
         ParticipantFontSize 12
         ParticipantPadding 0
- 
+
         LifeLineBorderColor DimGray
         ArrowColor Black
         ArrowThickness 0.8
@@ -87,10 +87,12 @@ srs_rtmp--> SimpleSocketStreamImpl:NEW
 SimpleSocketStreamImpl-->o Context:skt
 srs_rtmp->SimpleSocketStreamImpl:create_socket()
 deactivate srs_rtmp
+
 activate SimpleSocketStreamImpl
 create srs_hijack_io
 SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_create_socket()
 deactivate SimpleSocketStreamImpl
+
 activate srs_hijack_io
 create socket
 srs_hijack_io->socket:::socket()
@@ -145,7 +147,7 @@ SrsRtmpClient-->o srs_rtmp:rtmp
 create SrsProtocol
 SrsRtmpClient-->SrsProtocol:NEW
 create SrsFastBuffer
-SrsProtocol-->SrsFastBuffer:new 
+SrsProtocol-->SrsFastBuffer:new
 SrsFastBuffer-->o SrsProtocol:in_buffer
 SimpleSocketStreamImpl-->o SrsProtocol:skt
 SrsProtocol-->o SrsRtmpClient:protocol
@@ -168,32 +170,31 @@ deactivate SrsRtmpClient
 activate SrsSimpleHandshake
 SrsSimpleHandshake->SrsHandshakeBytes:create_c0c1()
 group SEND
-SrsSimpleHandshake->SimpleSocketStreamImpl:write()
-activate SimpleSocketStreamImpl
-SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_write()
-deactivate SimpleSocketStreamImpl
-activate srs_hijack_io
-srs_hijack_io->socket::send()
-deactivate srs_hijack_io
-end group
+    SrsSimpleHandshake->SimpleSocketStreamImpl:write()
+    activate SimpleSocketStreamImpl
+    SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_write()
+    deactivate SimpleSocketStreamImpl
+    activate srs_hijack_io
+    srs_hijack_io->socket::send()
+    deactivate srs_hijack_io
+end
 SrsSimpleHandshake->SrsHandshakeBytes:read_s0s1s2()
 activate SrsHandshakeBytes
 group RECIEVE
-SrsHandshakeBytes->SimpleSocketStreamImpl:read_fully()
-deactivate SrsHandshakeBytes
-activate SimpleSocketStreamImpl
-SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_read_fully()
-deactivate SimpleSocketStreamImpl
-activate srs_hijack_io
-group WHILE
-srs_hijack_io->srs_hijack_io:srs_hijack_io_read()
-activate srs_hijack_io
-srs_hijack_io->socket:::recv()
-deactivate srs_hijack_io
-end group
-deactivate srs_hijack_io
-
-end group
+    SrsHandshakeBytes->SimpleSocketStreamImpl:read_fully()
+    deactivate SrsHandshakeBytes
+    activate SimpleSocketStreamImpl
+    SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_read_fully()
+    deactivate SimpleSocketStreamImpl
+    activate srs_hijack_io
+    group WHILE
+        srs_hijack_io->srs_hijack_io:srs_hijack_io_read()
+        activate srs_hijack_io
+        srs_hijack_io->socket:::recv()
+        deactivate srs_hijack_io
+    end
+    deactivate srs_hijack_io
+end
 
 SrsSimpleHandshake->SrsHandshakeBytes:create_c2()
 SrsSimpleHandshake->socket:**SEND**
@@ -222,31 +223,33 @@ note left:**SrsConnectAppPacket**
 ' SrsAmf0Object-->o SrsConnectAppPacket:command_object
 ' deactivate SrsAmf0Object
 group SEND_PACKET
-SrsRtmpClient->SrsProtocol:send_and_free_packet()
-activate SrsProtocol
-SrsProtocol->SrsProtocol:do_send_and_free_packet()
-activate SrsProtocol
-SrsProtocol->SrsPacket:encode()
-SrsProtocol->SrsPacket:get_message_type()
-SrsProtocol->SrsPacket:get_prefer_cid()
-group SIMPLE_SEND()
-SrsProtocol->SrsProtocol:do_simple_send()
-activate SrsProtocol
-SrsProtocol->SrsProtocol:srs_chunk_header_c0()
-SrsProtocol->SrsProtocol:srs_chunk_header_c3()
-group SENDV()
-SrsProtocol->SimpleSocketStreamImpl:writev()
-deactivate SrsProtocol
-deactivate SrsProtocol
-activate SimpleSocketStreamImpl
-SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_writev()
-deactivate SimpleSocketStreamImpl
-activate srs_hijack_io
-srs_hijack_io->socket:::writev()
-deactivate srs_hijack_io
-end group
-end group
-end gourp
+    SrsRtmpClient->SrsProtocol:send_and_free_packet()
+    activate SrsProtocol
+    SrsProtocol->SrsProtocol:do_send_and_free_packet()
+    activate SrsProtocol
+    SrsProtocol->SrsPacket:encode()
+    SrsProtocol->SrsPacket:get_message_type()
+    SrsProtocol->SrsPacket:get_prefer_cid()
+
+    group SIMPLE_SEND()
+        SrsProtocol->SrsProtocol:do_simple_send()
+        activate SrsProtocol
+        SrsProtocol->SrsProtocol:srs_chunk_header_c0()
+        SrsProtocol->SrsProtocol:srs_chunk_header_c3()
+
+        group SENDV()
+            SrsProtocol->SimpleSocketStreamImpl:writev()
+            deactivate SrsProtocol
+            deactivate SrsProtocol
+            activate SimpleSocketStreamImpl
+            SimpleSocketStreamImpl->srs_hijack_io:srs_hijack_io_writev()
+            deactivate SimpleSocketStreamImpl
+            activate srs_hijack_io
+            srs_hijack_io->socket:::writev()
+            deactivate srs_hijack_io
+        end
+    end
+end
 
 SrsProtocol->SrsProtocol:manual_response_flush()
 activate SrsProtocol
@@ -261,57 +264,58 @@ SrsRtmpClient->SrsRtmpClient:expect_message()
 activate SrsRtmpClient
 note left:**SrsConnectAppResPacket**
 group EXPECT_MESSAGE()
-SrsRtmpClient->SrsProtocol:expect_message()
-deactivate SrsRtmpClient
-activate SrsProtocol
-group RECV_MESSAGE()
-group WHILE
-SrsProtocol->SrsProtocol:recv_message()
-activate SrsProtocol
-group WHILE
-SrsProtocol->SrsProtocol:recv_interlaced_message()
-activate SrsProtocol
-SrsProtocol->SrsProtocol:read_basic_header()
-activate SrsProtocol
-SrsProtocol->SrsFastBuffer:grow()
-activate SrsFastBuffer
-SrsFastBuffer->SimpleSocketStreamImpl:read()
-activate SimpleSocketStreamImpl
-socket->SimpleSocketStreamImpl:**RECIEVE()**
-deactivate SimpleSocketStreamImpl
-SrsProtocol->SrsFastBuffer:read_1byte()
-deactivate SrsFastBuffer
-deactivate SrsProtocol
+    SrsRtmpClient->SrsProtocol:expect_message()
+    deactivate SrsRtmpClient
+    activate SrsProtocol
 
-SrsProtocol->SrsProtocol:read_message_header()
-activate SrsProtocol
-deactivate SrsProtocol
-SrsProtocol->SrsProtocol:read_message_payload()
-activate SrsProtocol
-deactivate SrsProtocol
-deactivate SrsProtocol
-end group
-deactivate SrsProtocol
+    group RECV_MESSAGE()
+        group WHILE
+            SrsProtocol->SrsProtocol:recv_message()
+            activate SrsProtocol
+            group WHILE
+                SrsProtocol->SrsProtocol:recv_interlaced_message()
+                activate SrsProtocol
+                SrsProtocol->SrsProtocol:read_basic_header()
+                activate SrsProtocol
+                SrsProtocol->SrsFastBuffer:grow()
+                activate SrsFastBuffer
+                SrsFastBuffer->SimpleSocketStreamImpl:read()
+                activate SimpleSocketStreamImpl
+                socket->SimpleSocketStreamImpl:**RECIEVE()**
+                deactivate SimpleSocketStreamImpl
+                SrsProtocol->SrsFastBuffer:read_1byte()
+                deactivate SrsFastBuffer
+                deactivate SrsProtocol
 
-SrsProtocol->SrsProtocol:decode_message()
-activate SrsProtocol
-SrsProtocol->SrsProtocol:do_decode_message()
-activate SrsProtocol
-SrsProtocol->SrsProtocol:srs_amf0_read_string()
-activate SrsProtocol
-' SrsProtocol->SrsStream:new
-' SrsProtocol->SrsStream:read_1bytes()
+                SrsProtocol->SrsProtocol:read_message_header()
+                activate SrsProtocol
+                deactivate SrsProtocol
+                SrsProtocol->SrsProtocol:read_message_payload()
+                activate SrsProtocol
+                deactivate SrsProtocol
+                deactivate SrsProtocol
+            end
+            deactivate SrsProtocol
 
-deactivate SrsProtocol
-deactivate SrsProtocol
+            SrsProtocol->SrsProtocol:decode_message()
+            activate SrsProtocol
+            SrsProtocol->SrsProtocol:do_decode_message()
+            activate SrsProtocol
+            SrsProtocol->SrsProtocol:srs_amf0_read_string()
+            activate SrsProtocol
+            ' SrsProtocol->SrsStream:new
+            ' SrsProtocol->SrsStream:read_1bytes()
 
-SrsProtocol-->SrsRtmpClient:RET
-deactivate SrsProtocol
-deactivate SrsProtocol
+            deactivate SrsProtocol
+            deactivate SrsProtocol
 
-end group
-end group
-end group
+            SrsProtocol-->SrsRtmpClient:RET
+            deactivate SrsProtocol
+            deactivate SrsProtocol
+
+        end
+    end
+end
 
 deactivate SrsRtmpClient
 deactivate SrsRtmpClient

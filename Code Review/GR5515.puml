@@ -1,0 +1,13 @@
+@startuml GR5515_Sample
+hide footbox
+
+create "Real Time Clock" as rtc
+-> rtc: app_rtc_init()
+create "Function State" as funcState
+rtc -> funcState: NEW
+note right
+The enabled state of different functions: 
+0b0001, 0b0010, 0b0100, 0b1000
+end note
+
+@enduml
