@@ -1,5 +1,9 @@
 # SPI vs I2C
 
+| Version | Date      | Description     |
+| :------ | :-------- | :-------------- |
+| v1.0    | 2023-8-20 | Initial release |
+
 ## SPI
 
 SPI（Serial Peripheral Interface，串行外设接口）是一种常见的**串行通信协议**，主要应用于单片机系统中，用于在集成电路（Integrated Circuit, IC）之间进行数据传输。它是一种同步、**全双工**的通信方式，通常用于连接**微控制器或主处理器**与**外围设备（如传感器、存储器、显示屏等）**之间的通信。
