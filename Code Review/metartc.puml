@@ -1,0 +1,32 @@
+@startuml metartc
+hide footbox
+
+create YangRtcPublish
+-> YangRtcPublish: publish()
+YangRtcPublish -> YangPeerConnection2 : YangRtcPublish::init()
+YangPeerConnection2 -> YangPeerConnection : yang_create_peerConnection()
+YangPeerConnection -> YangRtcConnection : g_yang_pc_init()
+
+YangRtcConnection -> YangRtcSession : yang_create_rtcConnection
+YangRtcSession -> YangRtcContext : yang_create_rtcContext()
+YangRtcSession -> YangIce : yang_create_ice()
+YangRtcSession -> YangRtcpCompound : yang_create_rtcpCompound()
+YangRtcConnection <- YangRtcSession : yang_create_rtcConnection()
+
+YangPeerConnection2 -> YangRtcConnection : YangPeerConnection2::connectSfuServer() [g_yang_pc_connectServer()]
+' YangRtcConnection -> SrsSdpResponseType : yang_srs_connectRtcServer()
+YangRtcConnection -> SDP : yang_srs_connectRtcServer()
+
+YangRtcSession -> SDP : YangRtcConnection::createOffer()
+
+' SDP -> SrsSdpResponseType : yang_srs_getSignal()
+SDP -> srsSdp : yang_srs_getSignal
+YangRtcSession -> srsSdp : yang_srs_getSignal()
+srsSdp -> SrsSdpResponseType : yang_sdp_querySrs()
+
+
+
+SrsSdpResponseType -> empty : YangRtcConnection::setRemoteDescription
+
+
+@enduml
