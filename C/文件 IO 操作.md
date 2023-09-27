@@ -5,11 +5,11 @@
 将log信息写入本地文件：
 
 ```c
-int Com_OpenFile(FILE *file, const char *filename, const char *openType)
+int Com_OpenFile(FILE **file, const char *filename, const char *openType)
 {
-    file = fopen(filename, openType);
+    *file = fopen(filename, openType);
 
-    if (file == NULL) {
+    if (*file == NULL) {
         perror("Open file error");
         return 1;
     }
