@@ -5,33 +5,44 @@
 将log信息写入本地文件：
 
 ```c
-int OpenLogFile(FILE* file, char* filename) {   
-    // 打开文件以进行写入（二进制模式）
-    file = fopen(filename, "a");
+int Com_OpenFile(FILE *file, const char *filename, const char *openType)
+{
+    file = fopen(filename, openType);
 
     if (file == NULL) {
-        perror("无法打开文件");
+        perror("Open file error");
         return 1;
     }
 
     return 0;
 }
 
-int WriteLogFile(char* log) {
-    size_t dataSize = sizeof(log);
-
-    // 将二进制数据写入文件
-    size_t bytesWritten = fwrite(log, 1, dataSize, file);
+int Com_WriteFile(FILE *file, char *data, size_t dataSize)
+{
+    size_t bytesWritten = fwrite(data, 1, dataSize, file);
 
     if (bytesWritten != dataSize) {
-        perror("写入文件时出错");
+        perror("Write file error");
         return 1;
     }
 
     return 0;
 }
 
-void CloseLogFile(FILE* file) {
+int Com_ReadFile(FILE *file, char *data, size_t dataSize)
+{
+    size_t bytesRead = fread(data, 1, dataSize, file);
+
+    if (bytesRead != dataSize) {
+        perror("Read file error");
+        return 1;
+    }
+
+    return 0;
+}
+
+void Com_CloseFile(FILE *file)
+{
     fclose(file);
 }
 ```
