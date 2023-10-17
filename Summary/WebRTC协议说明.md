@@ -1,12 +1,12 @@
-# WebRTC 协议说明
+# WebRTC 协议介绍及相关技术说明
 
-| Version | Date      | Description     |
-| :------ | :-------- | :-------------- |
-| 1.0     | 2023-10-7 | Initial release |
+| Version | Date    | Description     |
+| :------ | :------ | :-------------- |
+| 1.0     | 2023-10 | Initial release |
 
 ## 1. 简介
 
-WebRTC（Web Real-Time Communications）是一项**实时通讯技术**，它允许网络应用或者站点，在不借助中间媒介的情况下，建立不同设备上的两个应用之间点对点（Peer-to-Peer）的连接，实现视频流和音频流，或者其他任意数据的传输。
+[WebRTC（Web Real-Time Communications）](https://en.wikipedia.org/wiki/WebRTC)是一项**实时通讯技术**，它允许网络应用或者站点，在不借助中间媒介的情况下，建立不同设备上的两个应用之间点对点（Peer-to-Peer）的连接，实现视频流和音频流，或者其他任意数据的传输。
 
 ## 2. 相关概念
 
@@ -16,4 +16,6 @@ WebRTC（Web Real-Time Communications）是一项**实时通讯技术**，它允
 
 ## Reference
 
-1. [Interactive Connectivity Establishment (ICE)-Wiki](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)
+1. [WebRTC-wiki](https://en.wikipedia.org/wiki/WebRTC)
+1. https://en.wikipedia.org/wiki/WebRTC
+2. [Interactive Connectivity Establishment (ICE)-wiki](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)
