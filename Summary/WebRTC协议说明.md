@@ -17,5 +17,4 @@
 ## Reference
 
 1. [WebRTC-wiki](https://en.wikipedia.org/wiki/WebRTC)
-1. https://en.wikipedia.org/wiki/WebRTC
 2. [Interactive Connectivity Establishment (ICE)-wiki](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)
