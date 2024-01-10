@@ -166,6 +166,14 @@ GATT 定义了 BLE 服务器数据库的分层模型。在顶层是 Profile，�
 
 - 属性权限是特定于实现的。
 
+### 4.5. Universally Unique Identifier (UUID)
+
+蓝牙通过使用 UUID（Universally Unique Identifier，通用唯一标识符）来区分不同的服务。在蓝牙通信中，每个 service 或者 Characteristic 都有一个唯一的 UUID，用于标识该服务的类型和用途。UUID 是一个 128 位的数字，通常以 16 进制表示。
+
+蓝牙设备可以提供多个服务，每个服务都有一个特定的 UUID。这种机制使得设备能够识别和区分不同的服务类型。例如，一个蓝牙耳机可能提供音频传输服务和电话服务，每个服务都有不同的 UUID。
+
+通常，Bluetooth SIG（蓝牙特别兴趣小组）定义了一些标准的 UUID 用于常见的蓝牙服务，同时，开发者也可以创建自定义的 UUID 以支持其特定应用的服务。UUID 的使用确保了在蓝牙通信中的唯一性和标识性。
+
 ## 5. 连接过程
 
 一般情况下，建立两台蓝牙设备之间的通讯需要首先实现 GAP，然后再实现 GATT。下面是建立蓝牙通信的一般步骤：
@@ -191,4 +199,4 @@ GATT 定义了 BLE 服务器数据库的分层模型。在顶层是 Profile，�
 
 3. [How GAP and GATT Work](https://punchthrough.com/how-gap-and-gatt-work/)
 
-4. [GR551x BLE Stack用户指南](https://docs.goodix.com/zh/online/detail/gr55xx_ble_stack_user_guide/V1.9/a1c6a5aa34585b3abb06d1473425b62b)
+4. [GR551x BLE Stack 用户指南](https://docs.goodix.com/zh/online/detail/gr55xx_ble_stack_user_guide/V1.9/a1c6a5aa34585b3abb06d1473425b62b)
