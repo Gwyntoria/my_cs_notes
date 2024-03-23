@@ -11,3 +11,5 @@
 5. [Instagram Download Button](https://greasyfork.org/en/scripts/406535-instagram-download-button)
 
 6. [Remove the Adblock Popup from YOUTUBE](https://github.com/TheRealJoelmatic/RemoveAdblockThing)
+
+7. [Twitter Media Downloader](https://greasyfork.org/en/scripts/423001-twitter-media-downloader)
