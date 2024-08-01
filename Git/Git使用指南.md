@@ -1,28 +1,28 @@
 # Git 使用指南
 
-## 初始化及基本操作
+## 1. 初始化及基本操作
 
-### 初始化
+### 1.1. 初始化
 
 ```text
 git init
 ```
 
-### 添加进库
+### 1.2. 添加进库
 
 ```text
 git add .
 ```
 
-### 提交修改
+### 1.3. 提交修改
 
 ```text
 git commit -m "xxxxxxxxx"
 ```
 
-## 连接远程仓库
+## 2. 连接远程仓库
 
-### 建立连接
+### 2.1. 建立连接
 
 ```sh
 # ssh
@@ -36,7 +36,7 @@ or
 git remote add origin https://github.com/yourName/repositoryname.git
 ```
 
-### 上传、下载
+### 2.2. 上传、下载
 
 ```sh
 # push single branch
@@ -46,21 +46,21 @@ git push origin branch_name
 git pull origin branch_name
 ```
 
-### 对所有分支进行操作
+### 2.3. 对所有分支进行操作
 
-#### git 将多个分支同步到 github
+#### 2.3.1. git 将多个分支同步到 github
 
 1. 一次性推送所有分支。在本地仓库目录下，执行`git push --all origin`命令，可以将本地仓库的所有分支一次性推送到远程仓库 origin。如果远程仓库中没有对应的分支，会自动创建。
 2. 分别推送每个分支。在本地仓库目录下，切换到要推送的分支，执行`git push origin branchname`命令，可以将本地仓库的指定分支推送到远程仓库 origin。如果远程仓库中没有对应的分支，会自动创建。
 3. 在 github 网站上合并分支。在 github 上创建一个 pull request，选择要合并的源分支和目标分支，然后点击 Merge pull request 按钮，可以将源分支的内容合并到目标分支。
 
-#### git 将多个分支同步到本地
+#### 2.3.2. git 将多个分支同步到本地
 
 1. 执行`git pull --all`命令，可以将远程仓库的所有分支拉取到本地仓库，并与对应的本地分支合并。这需要本地仓库已经跟踪了所有远程分支。
 2. 执行`git remote update`命令，可以将远程仓库的所有分支信息更新到本地仓库，但不会合并。然后可以切换到要更新的本地分支，执行`git pull origin branchname`命令，将远程分支的内容拉取并合并到本地分支。
 3. 执行`git fetch --all`命令，可以将远程仓库的所有分支内容拉取到本地仓库，但不会合并。然后可以切换到要更新的本地分支，执行`git merge origin/branchname`命令，将远程分支的内容合并到本地分支。
 
-## 为一个 Git 本地仓库添加两个远程仓库地址
+## 3. 为一个 Git 本地仓库添加两个远程仓库地址
 
 要为一个 Git 本地仓库添加两个远程仓库地址，可以使用以下命令：
 
@@ -100,7 +100,7 @@ git remote -v
 
 这将显示所有已配置的远程仓库及其对应的 URL 地址。
 
-## 修改远程仓库地址
+## 4. 修改远程仓库地址
 
 ```bash
 git remote set-url origin https://github.com/your-username/your-repo.git
@@ -108,7 +108,7 @@ git remote set-url origin https://github.com/your-username/your-repo.git
 
 **NOTE:** 将命令中的 origin 替换为你实际使用的远程仓库名称，并将新地址替换为你希望使用的新仓库地址。
 
-## 添加 Tag，以及 Tag Message
+## 5. 添加 Tag，以及 Tag Message
 
 1. 切换到需要添加 Tag 的分支。
 
@@ -131,7 +131,7 @@ git remote set-url origin https://github.com/your-username/your-repo.git
     git push upstream --tags # 推送到upstream仓库
     ```
 
-## .gitignore
+## 6. `.gitignore`
 
 在使用`.gitignore`来忽略仓库中的某些内容的时候，有时需要忽略整个文件夹中除去某个特定文件的其它文件和文件夹。
 
