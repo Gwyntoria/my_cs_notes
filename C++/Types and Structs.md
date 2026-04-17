@@ -101,7 +101,7 @@ auto com_pair = std::make_pair(true, "Hangzhou");
 
 :star: ==auto== **does not mean that the variable doesn’t have a type**. It means that the type is **deduced** by the **compiler**.
 
-## Recapitulation
+## RecAPItulation
 
 - Everything with a name in program has a **type**
 - **Strong type systems** prevent errors before your code runs!

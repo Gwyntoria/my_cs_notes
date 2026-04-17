@@ -1,4 +1,4 @@
-# loto_rtmp 运行时框架
+# loto_RTMP 运行时框架
 
 | Version | Date      | Description |
 | :------ | :-------- | :---------- |
@@ -16,9 +16,9 @@
 2. [webrtc_3516dv300](http://gitnas.loc:10086/embedded/webrtc_3516dv300)
 3. [StreamController_402](http://gitnas.loc:10086/embedded/streamcontroller_402)
 
-## 1.1. rtmp_pack
+## 1.1. RTMP_pack
 
-### 1.1.1. rtmp_pack 目录结构
+### 1.1.1. RTMP_pack 目录结构
 
 ```text
 rtmp_pack/
@@ -50,7 +50,7 @@ rtmp_pack/
 
 > **NOTE:** 不同项目中，该目录中的内容略有区别，但结构大致相同
 
-### 1.1.2. rtmp_pack 安装方法
+### 1.1.2. RTMP_pack 安装方法
 
 将`rtmp_pack`压缩成`tgz`格式后，使用`tftp`传输至板端的`/root`目录下并解压，`cd`至`rtmp_pack`目录后执行`./install.sh`即可。
 
@@ -85,7 +85,7 @@ cd /ko
 ./load3516dv300 -i -osmem 256 -total 1024
 ```
 
-其中`osmem`的参数应参考 Uboot 的`bootargs`引导参数设定，`total`的参数应参考硬件设计。
+其中`osmem`的参数应参考 U-Boot 的`bootargs`引导参数设定，`total`的参数应参考硬件设计。
 
 > **NOTE:** `bootargs`的设定参考《hisi3516dv300 固件烧录指南》中“配置启动参数”小节。
 

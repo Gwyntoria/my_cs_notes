@@ -2,7 +2,7 @@
 
 ## bash 的运行模式
 
-**NOTE:** bash的运行模式可分为`login shell`和`non-login shell`
+**NOTE:** bash 的运行模式可分为`login shell`和`non-login shell`
 
 **login shell：**
 
@@ -10,7 +10,7 @@
 
 **non-login shell:**
 
-- 当我们执行以下命令 ssh hadoop103 command，在 hadoop103 执行 command 的就是一个 non-login shell
+- 当我们执行以下命令 SSH hadoop103 command，在 hadoop103 执行 command 的就是一个 non-login shell
 
 ## 区别
 

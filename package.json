@@ -4,9 +4,9 @@
   "description": "本仓库记录了我在遇到一些问题时，所查找到的可行的解决方案，但可能存在归因并不全面的情况，而导致解决方案在特定条件下并不能解决同样的问题。",
   "main": "index.js",
   "scripts": {
-    "lint:md": "textlint \"**/*.md\"",
-    "lint:md:fix": "textlint --fix \"**/*.md\"",
-    "format:md": "prettier --write \"**/*.md\""
+    "lint:md": "markdownlint-cli2 && textlint \"**/*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix && textlint --fix \"**/*.md\"",
+    "format:md": "markdownlint-cli2 --fix"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Gwyntoria/my_cs_notes#readme",
   "devDependencies": {
-    "prettier": "^3.8.3",
+    "markdownlint-cli2": "^0.18.1",
     "textlint": "^15.5.4",
     "textlint-rule-ja-space-between-half-and-full-width": "^2.4.2",
     "textlint-rule-no-todo": "^2.0.1",

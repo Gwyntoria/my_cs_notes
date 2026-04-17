@@ -15,14 +15,14 @@ NTP is widely used in computer networks, including the internet, to ensure accur
 ## ntpdate常用服务器
 
 1. 中国国家授时中心：210.72.145.44
-2. NTP服务器(上海) ：ntp.api.bz
+2. NTP 服务器（上海） ：ntp.API.bz
 3. 美国： time.nist.gov
 4. 复旦： ntp.fudan.edu.cn
-5. 微软公司授时主机(美国) ：time.windows.com
+5. 微软公司授时主机（美国） ：time.Windows.com
 6. 北京邮电大学 : s1a.time.edu.cn
 7. 清华大学 : s1b.time.edu.cn
 8. 北京大学 : s1c.time.edu.cn
-9. 台警大授时中心(台湾)：asia.pool.ntp.org
+9. 台警大授时中心（台湾）：asia.pool.ntp.org
 10. time.stdtime.gov.tw
 11. clock.stdtime.gov.tw
 12. freq_f.stdtime.gov.tw

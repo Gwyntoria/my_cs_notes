@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
                 HI_S32 SAMPLE_COMM_VI_CreateVi(SAMPLE_VI_CONFIG_S *pstViConfig)
                     HI_S32 SAMPLE_COMM_VI_CreateSingleVi(SAMPLE_VI_INFO_S *pstViInfo)
                         HI_S32 SAMPLE_COMM_VI_StartDev(SAMPLE_VI_INFO_S *pstViInfo)
-                            HI_S32 SAMPLE_COMM_VI_GetDevAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_DEV_ATTR_S *pstViDevAttr)		// case SONY_IMX385_MIPI_2M_30FPS_12BIT
+                            HI_S32 SAMPLE_COMM_VI_GetDevAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_DEV_ATTR_S *pstViDevAttr)  // case SONY_IMX385_MIPI_2M_30FPS_12BIT
                             HI_S32 HI_MPI_VI_SetDevAttr(VI_DEV ViDev, const VI_DEV_ATTR_S *pstDevAttr)
                             HI_S32 HI_MPI_VI_EnableDev(VI_DEV ViDev)
                             
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
                             HI_S32 HI_MPI_VI_SetDevBindPipe(VI_DEV ViDev, const VI_DEV_BIND_PIPE_S *pstDevBindPipe)
                             
                         HI_S32 SAMPLE_COMM_VI_StartViPipe(SAMPLE_VI_INFO_S *pstViInfo)
-                            HI_S32 SAMPLE_COMM_VI_GetPipeAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_PIPE_ATTR_S *pstPipeAttr) 	// case SONY_IMX385_MIPI_2M_30FPS_12BIT
+                            HI_S32 SAMPLE_COMM_VI_GetPipeAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_PIPE_ATTR_S *pstPipeAttr)  // case SONY_IMX385_MIPI_2M_30FPS_12BIT
                             HI_S32 HI_MPI_VI_CreatePipe(VI_PIPE ViPipe, const VI_PIPE_ATTR_S *pstPipeAttr)
                             
                         HI_S32 SAMPLE_COMM_VI_StartViChn(SAMPLE_VI_INFO_S *pstViInfo)
@@ -76,16 +76,16 @@ int main(int argc, char *argv[])
                             
                 HI_S32 SAMPLE_COMM_VI_CreateIsp(SAMPLE_VI_CONFIG_S *pstViConfig)
                     HI_S32 SAMPLE_COMM_VI_StartIsp(SAMPLE_VI_INFO_S *pstViInfo)
-                        HI_S32 SAMPLE_COMM_VI_GetPipeAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_PIPE_ATTR_S *pstPipeAttr) 		// case SONY_IMX385_MIPI_2M_30FPS_12BIT:
+                        HI_S32 SAMPLE_COMM_VI_GetPipeAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, VI_PIPE_ATTR_S *pstPipeAttr)   // case SONY_IMX385_MIPI_2M_30FPS_12BIT:
                         
-                        HI_S32 SAMPLE_COMM_ISP_GetIspAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, ISP_PUB_ATTR_S *pstPubAttr)			// case SONY_IMX385_MIPI_2M_30FPS_12BIT:
+                        HI_S32 SAMPLE_COMM_ISP_GetIspAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, ISP_PUB_ATTR_S *pstPubAttr)   // case SONY_IMX385_MIPI_2M_30FPS_12BIT:
                         
                         HI_S32 SAMPLE_COMM_ISP_Sensor_Regiter_callback(ISP_DEV IspDev, HI_U32 u32SnsId)
-                            ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)											// case SONY_IMX385_MIPI_2M_30FPS_12BIT:   return &stSnsImx385Obj;
+                            ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)           // case SONY_IMX385_MIPI_2M_30FPS_12BIT:   return &stSnsImx385Obj;
                             
                         HI_S32 SAMPLE_COMM_ISP_BindSns(ISP_DEV IspDev, HI_U32 u32SnsId, SAMPLE_SNS_TYPE_E enSnsType, HI_S8 s8SnsDev)
-                            ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)											// case SONY_IMX385_MIPI_2M_30FPS_12BIT:   return &stSnsImx385Obj;
-                            ISP_SNS_TYPE_E SAMPLE_COMM_GetSnsBusType(SAMPLE_SNS_TYPE_E enSnsType)								// enBusType = ISP_SNS_I2C_TYPE;
+                            ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)           // case SONY_IMX385_MIPI_2M_30FPS_12BIT:   return &stSnsImx385Obj;
+                            ISP_SNS_TYPE_E SAMPLE_COMM_GetSnsBusType(SAMPLE_SNS_TYPE_E enSnsType)        // enBusType = ISP_SNS_I2C_TYPE;
                             
                         HI_S32 SAMPLE_COMM_ISP_Aelib_Callback(ISP_DEV IspDev)
                         {
@@ -130,14 +130,14 @@ int main(int argc, char *argv[])
             HI_S32 SAMPLE_COMM_VI_Bind_VPSS(VI_PIPE ViPipe, VI_CHN ViChn, VPSS_GRP VpssGrp)
                 HI_S32 HI_MPI_SYS_Bind(const MPP_CHN_S *pstSrcChn, const MPP_CHN_S *pstDestChn)
                 
-            HI_S32 SAMPLE_COMM_VENC_GetGopAttr(VENC_GOP_MODE_E enGopMode, VENC_GOP_ATTR_S *pstGopAttr)				// 获取Gop属性
+            HI_S32 SAMPLE_COMM_VENC_GetGopAttr(VENC_GOP_MODE_E enGopMode, VENC_GOP_ATTR_S *pstGopAttr)    // 获取Gop属性
                 
             HI_S32 SAMPLE_COMM_VENC_Start(VENC_CHN VencChn, PAYLOAD_TYPE_E enType, PIC_SIZE_E enSize, SAMPLE_RC_E enRcMode, HI_U32 u32Profile, HI_BOOL bRcnRefShareBuf, VENC_GOP_ATTR_S *pstGopAttr)
                 HI_S32 SAMPLE_COMM_VENC_Creat(VENC_CHN VencChn, PAYLOAD_TYPE_E enType, PIC_SIZE_E enSize, SAMPLE_RC_E enRcMode, HI_U32 u32Profile, HI_BOOL bRcnRefShareBuf, VENC_GOP_ATTR_S *pstGopAttr)
                     HI_S32 SAMPLE_COMM_SYS_GetPicSize(PIC_SIZE_E enPicSize, SIZE_S *pstSize)
                     void SAMPLE_COMM_VI_GetSensorInfo(SAMPLE_VI_CONFIG_S *pstViConfig)
                     HI_S32 SAMPLE_COMM_VI_GetFrameRateBySensor(SAMPLE_SNS_TYPE_E enMode, HI_U32 *pu32FrameRate)
-                    HI_S32 HI_MPI_VENC_CreateChn(VENC_CHN VeChn, const VENC_CHN_ATTR_S *pstAttr)					// 根据通道信息创建编码通道
+                    HI_S32 HI_MPI_VENC_CreateChn(VENC_CHN VeChn, const VENC_CHN_ATTR_S *pstAttr)     // 根据通道信息创建编码通道
                     HI_S32 SAMPLE_COMM_VENC_CloseReEncode(VENC_CHN VencChn)
                         HI_S32 HI_MPI_VENC_GetChnAttr(VENC_CHN VeChn, VENC_CHN_ATTR_S *pstChnAttr)
                         HI_S32 HI_MPI_VENC_GetRcParam(VENC_CHN VeChn, VENC_RC_PARAM_S *pstRcParam)
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
                     HI_S32 SAMPLE_COMM_VENC_GetFilePostfix(PAYLOAD_TYPE_E enPayload, char *szFilePostfix)
                     HI_S32 HI_MPI_VENC_GetStreamBufInfo(VENC_CHN VeChn, VENC_STREAM_BUF_INFO_S *pstStreamBufInfo)
                     
-                    FD_ZERO(&read_fds);																				// get stream from each channels and save them
+                    FD_ZERO(&read_fds);                    // get stream from each channels and save them
                     s32Ret = select(maxfd + 1, &read_fds, NULL, NULL, &TimeoutVal);
                     HI_S32 HI_MPI_VENC_QueryStatus(VENC_CHN VeChn, VENC_CHN_STATUS_S *pstStatus)
                     HI_S32 HI_MPI_VENC_GetStream(VENC_CHN VeChn, VENC_STREAM_S *pstStream, HI_S32 s32MilliSec)
@@ -215,4 +215,3 @@ int main(int argc, char *argv[])
         
         
 ```
-

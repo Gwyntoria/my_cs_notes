@@ -36,11 +36,9 @@ install(TARGETS <target_name> DESTINATION <install_directory>)
 
 ```
 
-
-
 ## 2 `CMake`增加`CFLAG`内容
 
-`CMAKE_C_FLAGS`变量用于设置C编译器的编译选项，例如优化选项、调试选项、警告选项等。同样，`CMAKE_CXX_FLAGS`变量用于设置C++编译器的编译选项。
+`CMAKE_C_FLAGS`变量用于设置 C 编译器的编译选项，例如优化选项、调试选项、警告选项等。同样，`CMAKE_CXX_FLAGS`变量用于设置 C++编译器的编译选项。
 
 ```cmake
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
@@ -144,9 +142,6 @@ install(CODE "code..."
 
 - `PROGRAMS`：安装可执行文件。和`FILES`类似，但是会为文件添加可执行权限。
 
-
-
-
 ### macro variable `CMAKE_INSTALL_PREFIX` and command`install`
 
 ```cmake
@@ -154,8 +149,6 @@ set(CMAKE_INSTALL_PREFIX /home/karl/Development/PortLib)
 
 install(DIRECTORY include DESTINATION $(CMAKE_INSTALL_PREFIX)/)
 ```
-
-
 
 ## 4 常见预定义变量及其含义
 
@@ -173,12 +166,12 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/my_toolchain_file.cmake /path/to/source
 
 在工具链文件中，可以通过定义一些变量来指定交叉编译需要使用的工具，例如：
 
-- `CMAKE_SYSTEM_NAME`：**指定目标平台的名称**，例如Linux、Android、iOS等。
+- `CMAKE_SYSTEM_NAME`：**指定目标平台的名称**，例如 Linux、Android、iOS 等。
 - `CMAKE_C_COMPILER`和`CMAKE_CXX_COMPILER`：**指定C和C++编译器的位置**。
 - `CMAKE_FIND_ROOT_PATH`：**指定头文件和库文件的搜索路径**。
 - `CMAKE_SYSROOT`：**指定交叉编译工具链的根目录**。
 
-根据交叉编译工具链文件中的定义，CMake将自动使用正确的编译器和库文件，生成适用于目标平台的可执行文件或库。
+根据交叉编译工具链文件中的定义，CMake 将自动使用正确的编译器和库文件，生成适用于目标平台的可执行文件或库。
 
 ### 4.2 `CMAKE_SYSTEM_PROCESSOR`
 
@@ -186,15 +179,15 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/my_toolchain_file.cmake /path/to/source
 
 在跨平台开发中，你可能需要使用`CMAKE_SYSTEM_PROCESSOR`来**区分主机和目标平台的处理器架构**。例如，如果你的主机使用`x86`架构，但你要编译一个适用于`ARM`架构的程序，你可以在`CMakeLists.txt`文件中设置`CMAKE_SYSTEM_PROCESSOR`为`arm`，以确保`CMake`在交叉编译时使用正确的编译器和库文件。
 
-需要注意的是，`CMAKE_SYSTEM_PROCESSOR`并不是一个精确的处理器型号或者`CPUID`。它只是用来指示处理器架构的名称。在Linux上，`CMAKE_SYSTEM_PROCESSOR`的值通常是类似于`armv7l`或`x86_64`这样的字符串。具体的取值范围取决于`CMake`的实现和主机操作系统。
+需要注意的是，`CMAKE_SYSTEM_PROCESSOR`并不是一个精确的处理器型号或者`CPUID`。它只是用来指示处理器架构的名称。在 Linux 上，`CMAKE_SYSTEM_PROCESSOR`的值通常是类似于`armv7l`或`x86_64`这样的字符串。具体的取值范围取决于`CMake`的实现和主机操作系统。
 
-### 4.3 `CMAKE_FIND_ROOT_PATH` 
+### 4.3 `CMAKE_FIND_ROOT_PATH`
 
 `CMAKE_FIND_ROOT_PATH`指示`CMake`**查找头文件、库文件和可执行文件时应该搜索的目录**。该变量通常在交叉编译时使用，因为在交叉编译过程中，你需要告诉`CMake`查找适用于目标平台的头文件和库文件，而不是在本地主机上查找。
 
 默认情况下，`CMake`会在主机上的标准目录中搜索头文件和库文件。但是在交叉编译时，这些**标准目录通常不包含目标平台的头文件和库文件**。因此，你需要告诉`CMake`在哪里搜索这些文件。
 
-`CMAKE_FIND_ROOT_PATH`变量的值应该是一个包含了目标平台头文件和库文件的目录列表。例如，在交叉编译ARM平台的程序时，你可能需要将`CMAKE_FIND_ROOT_PATH`设置为包含`ARM`平台交叉编译工具链的目录，以便CMake可以在这个目录中查找适用于ARM平台的头文件和库文件。具体来说，以下三个子变量用来设置查找路径：
+`CMAKE_FIND_ROOT_PATH`变量的值应该是一个包含了目标平台头文件和库文件的目录列表。例如，在交叉编译 ARM 平台的程序时，你可能需要将`CMAKE_FIND_ROOT_PATH`设置为包含`ARM`平台交叉编译工具链的目录，以便 CMake 可以在这个目录中查找适用于 ARM 平台的头文件和库文件。具体来说，以下三个子变量用来设置查找路径：
 
 - `CMAKE_FIND_ROOT_PATH_MODE_PROGRAM`：指示`CMake`在哪些目录中搜索**可执行文件**，例如编译器和链接器。
 - `CMAKE_FIND_ROOT_PATH_MODE_LIBRARY`：指示`CMake`在哪些目录中搜索**库文件**。
@@ -206,5 +199,4 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/my_toolchain_file.cmake /path/to/source
 - `ONLY`：表示**仅在**这些目录中搜索。
 - `BOTH`：表示**先在**这些目录中搜索，**如果没有找到则在默认目录中搜索**。
 
-**NOTE: **通过设置`CMAKE_FIND_ROOT_PATH`和`CMAKE_FIND_ROOT_PATH_MODE_*`变量，可以确保`CMake`*在交叉编译时使用适当的头文件和库文件*。
-
+**NOTE:**通过设置`CMAKE_FIND_ROOT_PATH`和`CMAKE_FIND_ROOT_PATH_MODE_*`变量，可以确保`CMake`*在交叉编译时使用适当的头文件和库文件*。

@@ -156,12 +156,12 @@ First Deferred
 
 关键点：
 
-- defer 会将语句推入堆栈，最后入栈的语句最先执行（LIFO）。
+- defer 会将语句推入堆栈，最后入栈的语句最先执行(LIFO)。
 - 常用于资源清理、文件关闭等场景。
 
 ## 6. 如何在 Go 中实现 HTTP 服务器？请编写一个简单示例
 
-Go 内置 net/http 包，可轻松构建 HTTP 服务器：
+Go 内置 net/HTTP 包，可轻松构建 HTTP 服务器：
 
 ```go
 package main
@@ -184,8 +184,8 @@ func main() {
 
 关键点：
 
-- http.HandleFunc()：注册路由和处理函数；
-- http.ListenAndServe()：监听指定端口并启动服务器。
+- HTTP.HandleFunc()：注册路由和处理函数；
+- HTTP.ListenAndServe()：监听指定端口并启动服务器。
 
 ## 7. Go 中的 context 包有什么作用？如何优雅地取消 Goroutine？
 
@@ -284,7 +284,7 @@ func main() {
 
 ## 10. 如何在 Go 中实现 HTTP 请求的超时控制？
 
-使用 http.Client 配置 Timeout 字段：
+使用 HTTP.Client 配置 Timeout 字段：
 
 ```go
 client := &http.Client{
@@ -302,7 +302,7 @@ if err != nil {
 
 ## 11. 什么是 channel？
 
-在 Go 语言中，**channel** 是一种内建的数据类型，用于 **在不同的 goroutine 之间安全地传递数据**。它是 Go 实现并发通信的核心机制之一，遵循的是 **通信顺序进程（CSP）模型**。
+在 Go 语言中，**channel** 是一种内建的数据类型，用于 **在不同的 goroutine 之间安全地传递数据**。它是 Go 实现并发通信的核心机制之一，遵循的是 **通信顺序进程(CSP)模型**。
 
 ---
 

@@ -1,4 +1,4 @@
-# OSD准备：移植freetype、SDL、SDL_ttf
+# OSD准备：移植FreeType、SDL、SDL_ttf
 
 ## 源码网址
 
@@ -12,7 +12,7 @@
 
 ### FreeType和SDL
 
-1. FreeType和SDL使用相同的配置
+1. FreeType 和 SDL 使用相同的配置
 
     ```bash
     ./configure CC=arm-himix200-linux-gcc --host=arm-himix-linux --prefix=$PWD/HI_INSTALL --enable-shared=no --enable-static=yes

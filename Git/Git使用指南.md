@@ -48,11 +48,11 @@ git pull origin branch_name
 
 ### 2.3. 对所有分支进行操作
 
-#### 2.3.1. git 将多个分支同步到 github
+#### 2.3.1. git 将多个分支同步到 GitHub
 
 1. 一次性推送所有分支。在本地仓库目录下，执行`git push --all origin`命令，可以将本地仓库的所有分支一次性推送到远程仓库 origin。如果远程仓库中没有对应的分支，会自动创建。
 2. 分别推送每个分支。在本地仓库目录下，切换到要推送的分支，执行`git push origin branchname`命令，可以将本地仓库的指定分支推送到远程仓库 origin。如果远程仓库中没有对应的分支，会自动创建。
-3. 在 github 网站上合并分支。在 github 上创建一个 pull request，选择要合并的源分支和目标分支，然后点击 Merge pull request 按钮，可以将源分支的内容合并到目标分支。
+3. 在 GitHub 网站上合并分支。在 GitHub 上创建一个 pull request，选择要合并的源分支和目标分支，然后点击 Merge pull request 按钮，可以将源分支的内容合并到目标分支。
 
 #### 2.3.2. git 将多个分支同步到本地
 

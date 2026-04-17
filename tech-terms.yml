@@ -114,12 +114,15 @@ rules:
       - from: Textlint
         to: textlint
 
-  - expected: Prettier
+  - expected: markdownlint
     patterns:
-      - prettier
+      - Markdownlint
+      - markdownLint
     specs:
-      - from: prettier
-        to: Prettier
+      - from: Markdownlint
+        to: markdownlint
+      - from: markdownLint
+        to: markdownlint
 
   - expected: macOS
     patterns:

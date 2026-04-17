@@ -172,7 +172,7 @@ copy_list = numbers.copy()
 
 等效于 `numbers[:]` 或使用 `list(numbers)`。
 
-## 三、列表推导式（List Comprehension）
+## 三、列表推导式(List Comprehension)
 
 一种简洁表达式用于构造列表。
 

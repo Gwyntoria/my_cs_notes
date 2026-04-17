@@ -326,7 +326,7 @@ int getInteger() {
 }
 ```
 
-## Recapitulation
+## RecAPItulation
 
 - Streams convert between **data of any type** and **the string representation of that data**
 - Streams have an endpoint: **console** for `cin/cout`, **files** for `i/o fstreams`,  **string variables** for `i/o sstreams` *where they read in a string from or output a string to*.

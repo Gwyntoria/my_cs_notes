@@ -18,9 +18,9 @@ main
             SAMPLE_COMM_SYS_GetPicSize() // 获得通道图片大小
             SAMPLE_COMM_VI_GetSensorInfo() // 获取sensor信息（分辨率、帧率……）
             SAMPLE_VENC_CheckSensor() // 检查从sensor获取的信息也配置信息是否匹配
-            	SAMPLE_VENC_ModifyResolution() // if Hifailure run this (获取的Sensor信息和配置的信息不同时，修改配置信息)
-                	SAMPLE_COMM_VI_GetSizeBySensor() // Get enSize by diffrent sensor
-                	SAMPLE_COMM_SYS_GetPicSize() // get picture size(w*h), according enPicSize
+             SAMPLE_VENC_ModifyResolution() // if Hifailure run this (获取的Sensor信息和配置的信息不同时，修改配置信息)
+                 SAMPLE_COMM_VI_GetSizeBySensor() // Get enSize by diffrent sensor
+                 SAMPLE_COMM_SYS_GetPicSize() // get picture size(w*h), according enPicSize
             SAMPLE_VENC_VI_Init() // VI初始化
                 SAMPLE_VENC_SYS_Init() // 系统初始化
                     memset(&stVbConf, 0, sizeof(VB_CONFIG_S)) // 缓存池内存清0
@@ -109,23 +109,23 @@ HI_S32 SAMPLE_VENC_LOW_DELAY()
     HI_S32 SAMPLE_COMM_SYS_GetPicSize() // get picture size(w*h), according enPicSize
     HI_VOID SAMPLE_COMM_VI_GetSensorInfo() // Get sensor information
     HI_S32 SAMPLE_VENC_CheckSensor() // Check sensor information
-    	HI_S32 SAMPLE_VENC_ModifyResolution() // 
-    		HI_S32 SAMPLE_COMM_VI_GetSizeBySensor()
-    		HI_S32 SAMPLE_COMM_SYS_GetPicSize()
-    HI_S32 SAMPLE_VENC_VI_Init() 	// Initialize VI
-    	HI_S32 SAMPLE_VENC_SYS_Init()
-    		HI_S32 SAMPLE_COMM_VI_GetSizeBySensor()
-    		HI_S32 SAMPLE_COMM_SYS_GetPicSize()
-    		static inline HI_U32 COMMON_GetPicBufferSize() 
-    		HI_S32 SAMPLE_COMM_SYS_Init()
-    	HI_S32 SAMPLE_COMM_VI_SetParam()
-    		HI_S32 HI_MPI_SYS_GetVIVPSSMode()
-    		if ((pstViInfo->stPipeInfo.bMultiPipe == HI_TRUE)|| (VI_OFFLINE_VPSS_ONLINE == pstViInfo->stPipeInfo.enMastPipeMode))
-    			HI_S32 SAMPLE_COMM_VI_UpdateVIVPSSMode()
-    		HI_S32 HI_MPI_SYS_SetVIVPSSMode()
-   	 	HI_S32 SAMPLE_COMM_VI_GetFrameRateBySensor()
-    	HI_S32 HI_MPI_ISP_SetCtrlParam()
-    	HI_S32 SAMPLE_COMM_VI_StartVi()
+     HI_S32 SAMPLE_VENC_ModifyResolution() // 
+      HI_S32 SAMPLE_COMM_VI_GetSizeBySensor()
+      HI_S32 SAMPLE_COMM_SYS_GetPicSize()
+    HI_S32 SAMPLE_VENC_VI_Init()  // Initialize VI
+     HI_S32 SAMPLE_VENC_SYS_Init()
+      HI_S32 SAMPLE_COMM_VI_GetSizeBySensor()
+      HI_S32 SAMPLE_COMM_SYS_GetPicSize()
+      static inline HI_U32 COMMON_GetPicBufferSize() 
+      HI_S32 SAMPLE_COMM_SYS_Init()
+     HI_S32 SAMPLE_COMM_VI_SetParam()
+      HI_S32 HI_MPI_SYS_GetVIVPSSMode()
+      if ((pstViInfo->stPipeInfo.bMultiPipe == HI_TRUE)|| (VI_OFFLINE_VPSS_ONLINE == pstViInfo->stPipeInfo.enMastPipeMode))
+       HI_S32 SAMPLE_COMM_VI_UpdateVIVPSSMode()
+      HI_S32 HI_MPI_SYS_SetVIVPSSMode()
+      HI_S32 SAMPLE_COMM_VI_GetFrameRateBySensor()
+     HI_S32 HI_MPI_ISP_SetCtrlParam()
+     HI_S32 SAMPLE_COMM_VI_StartVi()
             HI_S32 SAMPLE_COMM_VI_StartMIPI()
                 HI_U32 SAMPLE_COMM_VI_GetMipiLaneDivideMode()
                 HI_S32 SAMPLE_COMM_VI_SetMipiHsMode()
@@ -143,8 +143,8 @@ HI_S32 SAMPLE_VENC_LOW_DELAY()
             HI_S32 SAMPLE_COMM_VI_CreateVi()
             HI_S32 SAMPLE_COMM_VI_CreateIsp()
             if (s32Ret != HI_SUCCESS)
-            	HI_S32 SAMPLE_COMM_VI_DestroyVi()
-    HI_S32 SAMPLE_VENC_VPSS_Init() 	// Initialize VPSS
+             HI_S32 SAMPLE_COMM_VI_DestroyVi()
+    HI_S32 SAMPLE_VENC_VPSS_Init()  // Initialize VPSS
     HI_S32 HI_MPI_VPSS_SetLowDelayAttr() // Set low delay attribute
     HI_S32 SAMPLE_COMM_VI_Bind_VPSS() // Bind VI and VPSS
     
@@ -158,4 +158,3 @@ HI_S32 SAMPLE_VENC_LOW_DELAY()
     HI_S32 SAMPLE_COMM_VENC_StartGetStream() // Stream save process
     HI_S32 SAMPLE_COMM_VENC_StopGetStream() // Exit process
 ```
-

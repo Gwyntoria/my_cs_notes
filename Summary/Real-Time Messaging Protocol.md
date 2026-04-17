@@ -1,2 +1,1 @@
 # Real-Time Messaging Protocol
-

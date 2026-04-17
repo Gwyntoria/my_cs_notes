@@ -1,12 +1,12 @@
-# ssh 连接失败
+# SSH 连接失败
 
-原先可正常使用 ssh 进行 push 或 pull 的本地仓库，近期突然不再可以进行相关操作。在尝试 clone 一些新仓库时也会显示无法访问到 github.com。转用 HTTP 的请求时，大多情况下也无法拉取远程仓库。
+原先可正常使用 SSH 进行 push 或 pull 的本地仓库，近期突然不再可以进行相关操作。在尝试 clone 一些新仓库时也会显示无法访问到 GitHub.com。转用 HTTP 的请求时，大多情况下也无法拉取远程仓库。
 
-根据 GitHub Docs 中的提示，执行`ssh -T git@github.com`进行 ssh 连接测试，依然显示连接失败。
+根据 GitHub Docs 中的提示，执行`ssh -T git@github.com`进行 SSH 连接测试，依然显示连接失败。
 
 ## 启用通过 HTTPS 的 SSH 连接
 
-GitHub Docs 中还提示可以使用 HTTPS 端口进行 ssh 连接，可以使用以下 ssh 命令进行端口测试：
+GitHub Docs 中还提示可以使用 HTTPS 端口进行 SSH 连接，可以使用以下 SSH 命令进行端口测试：
 
 ```bash
 ssh -T -p 443 git@ssh.github.com

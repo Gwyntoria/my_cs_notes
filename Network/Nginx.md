@@ -65,7 +65,7 @@ sudo systemctl reload nginx
 
 #### 防火墙设置
 
-如果服务器上启用了防火墙，您需要允许 Nginx 的相关端口通过防火墙。例如，如果 Nginx 监听 80 端口（HTTP），您需要允许流量通过 80 端口。具体的防火墙设置可能因操作系统和防火墙工具而有所不同。
+如果服务器上启用了防火墙，您需要允许 Nginx 的相关端口通过防火墙。例如，如果 Nginx 监听 80 端口(HTTP)，您需要允许流量通过 80 端口。具体的防火墙设置可能因操作系统和防火墙工具而有所不同。
 
 #### 测试 Nginx
 
@@ -103,7 +103,7 @@ make
 
 #### 传输二进制文件
 
-将编译生成的 Nginx 二进制文件（例如 objs/nginx）传输到嵌入式 Linux 设备上，您可以使用 scp 或其他文件传输工具。
+将编译生成的 Nginx 二进制文件（例如 objs/Nginx）传输到嵌入式 Linux 设备上，您可以使用 scp 或其他文件传输工具。
 
 ```bash
 scp objs/nginx user@embedded-linux-device:/path/to/destination
@@ -111,7 +111,7 @@ scp objs/nginx user@embedded-linux-device:/path/to/destination
 
 #### 配置嵌入式 Nginx
 
-在嵌入式设备上，您需要创建适合嵌入式系统的 Nginx 配置文件。可以在/etc/nginx/目录下创建一个配置文件，例如 nginx.conf。在配置文件中，根据您的需求进行相应的配置，包括监听端口、虚拟主机设置等。
+在嵌入式设备上，您需要创建适合嵌入式系统的 Nginx 配置文件。可以在/etc/Nginx/目录下创建一个配置文件，例如 Nginx.conf。在配置文件中，根据您的需求进行相应的配置，包括监听端口、虚拟主机设置等。
 
 #### 启动嵌入式 Nginx
 
@@ -186,11 +186,11 @@ http {
 
 上述示例演示了一个简单的 Nginx 配置文件，其中包含了一些常见的配置选项和虚拟主机设置。以下是配置文件的几个主要部分：
 
-1. 全局配置（Global Configuration）：设置 Nginx 的全局参数，如工作进程数、日志位置等。
-2. 事件处理（Events Block）：配置事件处理参数，如最大并发连接数等。
-3. HTTP 配置（HTTP Block）：定义 HTTP 服务器的全局设置，如 MIME 类型、默认类型等。
-4. 虚拟主机配置（Server Block）：每个 server 块定义一个虚拟主机的配置，包括监听端口、服务器名、根目录、位置块等。
-5. 位置块（Location Block）：在 server 块内部，使用 location 块来定义不同 URL 路径的处理方式，如反向代理、静态文件缓存、重定向等。
+1. 全局配置(Global Configuration)：设置 Nginx 的全局参数，如工作进程数、日志位置等。
+2. 事件处理(Events Block)：配置事件处理参数，如最大并发连接数等。
+3. HTTP 配置(HTTP Block)：定义 HTTP 服务器的全局设置，如 MIME 类型、默认类型等。
+4. 虚拟主机配置(Server Block)：每个 server 块定义一个虚拟主机的配置，包括监听端口、服务器名、根目录、位置块等。
+5. 位置块(Location Block)：在 server 块内部，使用 location 块来定义不同 URL 路径的处理方式，如反向代理、静态文件缓存、重定向等。
 
 在编写配置文件时，您需要了解 Nginx 的配置语法和各种指令的作用。配置文件的结构和指令非常丰富，可以根据需要进行调整和扩展。请务必仔细查阅 Nginx 的官方文档，以便更好地理解和编写配置文件。
 

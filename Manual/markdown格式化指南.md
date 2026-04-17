@@ -4,23 +4,31 @@
 
 在 VS Code 中编辑 Markdown 时，实现以下效果：
 
-1. 保存文件时自动执行 `Prettier` 格式化
-2. 保存文件时自动执行 `textlint` 修复
+1. 保存文件时使用 `markdownlint` 统一 Markdown 标记风格
+2. 保存文件时使用 `textlint` 修复中文排版和术语问题
 3. 自动在中文与英文、数字、半角字符之间补空格
 4. 统一常见技术术语写法
 5. 检查并禁止遗留的 `TODO`
-6. 规范中文场景下的中英文括号使用
+6. 固定斜体和加粗使用 `*`，避免被改写成 `_`
 
-## 2. 前提条件
+## 2. 最终方案
+
+1. `markdownlint-cli2`
+   - 负责 Markdown 标题、列表、强调符号等结构和标记风格
+   - 支持 `--fix` 自动修复可修复的问题
+2. `textlint`
+   - 负责中文技术笔记中的空格、括号、术语和 `TODO` 检查
+
+## 3. 前提条件
 
 需要提前安装以下 VS Code 插件：
 
-1. `Prettier - Code formatter`
-2. `vscode-textlint`
+1. `markdownlint`
+2. `textlint`
 
 此外，本地还需要可用的 `Node.js` 和 `npm` 环境。
 
-## 3. 初始化项目
+## 4. 初始化项目
 
 在仓库根目录执行：
 
@@ -30,12 +38,12 @@ npm init -y
 
 这一步会生成 `package.json`，用于记录依赖和脚本。
 
-## 4. 安装依赖
+## 5. 安装依赖
 
 在仓库根目录执行：
 
 ```bash
-npm install -D prettier textlint \
+npm install -D markdownlint-cli2 textlint \
   textlint-rule-ja-space-between-half-and-full-width \
   textlint-rule-no-todo \
   textlint-rule-prh \
@@ -47,7 +55,57 @@ npm install -D prettier textlint \
 1. `node_modules/`
 2. `package-lock.json`
 
-## 5. textlint 规则设计思路
+## 6. 配置 `markdownlint`
+
+在仓库根目录创建 `.markdownlint-cli2.jsonc`：
+
+```jsonc
+{
+  "globs": [
+    "**/*.md",
+    "#node_modules"
+  ],
+  "gitignore": ".gitignore",
+  "config": {
+    "line-length": false,
+    "no-duplicate-heading": {
+      "siblings_only": true
+    },
+    "no-inline-html": false,
+    "no-emphasis-as-heading": true,
+    "emphasis-style": {
+      "style": "asterisk"
+    },
+    "strong-style": {
+      "style": "asterisk"
+    }
+  }
+}
+```
+
+这份配置的含义如下：
+
+1. 默认检查仓库中的全部 Markdown 文件
+2. 跟随根目录 `.gitignore` 忽略不需要的路径
+3. 关闭 `MD013`，不强制限制行宽
+4. 关闭 `MD033`，允许必要的内联 HTML
+5. 关闭 `MD041`，不强制每个文件首行必须是一级标题
+6. 使用 `MD049` 固定斜体风格为 `*`
+7. 使用 `MD050` 固定加粗风格为 `*`
+
+其中最关键的是：
+
+```md
+*你好*
+```
+
+在 `markdownlint` 方案下可以被保留为 `*你好*`，不会像 `Prettier` 那样改成：
+
+```md
+_你好_
+```
+
+## 7. textlint 规则设计思路
 
 这套规则专门面向中文技术笔记，目标是“高收益、低打扰”。
 
@@ -64,7 +122,7 @@ npm install -D prettier textlint \
 
 没有加入很多“写作风格类”规则，是为了避免在技术笔记场景下产生过多误报。
 
-## 6. 配置 textlint
+## 8. 配置 textlint
 
 在仓库根目录创建 `.textlintrc.json`：
 
@@ -99,102 +157,9 @@ npm install -D prettier textlint \
 4. 用独立的术语词典文件维护技术名词
 5. 不检查链接内容，避免把 URL 或域名误改
 
-## 7. 配置术语词典
+## 9. 配置术语词典
 
-在仓库根目录创建 `tech-terms.yml`：
-
-```yaml
-version: 1
-rules:
-  - expected: JavaScript
-    patterns:
-      - Javascript
-      - javascript
-
-  - expected: TypeScript
-    patterns:
-      - Typescript
-      - typescript
-
-  - expected: Node.js
-    patterns:
-      - NodeJS
-      - Nodejs
-      - nodejs
-      - node.js
-
-  - expected: npm
-    patterns:
-      - NPM
-
-  - expected: pnpm
-    patterns:
-      - PNPM
-      - Pnpm
-
-  - expected: VS Code
-    patterns:
-      - VSCode
-      - vscode
-      - VScode
-
-  - expected: GitHub
-    patterns:
-      - Github
-      - github
-
-  - expected: Markdown
-    patterns:
-      - markdown
-
-  - expected: textlint
-    patterns:
-      - Textlint
-
-  - expected: Prettier
-    patterns:
-      - prettier
-
-  - expected: macOS
-    patterns:
-      - MacOS
-      - Macos
-
-  - expected: Linux
-    patterns:
-      - linux
-
-  - expected: API
-    patterns:
-      - api
-
-  - expected: URL
-    patterns:
-      - url
-
-  - expected: JSON
-    patterns:
-      - json
-
-  - expected: YAML
-    patterns:
-      - yml
-      - yaml
-```
-
-这份词典主要做两件事：
-
-1. 统一技术术语大小写
-2. 自动把常见错误写法替换为推荐写法
-
-目前已经覆盖这类仓库里高频出现的术语：
-
-1. 前端与通用开发：`JavaScript`、`TypeScript`、`Node.js`、`npm`、`pnpm`、`VS Code`、`GitHub`
-2. 构建与编译：`CMake`、`GCC`、`GDB`、`GNU`
-3. 系统与环境：`Linux`、`Windows`、`macOS`、`Ubuntu`、`Debian`、`CentOS`
-4. 网络与服务：`HTTP`、`HTTPS`、`SSH`、`WebSocket`、`Nginx`
-5. 嵌入式与音视频：`SDK`、`U-Boot`、`WebRTC`、`RTMP`、`FreeRTOS`、`FreeType`、`SDL`、`SDL_ttf`
-6. 数据与 AI：`JSON`、`YAML`、`MySQL`、`Redis`、`OpenAI`、`ChatGPT`
+在仓库根目录维护 `tech-terms.yml`，用于统一技术术语大小写和常见写法。
 
 例如：
 
@@ -203,7 +168,7 @@ Javascript
 vscode
 Github
 nodejs
-markdown
+markdownlint
 ```
 
 会被修正为：
@@ -213,46 +178,35 @@ JavaScript
 VS Code
 GitHub
 Node.js
-Markdown
+markdownlint
 ```
 
 后续如果有新的团队术语要求，只需要继续往这个 YAML 文件里追加规则即可。
 
-## 8. 配置 Prettier
-
-在仓库根目录创建 `.prettierrc.json`：
-
-```json
-{
-  "proseWrap": "preserve",
-  "singleQuote": false
-}
-```
-
-这里的配置含义：
-
-1. `proseWrap: "preserve"` 表示尽量保留现有 Markdown 段落换行
-2. `singleQuote: false` 表示使用双引号
-
-## 9. package 脚本配置
+## 10. package 脚本配置
 
 可以在 `package.json` 中加入以下脚本：
 
 ```json
 {
   "scripts": {
-    "lint:md": "textlint \"**/*.md\"",
-    "lint:md:fix": "textlint --fix \"**/*.md\"",
-    "format:md": "prettier --write \"**/*.md\""
+    "lint:md": "markdownlint-cli2 && textlint \"**/*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix && textlint --fix \"**/*.md\"",
+    "format:md": "markdownlint-cli2 --fix"
   }
 }
 ```
 
 作用如下：
 
-1. `npm run lint:md`：检查所有 Markdown 文件
-2. `npm run lint:md:fix`：自动修复可修复的文本问题
-3. `npm run format:md`：使用 `Prettier` 格式化所有 Markdown 文件
+1. `npm run lint:md`
+   - 先检查 Markdown 结构和标记风格
+   - 再检查中文排版和术语
+2. `npm run lint:md:fix`
+   - 先自动修复可修复的 Markdown 问题
+   - 再自动修复可修复的文本问题
+3. `npm run format:md`
+   - 仅执行 `markdownlint-cli2 --fix`
 
 建议执行顺序：
 
@@ -261,14 +215,43 @@ npm run format:md
 npm run lint:md:fix
 ```
 
-## 10. Git 管理建议
+## 11. VS Code 建议配置
+
+如果希望保存时自动修复，可以在工作区或用户级 `settings.json` 中加入：
+
+```json
+{
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+  },
+  "markdownlint.run": "onSave",
+  "textlint.run": "onSave",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.textlint": "explicit"
+  }
+}
+```
+
+说明：
+
+1. `markdownlint` 作为 Markdown 默认格式化器
+2. 保存时由 `markdownlint` 处理结构类问题
+3. `textlint` 继续负责中文排版和术语检查
+
+不同版本的 VS Code 或插件对保存时自动修复的支持略有差异；如果 `textlint` 没有自动修复，可以继续使用：
+
+```bash
+npm run lint:md:fix
+```
+
+## 12. Git 管理建议
 
 以下文件建议保留到 Git：
 
 1. `package.json`
-2. `.textlintrc.json`
-3. `tech-terms.yml`
-4. `.prettierrc.json`
+2. `.markdownlint-cli2.jsonc`
+3. `.textlintrc.json`
+4. `tech-terms.yml`
 
 以下文件或目录不建议提交：
 
@@ -280,95 +263,85 @@ npm run lint:md:fix
 说明：
 
 1. `node_modules/` 是安装依赖后的产物，可重复生成
-2. `package-lock.json` 也是安装依赖后自动生成的锁文件，如果仓库不希望提交锁文件，可以加入 `.gitignore`
+2. `package-lock.json` 是安装依赖后自动生成的锁文件；如果仓库不希望提交锁文件，可以继续加入 `.gitignore`
 
-## 11. 验证方式
+## 13. 验证方式
 
 安装完成后，可以在仓库根目录执行：
 
 ```bash
+npx markdownlint-cli2
 npx textlint README.md
-npx prettier --check README.md
 ```
 
 如果想验证自动修复效果，可以执行：
 
 ```bash
+npx markdownlint-cli2 --fix
 npx textlint --fix README.md
 ```
 
 如果出现以下情况，说明配置是正常的：
 
-1. `textlint` 能正常执行，没有报找不到配置或规则
-2. `Prettier --check` 能检查出文件是否需要格式化
-3. `textlint --fix` 能对支持修复的规则自动改写
+1. `markdownlint-cli2` 能正常执行，没有报找不到配置文件
+2. `markdownlint-cli2 --fix` 能把强调符号修正为 `*`
+3. `textlint` 能正常执行，没有报找不到规则
+4. `textlint --fix` 能对支持修复的规则自动改写
 
-## 12. 常见问题
+## 14. 常见问题
 
-### 12.1 保存时没有生效
+### 14.1 保存时没有生效
 
 可以按以下顺序检查：
 
 1. 确认打开的是项目根目录，而不是单个 Markdown 文件
-2. 确认 `.textlintrc.json` 已存在
-3. 确认 `tech-terms.yml` 已存在
-4. 确认依赖已经安装完成
-5. 在 VS Code 中执行一次 `Developer: Reload Window`
+2. 确认 `.markdownlint-cli2.jsonc` 已存在
+3. 确认 `.textlintrc.json` 已存在
+4. 确认 `tech-terms.yml` 已存在
+5. 确认依赖已经安装完成
+6. 在 VS Code 中执行一次 `Developer: Reload Window`
 
-### 12.2 textlint 插件已安装，但仍然不工作
+### 14.2 textlint 插件已安装，但仍然不工作
 
 原因通常是：只安装了 VS Code 插件，但没有在当前项目里安装 `textlint` 及规则包。
 
 需要重新执行：
 
 ```bash
-npm install -D prettier textlint \
+npm install -D textlint \
   textlint-rule-ja-space-between-half-and-full-width \
   textlint-rule-no-todo \
   textlint-rule-prh \
   textlint-rule-zh-half-and-full-width-bracket
 ```
 
-### 12.3 想扩展更多术语
+### 14.3 `markdownlint` 没有按照 `*` 风格修复
 
-直接修改 `tech-terms.yml` 即可。
+优先检查：
 
-建议优先追加以下类型的术语：
+1. 当前使用的是不是 `markdownlint`，而不是 `Prettier`
+2. `.markdownlint-cli2.jsonc` 中是否已经配置 `MD049.style = "asterisk"`
+3. VS Code 的 Markdown 默认格式化器是否仍然指向 `Prettier`
 
-1. 技术名词大小写
-2. 品牌名和产品名
-3. 团队内部约定写法
-4. 常见拼写错误
+### 14.4 为什么不用 `Prettier`
 
-### 12.4 为什么不用很多“语气类”或“文风类”规则
+核心原因只有一个：
 
-技术笔记和产品文案不同。
+```md
+*你好*
+```
 
-技术笔记通常包含：
+在当前需求下必须保留 `*` 风格，而 `Prettier` 没有提供对应配置项。
 
-1. 命令
-2. 配置项
-3. 版本号
-4. 缩写
-5. 大量专有名词
+因此，当前仓库改用 `markdownlint` 处理 Markdown 标记风格，用 `textlint` 处理中文排版和术语，这是更合适的组合。
 
-如果规则过多，误报会明显上升，反而影响写作效率。所以这套配置优先保留：
+### 14.5 第一次执行 `lint:md` 为什么会报很多历史问题
 
-1. 排版一致性
-2. 术语一致性
-3. 明显问题拦截
+这是正常现象。
 
-## 13. 本仓库最终使用的文件
+`markdownlint` 接入后，会把仓库里原有 Markdown 文件中的重复标题、制表符、多余空行、裸链接等问题一起暴露出来。
 
-本次配置完成后，仓库中实际新增或修改了以下文件：
+这说明规则已经生效，不代表安装失败。通常有两种处理方式：
 
-1. `package.json`
-2. `.textlintrc.json`
-3. `tech-terms.yml`
-4. `.prettierrc.json`
-5. `.gitignore`
-
-其中依赖安装后自动生成但不需要保存在 Git 中的文件包括：
-
-1. `node_modules/`
-2. `package-lock.json`
+1. 先只把它用于新文档或正在维护的文档
+2. 分目录逐步清理历史文件

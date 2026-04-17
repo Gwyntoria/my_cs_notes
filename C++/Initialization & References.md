@@ -37,7 +37,7 @@ vec2 = {3,5};
 
 ## Uniform Initialization
 
-**Definition:** curly bracket initialization. Available for all types, immediate initialization on declaration
+**Definition:** cURLy bracket initialization. Available for all types, immediate initialization on declaration
 
 ```C++
 std::vector<int> vec{1,3,5};
@@ -253,7 +253,7 @@ const auto& c_aref = ref; // a const reference
 
 C++, by default, makes copies when we do variable assignment! We need to use `&` if we need references instead
 
-## Recapitulation
+## RecAPItulation
 
 - Use input streams to get information
 - Use structs to bundle information
