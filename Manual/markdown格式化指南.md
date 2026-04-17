@@ -56,14 +56,12 @@ npm install -D textlint \
   textlint-rule-zh-half-and-full-width-bracket
 ```
 
-安装完成后会生成：
+安装完成后会生成
 
 1. `node_modules/`
 2. `package-lock.json`
 
 ### 全局安装（不推荐）
-
-如果是全局安装，则使用:
 
 ```bash
 npm install -g textlint \
