@@ -1,1 +1,7 @@
 **/.DS_Store
+
+/.vscode
+/.codex
+
+/node_modules
+/package-lock.json
