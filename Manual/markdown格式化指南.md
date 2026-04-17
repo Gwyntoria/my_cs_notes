@@ -61,7 +61,7 @@ npm install -D textlint \
 1. `node_modules/`
 2. `package-lock.json`
 
-### 全局安装
+### 全局安装（不推荐）
 
 如果是全局安装，则使用:
 
