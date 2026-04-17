@@ -43,7 +43,11 @@ npm init -y
 在仓库根目录执行：
 
 ```bash
-npm install -D markdownlint-cli2 textlint \
+npm install -D markdownlint-cli2
+```
+
+```bash
+npm install -D textlint \
   textlint-rule-ja-space-between-half-and-full-width \
   textlint-rule-no-todo \
   textlint-rule-prh \
