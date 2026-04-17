@@ -128,10 +128,13 @@ rules:
     patterns:
       - MacOS
       - Macos
+      - macos
     specs:
       - from: MacOS
         to: macOS
       - from: Macos
+        to: macOS
+      - from: macos
         to: macOS
 
   - expected: Linux
@@ -334,3 +337,10 @@ rules:
     specs:
       - from: chatgpt
         to: ChatGPT
+
+  - expected: Typora
+    patterns:
+      - typora
+    specs:
+      - from: typora
+        to: Typora
