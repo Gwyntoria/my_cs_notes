@@ -40,6 +40,8 @@ npm init -y
 
 ## 5. 安装依赖
 
+### 本地安装
+
 在仓库根目录执行：
 
 ```bash
@@ -58,6 +60,20 @@ npm install -D textlint \
 
 1. `node_modules/`
 2. `package-lock.json`
+
+### 全局安装
+
+如果是全局安装，则使用:
+
+```bash
+npm install -g textlint \
+  textlint-rule-ja-space-between-half-and-full-width \
+  textlint-rule-no-todo \
+  textlint-rule-prh \
+  textlint-rule-zh-half-and-full-width-bracket
+```
+
+textlint 插件需要在设置中配置 node path 才可以工作。
 
 ## 6. 配置 `markdownlint`
 
