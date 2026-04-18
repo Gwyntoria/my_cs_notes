@@ -9,3 +9,34 @@
 ## More Info
 
 1. *How_to_Ask_Questions.md* 是我从[华蟒用户组](https://groups.google.com/g/python-cn)的提问指南中找到的，英文原文为[How To Ask Questions the Smart Way](http://linuxmafia.com/faq/Essays/smart-questions.html)。
+
+## Format
+
+本仓库使用 `markdownlint-cli2` 和 `textlint` 统一 Markdown 结构、中文排版与技术术语。
+
+基础环境：
+
+1. 安装 `Node.js` 和 `npm`
+2. 在仓库根目录执行
+
+    ```bash
+    npm install -D markdownlint-cli2 textlint \
+    textlint-rule-ja-space-between-half-and-full-width \
+    textlint-rule-no-todo \
+    textlint-rule-prh \
+    textlint-rule-zh-half-and-full-width-bracket
+    ```
+
+仓库内已提供以下配置文件：
+
+1. `.markdownlint-cli2.jsonc`
+2. `.textlintrc.json`
+3. `tech-terms.yml`
+
+日常操作流程：
+
+1. 结构格式化：`npm run format:md`
+2. 自动修复并检查：`npm run lint:md:fix`
+3. 只检查不修改：`npm run lint:md`
+
+如果使用 VS Code，建议安装 `markdownlint` 和 `textlint` 插件，并在 `settings.json` 中启用保存时检查。更完整的规则说明见 [markdown格式化指南.md](Manual/markdown格式化指南.md)。
