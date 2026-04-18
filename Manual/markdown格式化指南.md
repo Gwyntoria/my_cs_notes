@@ -242,11 +242,20 @@ npm run lint:md:fix
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
   },
+
+  // onType or onSave
+  // 如果开启了自动保存，可以保持默认的 onSave
   "markdownlint.run": "onSave",
   "textlint.run": "onSave",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.textlint": "explicit"
-  }
+
+  // 保存时自动 fix
+  "textlint.autoFixOnSave": true,
+
+  // 限定 textlint 仅作用与 markdown
+  "textlint.languages": [
+      "markdown"
+  ],
+
 }
 ```
 
