@@ -1,9 +1,9 @@
 # FreeRTOS Briefing
 
-| Version | Date      | Description     |
-| :------ | :-------- | :---------      |
-| 1.0     | 2023-6-27 | Initial release |
-| 1.1     | 2023-6-29 | 1. 调整文章目录结构<br />2. 新增堆栈分配和时间片调度的介绍 |
+| Version | Date | Description |
+| :--- | :--- | :--- |
+| 1.0 | 2023-6-27 | Initial release |
+| 1.1 | 2023-6-29 | 1. 调整文章目录结构<br />2. 新增堆栈分配和时间片调度的介绍 |
 
 ## Introduction
 
