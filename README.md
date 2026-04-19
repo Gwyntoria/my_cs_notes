@@ -29,7 +29,7 @@
 
 仓库内已提供以下配置文件：
 
-1. `.markdownlint-cli2.jsonc`
+1. `.markdownlint-cli2.jsonc`（会覆盖掉 VS Code 插件的 setting）
 2. `.textlintrc.json`
 3. `tech-terms.yml`
 
