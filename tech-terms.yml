@@ -338,6 +338,63 @@ rules:
       - from: chatgpt
         to: ChatGPT
 
+  - expected: Machine Learning
+    patterns:
+      - machine learning
+      - Machine learning
+    specs:
+      - from: machine learning
+        to: Machine Learning
+      - from: Machine learning
+        to: Machine Learning
+
+  - expected: C++
+    patterns:
+      - cpp
+      - Cpp
+    specs:
+      - from: cpp
+        to: C++
+      - from: Cpp
+        to: C++
+
+  - expected: TCP
+    patterns:
+      - tcp
+    specs:
+      - from: tcp
+        to: TCP
+
+  - expected: RAII
+    patterns:
+      - raii
+    specs:
+      - from: raii
+        to: RAII
+
+  - expected: copy-on-write
+    patterns:
+      - /Copy[-]On[-]Write/
+      - /Copy[-]on[-]write/
+      - copy on write
+    specs:
+      - from: Copy-On-Write
+        to: copy-on-write
+      - from: Copy-on-write
+        to: copy-on-write
+      - from: copy on write
+        to: copy-on-write
+
+  - expected: mmap
+    patterns:
+      - Mmap
+      - MMAP
+    specs:
+      - from: Mmap
+        to: mmap
+      - from: MMAP
+        to: mmap
+
   - expected: Typora
     patterns:
       - typora
