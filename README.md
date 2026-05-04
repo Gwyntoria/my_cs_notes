@@ -14,9 +14,9 @@
 
 本仓库使用 `markdownlint-cli2` 和 `textlint` 统一 Markdown 结构、中文排版与技术术语。
 
-基础环境：
+### 基础环境
 
-1. 安装 `Node.js` 和 `npm`
+1. 安装 `Node.js`
 2. 在仓库根目录执行
 
     ```bash
@@ -33,10 +33,13 @@
 2. `.textlintrc.json`
 3. `tech-terms.yml`
 
-日常操作流程：
+### 操作流程
 
-1. 结构格式化：`npm run format:md`
-2. 自动修复并检查：`npm run lint:md:fix`
-3. 只检查不修改：`npm run lint:md`
+完成对 Markdown 文件的编辑后，使用 `markdownlint-cli2` 对文件进行格式化，然后使用 `textlint` 完成排版修复和术语替换。
+
+```bash
+npx markdownlint-cli2 --fix --no-globs path/to/file.md
+npx textlint --fix path/to/file.md
+```
 
 如果使用 VS Code，建议安装 `markdownlint` 和 `textlint` 插件，并在 `settings.json` 中启用保存时检查。更完整的规则说明见 [markdown格式化指南.md](Manual/markdown格式化指南.md)。
