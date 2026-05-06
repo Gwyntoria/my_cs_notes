@@ -1,209 +1,19 @@
 # clash verge global config
 
-## clash verge 完整脚本
+Clash Verge Rev 可以通过 global extend config 和 global extend script 实现重写代理规则、代理组，筛选节点，远程订阅代理规则等功能。
 
-```js
-// Clash Verge Rev 全局扩展脚本
-// 目的：
-// 1. Steam 在 CLOUD / GHELPER 两个 profile 下自动选择对应代理组走代理
-// 2. 微信、钉钉、支付宝、京东、淘宝、得到、财新等直连
-// 3. 对所有 profile 生效
+## global extend script
 
-const directPolicy = "DIRECT";
+以下 global extend script 仅能实现对 steam、微信、钉钉的代理规则重写：
 
-// profile 名称 -> 代理组名称
-const profilePolicyMap = {
-  "CLOUD": "🔰 手动选择",
-  "GHELPER": "Ghelper",
-};
+- steam 的所有流量，无论是商店、社区、下载，全走代理。
+- 微信和钉钉的所有流量全走直连。
 
-// 如果 profileName 没命中，就按这个候选列表自动找当前配置里存在的组名
-const proxyPolicyCandidates = [
-  "🔰 手动选择",
-  "Ghelper",
-  "Proxy",
-  "节点选择",
-  "🚀 节点选择",
-  "PROXY",
-  "GLOBAL",
-  "代理",
-  "手动切换"
-];
+脚本具体实现参考[clash-script.js](./clash-script.js)
 
-function uniqueRules(rules) {
-  const seen = new Set();
-  const result = [];
+### 需要自定义的部分
 
-  for (const rule of rules) {
-    if (typeof rule !== "string") continue;
-    if (seen.has(rule)) continue;
-    seen.add(rule);
-    result.push(rule);
-  }
-
-  return result;
-}
-
-function getProxyGroupNames(config) {
-  const groups = Array.isArray(config["proxy-groups"]) ? config["proxy-groups"] : [];
-
-  return groups
-    .map(group => group && group.name)
-    .filter(Boolean);
-}
-
-function resolveProxyPolicy(config, profileName) {
-  const groupNames = getProxyGroupNames(config);
-
-  // 1. 先按 profileName 精确匹配
-  const mappedPolicy = profilePolicyMap[profileName];
-  if (mappedPolicy && groupNames.includes(mappedPolicy)) {
-    return mappedPolicy;
-  }
-
-  // 2. 再按候选名称自动匹配
-  for (const candidate of proxyPolicyCandidates) {
-    if (groupNames.includes(candidate)) {
-      return candidate;
-    }
-  }
-
-  // 3. 最后兜底：选第一个看起来像“可出站代理组”的组
-  const groups = Array.isArray(config["proxy-groups"]) ? config["proxy-groups"] : [];
-  const fallbackGroup = groups.find(group => {
-    if (!group || !group.name || !group.type) return false;
-    return ["select", "url-test", "fallback", "load-balance"].includes(group.type);
-  });
-
-  return fallbackGroup ? fallbackGroup.name : null;
-}
-
-function buildSteamRules(proxyPolicy) {
-  if (!proxyPolicy) return [];
-
-  return [
-    // --- Steam: Windows ---
-    `PROCESS-NAME,steam.exe,${proxyPolicy}`,
-    `PROCESS-NAME,steamwebhelper.exe,${proxyPolicy}`,
-    `PROCESS-NAME,steamservice.exe,${proxyPolicy}`,
-
-    // --- Steam: macOS ---
-    `PROCESS-NAME,Steam,${proxyPolicy}`,
-    `PROCESS-NAME,steam_osx,${proxyPolicy}`,
-    `PROCESS-NAME,steamwebhelper,${proxyPolicy}`,
-
-    // --- Steam 核心域名 ---
-    `DOMAIN-SUFFIX,steampowered.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamcommunity.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamgames.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamusercontent.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamcontent.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamstatic.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamserver.net,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steam-chat.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,valvesoftware.com,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,valve.net,${proxyPolicy}`,
-
-    // --- 常见下载 / CDN ---
-    `DOMAIN-SUFFIX,steamcdn-a.akamaihd.net,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamstore-a.akamaihd.net,${proxyPolicy}`,
-    `DOMAIN-SUFFIX,steamusercontent-a.akamaihd.net,${proxyPolicy}`,
-
-    // --- 兜底关键词 ---
-    `DOMAIN-KEYWORD,steam,${proxyPolicy}`,
-    `DOMAIN-KEYWORD,valve,${proxyPolicy}`
-  ];
-}
-
-const directRules = [
-  `DOMAIN-SUFFIX,caixin.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,dedao.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,jd.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,alipay.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,taobao.com,${directPolicy}`,
-
-  // --- 微信 / WeChat: Windows ---
-  `PROCESS-NAME,WeChat.exe,${directPolicy}`,
-  `PROCESS-NAME,Weixin.exe,${directPolicy}`,
-  `PROCESS-NAME,WeChatAppEx.exe,${directPolicy}`,
-
-  // --- 微信 / WeChat: macOS ---
-  `PROCESS-NAME,WeChat,${directPolicy}`,
-  `PROCESS-NAME,Weixin,${directPolicy}`,
-
-  // --- 钉钉 / DingTalk: Windows ---
-  `PROCESS-NAME,DingTalk.exe,${directPolicy}`,
-
-  // --- 钉钉 / DingTalk: macOS ---
-  `PROCESS-NAME,DingTalk,${directPolicy}`,
-
-  // --- 微信域名 ---
-  `DOMAIN-SUFFIX,qq.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,wechat.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,weixin.qq.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,weixin.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,servicewechat.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,wx.qq.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,gtimg.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,qpic.cn,${directPolicy}`,
-  `DOMAIN-SUFFIX,qlogo.cn,${directPolicy}`,
-  `DOMAIN-SUFFIX,tenpay.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,wechatpay.com,${directPolicy}`,
-
-  // --- 钉钉域名 ---
-  `DOMAIN-SUFFIX,dingtalk.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,dingtalkapps.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,alicdn.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,aliyuncs.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,mxhichina.com,${directPolicy}`,
-  `DOMAIN-SUFFIX,mmstat.com,${directPolicy}`,
-
-  // --- 国内兜底 ---
-  `GEOSITE,cn,${directPolicy}`,
-  `GEOIP,CN,${directPolicy},no-resolve`
-];
-
-function main(config, profileName) {
-  const oldRules = Array.isArray(config.rules) ? config.rules : [];
-
-  const proxyPolicy = resolveProxyPolicy(config, profileName);
-  const steamProxyRules = buildSteamRules(proxyPolicy);
-
-  config.rules = uniqueRules(
-    steamProxyRules
-      .concat(directRules)
-      .concat(oldRules)
-  );
-
-  config.dns = config.dns || {};
-
-  const oldFakeIpFilter = Array.isArray(config.dns["fake-ip-filter"])
-    ? config.dns["fake-ip-filter"]
-    : [];
-
-  const fakeIpFilter = [
-    "localhost.ptlogin2.qq.com",
-    "localhost.sec.qq.com",
-    "localhost.work.weixin.qq.com",
-    "*.weixin.qq.com",
-    "*.wechat.com",
-    "*.dingtalk.com",
-    "*.dingtalkapps.com"
-  ];
-
-  config.dns["fake-ip-filter"] = uniqueRules(
-    fakeIpFilter.concat(oldFakeIpFilter)
-  );
-
-  return config;
-}
-```
-
----
-
-## 需要自定义的部分
-
-### 1）把 profile 名称改成你自己的
+#### 修改 profile 名称和 proxy group 名称
 
 这里：
 
@@ -214,25 +24,18 @@ const profilePolicyMap = {
 };
 ```
 
-比如如果你的两个 profile 实际叫：
-
-* `机场 1`
-* `机场 2`
-
-那就改成：
+比如你的两个 profile，`机场 1`和`机场 2`，`机场 1`的 proxy group 是`PROXY`，`机场 2`proxy group 是`手动选择`的那就改成：
 
 ```js
 const profilePolicyMap = {
-  "机场 1": "Proxy",
-  "机场 2": "节点选择",
+  "机场 1": "PROXY",
+  "机场 2": "手动选择",
 };
 ```
 
 ---
 
-### 2）如果你的代理组名还有别的可能，也可以补进候选列表
-
-这里：
+#### 如果你的代理组名还有别的可能，也可以补进候选列表（可选）
 
 ```js
 const proxyPolicyCandidates = [
@@ -243,3 +46,64 @@ const proxyPolicyCandidates = [
   "手动切换"
 ];
 ```
+
+NOTE: **即使你不做上面两项修改，脚本中还是有兜底，会选择 Policy 中最前面的 select 组作为默认代理组。**
+
+#### 自定义 Proxy Rules 和 Direct Rules
+
+```js
+function buildProxyRules(proxyPolicy) {
+  if (!proxyPolicy) return [];
+
+  // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
+  return [
+    // 示例
+    // `DOMAIN-SUFFIX,example.com`
+  ];
+}
+
+// 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
+const directRules = [
+  // 示例
+  // `PROCESS-NAME,DingTalk.exe,DIRECT`
+];
+```
+
+---
+
+## 订阅远程规则
+
+- `rule-providers` 放在“全局扩展配置”里，让 Mihomo 继续按 YAML 配置加载远程规则集。
+- `RULE-SET,...` 以及普通前置规则放在“全局扩展脚本”里的 `newRules` 数组。
+- 在脚本入口 `main(config)` 中执行 `config.rules = newRules.concat(oldRules)`，把自定义规则插到原订阅规则前面。
+
+### 全局扩展配置里放 `rule-providers`
+
+YAML 具体实现参考[clash-merge.yaml](./clash-merge.yaml)
+
+这些 `rule-providers` 只负责定义规则集来源。真正决定流量走哪个策略组的是 `rules` 里的 `RULE-SET,规则集名,策略组名`。
+
+### 全局扩展脚本里前置 `rules`
+
+```js
+// 需要优先生效的规则，等价于旧写法中的 prepend-rules。
+const newRules = [
+  "RULE-SET,Gemini,代理服务器3",
+  "RULE-SET,Bing,代理服务器2",
+  "RULE-SET,Openai,代理服务器1",
+  "RULE-SET,OneDrive,代理服务器1"
+];
+
+function main(config) {
+  const oldRules = Array.isArray(config.rules) ? config.rules : [];
+
+  config.rules = newRules.concat(oldRules);
+
+  return config;
+}
+```
+
+## References
+
+1. [自定义规则脚本](https://www.clashverge.dev/guide/script.html#1)
+2. [Issue 1437](https://github.com/clash-verge-rev/clash-verge-rev/issues/1437#issuecomment-2395050752)
