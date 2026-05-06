@@ -68,6 +68,9 @@ const directRules = [
 
 // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
 const proxyRulePrefixes = [
+  "RULE-SET,Openai",
+  "RULE-SET,Gemini",
+
   // --- Steam: Windows ---
   "PROCESS-NAME,steam.exe",
   "PROCESS-NAME,steamwebhelper.exe",
