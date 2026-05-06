@@ -5,6 +5,9 @@
     ],
     "gitignore": ".gitignore",
     "config": {
+        "ul-style": {
+            "style": "dash"
+        },
         "line-length": false,
         "no-duplicate-heading": {
             "siblings_only": true
