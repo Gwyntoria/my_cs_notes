@@ -1,7 +1,9 @@
 **/.DS_Store
 
-/.vscode
-/.codex
+/.vscode/
+/.codex/
 
-/node_modules
+/node_modules/
 /package-lock.json
+
+/Skill-Guide/
