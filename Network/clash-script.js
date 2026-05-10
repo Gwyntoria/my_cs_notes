@@ -17,6 +17,79 @@ const proxyPolicyCandidates = [
   "手动切换"
 ];
 
+// proxy group 中订阅节点优先顺序。命中这些地区的节点会排在前面，同一地区内保持原订阅顺序。
+const proxyRegionOrder = [
+  {
+    name: "美国",
+    keywords: [
+      "美国",
+      "美國",
+      "United States",
+      "USA",
+      "US",
+      "America",
+      "🇺🇸"
+    ]
+  },
+  {
+    name: "新加坡",
+    keywords: [
+      "新加坡",
+      "Singapore",
+      "SG",
+      "🇸🇬"
+    ]
+  },
+  {
+    name: "日本",
+    keywords: [
+      "日本",
+      "Japan",
+      "JP",
+      "Tokyo",
+      "Osaka",
+      "🇯🇵"
+    ]
+  },
+  {
+    name: "韩国",
+    keywords: [
+      "韩国",
+      "韓國",
+      "South Korea",
+      "Korea",
+      "KR",
+      "Seoul",
+      "🇰🇷"
+    ]
+  },
+  {
+    name: "台湾",
+    keywords: [
+      "台湾",
+      "台灣",
+      "Taiwan",
+      "TW",
+      "🇹🇼"
+    ]
+  }
+];
+
+// 从 proxy groups 里移除不需要的节点。
+const excludedProxyNameRules = [
+  // 示例：
+  // {
+  //   name: "测试节点",
+  //   keywords: ["test", "测试"]
+  // },
+  {
+    name: "IPv6",
+    keywords: [
+      "ipv6"
+    ]
+  }
+];
+
 // 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
 const directRules = [
   `DOMAIN-SUFFIX,epic.com,DIRECT`,
@@ -216,7 +289,94 @@ function mergeFakeIpFilter(config) {
   );
 }
 
+function getProxyName(proxy) {
+  return proxy && typeof proxy.name === "string" ? proxy.name : "";
+}
+
+function getProxyRegionRank(proxyName) {
+  for (let index = 0; index < proxyRegionOrder.length; index += 1) {
+    const region = proxyRegionOrder[index];
+    const matched = region.keywords.some(keyword => proxyName.includes(keyword));
+
+    if (matched) {
+      return index;
+    }
+  }
+
+  return proxyRegionOrder.length;
+}
+
+function shouldExcludeProxyName(proxyName) {
+  if (typeof proxyName !== "string") return false;
+
+  const normalizedProxyName = proxyName.toLowerCase();
+
+  return excludedProxyNameRules.some(rule => {
+    return rule.keywords.some(keyword => {
+      return normalizedProxyName.includes(keyword.toLowerCase());
+    });
+  });
+}
+
+function compareProxyRegion(left, right) {
+  if (left.rank !== right.rank) {
+    return left.rank - right.rank;
+  }
+
+  return left.index - right.index;
+}
+
+function getProxyNameSet(config) {
+  if (!Array.isArray(config.proxies)) return new Set();
+
+  return new Set(
+    config.proxies
+      .map(getProxyName)
+      .filter(Boolean)
+  );
+}
+
+function sortProxyGroupProxiesByRegion(config) {
+  const proxyNames = getProxyNameSet(config);
+  if (proxyNames.size === 0) return;
+
+  for (const group of getProxyGroups(config)) {
+    if (!group || !Array.isArray(group.proxies)) continue;
+
+    group.proxies = group.proxies.filter(proxyName => {
+      if (!proxyNames.has(proxyName)) return true;
+
+      return !shouldExcludeProxyName(proxyName);
+    });
+
+    const sortedProxyNames = group.proxies
+      .map((proxyName, index) => ({
+        proxyName,
+        index,
+        rank: typeof proxyName === "string"
+          ? getProxyRegionRank(proxyName)
+          : proxyRegionOrder.length
+      }))
+      .filter(item => proxyNames.has(item.proxyName))
+      .sort(compareProxyRegion)
+      .map(item => item.proxyName);
+
+    let sortedIndex = 0;
+    group.proxies = group.proxies.map(proxyName => {
+      if (!proxyNames.has(proxyName)) {
+        return proxyName;
+      }
+
+      const sortedProxyName = sortedProxyNames[sortedIndex];
+      sortedIndex += 1;
+
+      return sortedProxyName;
+    });
+  }
+}
+
 function main(config, profileName) {
+  sortProxyGroupProxiesByRegion(config);
   mergeProxyRules(config, profileName);
   mergeFakeIpFilter(config);
 

@@ -49,6 +49,88 @@ const proxyPolicyCandidates = [
 
 NOTE: **即使你不做上面两项修改，脚本中还是有兜底，会选择 Policy 中最前面的 select 组作为默认代理组。**
 
+#### 调整 proxy group 中的节点顺序
+
+脚本会重写 `proxy group` 里的节点顺序，但不会改动 `config.proxies` 中的节点定义顺序。
+
+默认优先顺序在 `proxyRegionOrder` 中配置：
+
+```js
+const proxyRegionOrder = [
+  {
+    name: "美国",
+    keywords: [
+      "美国",
+      "美國",
+      "United States",
+      "USA",
+      "US",
+      "America",
+      "🇺🇸"
+    ]
+  },
+  {
+    name: "新加坡",
+    keywords: [
+      "新加坡",
+      "Singapore",
+      "SG",
+      "🇸🇬"
+    ]
+  }
+];
+```
+
+排序规则：
+
+- 越靠前的地区优先级越高。
+- 同一地区内保持订阅原顺序。
+- 没有命中任何 `keywords` 的节点会排在已配置地区之后，并保持原相对顺序。
+- `DIRECT`、`REJECT`、其他 proxy group 名称等非真实节点不会参与排序，会保留在原位置。
+
+如果要调整地区优先级，直接调整 `proxyRegionOrder` 中对象的顺序。如果要增加新的地区，就按同样格式新增一个对象。
+
+#### 从 proxy group 中移除指定节点
+
+脚本会根据 `excludedProxyNameRules` 从 `proxy group` 中删除不需要的真实节点，但不会删除 `config.proxies` 里的节点定义。
+
+当前默认会移除节点名包含 `ipv6` 的节点，匹配时不区分大小写：
+
+```js
+const excludedProxyNameRules = [
+  {
+    name: "IPv6",
+    keywords: [
+      "ipv6"
+    ]
+  }
+];
+```
+
+如果还想删除香港节点，可以这样加：
+
+```js
+const excludedProxyNameRules = [
+  {
+    name: "IPv6",
+    keywords: [
+      "ipv6"
+    ]
+  },
+  {
+    name: "香港",
+    keywords: [
+      "香港",
+      "Hong Kong",
+      "HK",
+      "🇭🇰"
+    ]
+  }
+];
+```
+
+`keywords` 中任意一个字符串命中节点名，就会从 `proxy group` 中移除该节点。这里只影响策略组里的可选项，不会影响订阅中原始节点定义。
+
 #### 自定义 Proxy Rules 和 Direct Rules
 
 ```js
