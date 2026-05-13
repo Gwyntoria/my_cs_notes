@@ -23,10 +23,10 @@
 
 需要提前安装以下 VS Code 插件：
 
-1. `markdownlint`
-2. `textlint`
+1. [textlint](https://marketplace.visualstudio.com/items?itemName=3w36zj6.textlint)
+2. [markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 
-此外，本地还需要可用的 `Node.js` 和 `npm` 环境。
+此外，本地还需要可用的 `Node.js` 环境。
 
 ## 4. 初始化项目
 
@@ -111,21 +111,9 @@ textlint 插件需要在设置中配置 node path 才可以工作。
 6. 使用 `MD049` 固定斜体风格为 `*`
 7. 使用 `MD050` 固定加粗风格为 `*`
 
-其中最关键的是：
-
-```md
-*你好*
-```
-
-在 `markdownlint` 方案下可以被保留为 `*你好*`，不会像 `Prettier` 那样改成：
-
-```md
-_你好_
-```
+修改或新增配置可以参考[markdownlint 在 GitHub 中的 readme](https://github.com/DavidAnson/markdownlint)。
 
 ## 7. textlint 规则设计思路
-
-这套规则专门面向中文技术笔记，目标是“高收益、低打扰”。
 
 本次选择的规则如下：
 
@@ -137,8 +125,6 @@ _你好_
    - 阻止把 `TODO` 残留到正式笔记里
 4. `prh`
    - 通过自定义术语词典统一技术名词写法
-
-没有加入很多“写作风格类”规则，是为了避免在技术笔记场景下产生过多误报。
 
 ## 8. 配置 textlint
 
@@ -215,21 +201,27 @@ markdownlint
 }
 ```
 
-作用如下：
+作用如下，作用域为仓库内所有 md 文件：
 
-1. `npm run lint:md`
+1. `npm run format:md`
+   - 仅执行 `markdownlint-cli2 --fix`
+2. `npm run lint:md`
    - 先检查 Markdown 结构和标记风格
    - 再检查中文排版和术语
-2. `npm run lint:md:fix`
-   - 先自动修复可修复的 Markdown 问题
+3. `npm run lint:md:fix`
+   - 先自动修复可修复的 Markdown 结构问题
    - 再自动修复可修复的文本问题
-3. `npm run format:md`
-   - 仅执行 `markdownlint-cli2 --fix`
 
 建议执行顺序：
 
 ```bash
 npm run format:md
+npm run lint:md
+```
+
+or
+
+```bash
 npm run lint:md:fix
 ```
 
@@ -290,7 +282,7 @@ npm run lint:md:fix
 说明：
 
 1. `node_modules/` 是安装依赖后的产物，可重复生成
-2. `package-lock.json` 是安装依赖后自动生成的锁文件；如果仓库不希望提交锁文件，可以继续加入 `.gitignore`
+2. `package-lock.json` 是安装依赖后自动生成的锁文件，用于指定依赖的版本；如果仓库不希望提交锁文件，可以继续加入 `.gitignore`
 
 ## 13. 验证方式
 
@@ -352,15 +344,7 @@ npm install -D textlint \
 
 ### 14.4 为什么不用 `Prettier`
 
-核心原因只有一个：
-
-```md
-*你好*
-```
-
-在当前需求下必须保留 `*` 风格，而 `Prettier` 没有提供对应配置项。
-
-因此，当前仓库改用 `markdownlint` 处理 Markdown 标记风格，用 `textlint` 处理中文排版和术语，这是更合适的组合。
+Prettier 不再支持盘古之白。
 
 ### 14.5 第一次执行 `lint:md` 为什么会报很多历史问题
 
