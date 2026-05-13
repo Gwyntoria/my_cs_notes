@@ -9,7 +9,7 @@
 - Don’t sacrifice performance except as a last resort
 - Enforce safety at compile time whenever possible
 
-## 判断浮点数a、b是否相等
+## 判断浮点数 a、b 是否相等
 
 不应直接使用 a==b 来判断是否相等，应该判断两者之间**差的绝对值**是否小于一个足够小的阈值，如 1e-9：
 

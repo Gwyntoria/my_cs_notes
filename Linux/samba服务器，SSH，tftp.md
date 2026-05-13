@@ -1,4 +1,4 @@
-# samba服务器，SSH，tftp
+# samba 服务器，SSH，tftp
 
 ## samba
 

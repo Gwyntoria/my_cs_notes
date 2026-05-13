@@ -1,6 +1,6 @@
-# 海思SDK安装以及U-Boot、kernel、rootfs编译
+# 海思 SDK 安装以及 U-Boot、kernel、rootfs 编译
 
-## Ubuntu修改默认脚本解释器为bash
+## Ubuntu 修改默认脚本解释器为 bash
 
 **note:**在 Ubuntu 上面默认使用的解释器不是 bash，而是 dash。dash 是 Ubuntu 中默认使用的脚本解释器。
 
@@ -55,9 +55,9 @@ sudo apt-get install lib32z1 lib32z1-dev
 **注：**
 
 > - `lib32z1` 是海思开发环境搭建指南中指明需要的依赖库
-> - `lib32z1-dev` 是博客[《海思hi3516d交叉编译器安装问题》](https://blog.csdn.net/spts2008/article/details/79640568)中所提出的解决方案
+> - `lib32z1-dev` 是博客[《海思 hi3516d 交叉编译器安装问题》](https://blog.csdn.net/spts2008/article/details/79640568)中所提出的解决方案
 
-### 补遗：普通包和dev包的区别
+### 补遗：普通包和 dev 包的区别
 
 ```bash
 apt show lib32z1 lib32z1-dev
@@ -147,7 +147,7 @@ tar -zxvf ...
 1. 缺少头文件
 2. 变量未声明为全局变量
 
-### 3. Linux-4.9.37 kernel包中
+### 3. Linux-4.9.37 kernel 包中
 
 **Error:**yylloc 多次定义
 
@@ -193,7 +193,7 @@ cp -arf $(OSDRV_DIR)/opensource/busybox/$(BUSYBOX_VER)/_install/ $(OSDRV_DIR)/pu
 
 ## 烧录
 
-1. [Hi3516dv300使用tftp进行烧录](https://blog.51cto.com/u_15316847/3220965)
+1. [Hi3516dv300 使用 tftp 进行烧录](https://blog.51cto.com/u_15316847/3220965)
 2. HiTools 软件
 
 **Reference:**

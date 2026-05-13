@@ -45,7 +45,7 @@ ThreadPool* createThreadPool(int thread_count, int task_queue_size) {
 }
 ```
 
-### 定义线程执行的工作函数（worker函数）
+### 定义线程执行的工作函数（worker 函数）
 
 ```c
 void* worker(void *arg) {

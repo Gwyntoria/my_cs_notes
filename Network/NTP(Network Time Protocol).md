@@ -12,7 +12,7 @@ NTP operates using a complex algorithm that takes into account factors such as n
 
 NTP is widely used in computer networks, including the internet, to ensure accurate time synchronization. It is particularly important for systems that require precise timekeeping, such as financial transactions, distributed systems, network logging, and security applications. By maintaining synchronized clocks across a network, NTP helps ensure coordination, consistency, and integrity in various time-sensitive processes.
 
-## ntpdate常用服务器
+## ntpdate 常用服务器
 
 1. 中国国家授时中心：210.72.145.44
 2. NTP 服务器（上海） ：ntp.API.bz

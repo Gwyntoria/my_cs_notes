@@ -167,7 +167,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/my_toolchain_file.cmake /path/to/source
 在工具链文件中，可以通过定义一些变量来指定交叉编译需要使用的工具，例如：
 
 - `CMAKE_SYSTEM_NAME`：**指定目标平台的名称**，例如 Linux、Android、iOS 等。
-- `CMAKE_C_COMPILER`和`CMAKE_CXX_COMPILER`：**指定C和C++编译器的位置**。
+- `CMAKE_C_COMPILER`和`CMAKE_CXX_COMPILER`：**指定 C 和 C++编译器的位置**。
 - `CMAKE_FIND_ROOT_PATH`：**指定头文件和库文件的搜索路径**。
 - `CMAKE_SYSROOT`：**指定交叉编译工具链的根目录**。
 

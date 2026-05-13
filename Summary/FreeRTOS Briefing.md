@@ -183,5 +183,5 @@ int main() {
 2. [Mastering the FreeRTOS Real Time Kernel - a Hands On Tutorial Guide](https://www.freertos.org/fr-content-src/uploads/2018/07/161204_Mastering_the_FreeRTOS_Real_Time_Kernel-A_Hands-On_Tutorial_Guide.pdf)
 3. [FreeRTOS V10.0.0 Reference Manual](https://www.freertos.org/fr-content-src/uploads/2018/07/FreeRTOS_Reference_Manual_V10.0.0.pdf)
 4. [FreeRTOS 内核基础知识](https://docs.aws.amazon.com/zh_cn/freertos/latest/userguide/dev-guide-freertos-kernel.html)
-5. [FreeRTOS基础篇教程目录汇总](https://www.cnblogs.com/yangguang-it/p/7233591.html)
-6. [野火-FreeRTOS视频教学](https://www.bilibili.com/video/av57449565/?vd_source=234174c1ff815dc17ba5ea7ee11a6e81)
+5. [FreeRTOS 基础篇教程目录汇总](https://www.cnblogs.com/yangguang-it/p/7233591.html)
+6. [野火-FreeRTOS 视频教学](https://www.bilibili.com/video/av57449565/?vd_source=234174c1ff815dc17ba5ea7ee11a6e81)

@@ -1,4 +1,4 @@
-# OSD准备：移植FreeType、SDL、SDL_ttf
+# OSD 准备：移植 FreeType、SDL、SDL_ttf
 
 ## 源码网址
 
@@ -10,7 +10,7 @@
 
 ## 编译
 
-### FreeType和SDL
+### FreeType 和 SDL
 
 1. FreeType 和 SDL 使用相同的配置
 
@@ -44,7 +44,7 @@
     make && make install
     ```
 
-## 新版本FreeType出现的问题
+## 新版本 FreeType 出现的问题
 
 ![image-20220929153557732](../assets/image-20220929153557732.png)
 

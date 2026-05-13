@@ -2,7 +2,7 @@
 
 ## 概述
 
-**Linux系统软件架构**主要分为 4 层，由低到高分别为：*引导加载程序(Bootloader)*，*系统内核(Kernel)*，*文件系统(File System)*，*用户程序(Application)*
+**Linux 系统软件架构**主要分为 4 层，由低到高分别为：*引导加载程序(Bootloader)*，*系统内核(Kernel)*，*文件系统(File System)*，*用户程序(Application)*
 
 ### Bootloader
 

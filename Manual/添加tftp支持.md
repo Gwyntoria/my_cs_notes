@@ -1,4 +1,4 @@
-# 添加tftp支持
+# 添加 tftp 支持
 
 `tftp-hpa` 工具包因安全原因已经不再新版本的 macOS 支持列表中，可以考虑使用 macOS 自带的 tftp 服务器，这样可以将你的 Mac 变成一个 tftp 服务器，允许其他设备通过 tftp 从 Mac 获取文件。
 

@@ -22,5 +22,5 @@ Reversed (or previously applied) patch detected! Assume -R? [n]
 
 ## Reference
 
-1. [Linux中的Diff和Patch](https://juejin.cn/post/6963434347856658439)
-2. [patch补丁文件格式](https://blog.csdn.net/sunxiaopengsun/article/details/114031738)
+1. [Linux 中的 Diff 和 Patch](https://juejin.cn/post/6963434347856658439)
+2. [patch 补丁文件格式](https://blog.csdn.net/sunxiaopengsun/article/details/114031738)

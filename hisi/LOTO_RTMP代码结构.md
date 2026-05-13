@@ -1,4 +1,4 @@
-# LOTO_RTMP代码结构
+# LOTO_RTMP 代码结构
 
 ```c
 int main(int argc, char *argv[])
