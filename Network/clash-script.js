@@ -1,7 +1,7 @@
 // profile 名称 -> 代理组名称
 const profilePolicyMap = {
-  "CLOUD": "🔰 手动选择",
-  "GHELPER": "Ghelper",
+  CLOUD: "🔰 手动选择",
+  GHELPER: "Ghelper",
 };
 
 // 如果 profileName 没命中，就按这个候选列表自动找当前配置里存在的组名
@@ -14,65 +14,31 @@ const proxyPolicyCandidates = [
   "PROXY",
   "GLOBAL",
   "代理",
-  "手动切换"
+  "手动切换",
 ];
 
 // proxy group 中订阅节点优先顺序。命中这些地区的节点会排在前面，同一地区内保持原订阅顺序。
 const proxyRegionOrder = [
   {
     name: "美国",
-    keywords: [
-      "美国",
-      "美國",
-      "United States",
-      "USA",
-      "US",
-      "America",
-      "🇺🇸"
-    ]
+    keywords: ["美国", "美國", "United States", "USA", "US", "America", "🇺🇸"],
   },
   {
     name: "新加坡",
-    keywords: [
-      "新加坡",
-      "Singapore",
-      "SG",
-      "🇸🇬"
-    ]
+    keywords: ["新加坡", "Singapore", "SG", "🇸🇬"],
   },
   {
     name: "日本",
-    keywords: [
-      "日本",
-      "Japan",
-      "JP",
-      "Tokyo",
-      "Osaka",
-      "🇯🇵"
-    ]
+    keywords: ["日本", "Japan", "JP", "Tokyo", "Osaka", "🇯🇵"],
   },
   {
     name: "韩国",
-    keywords: [
-      "韩国",
-      "韓國",
-      "South Korea",
-      "Korea",
-      "KR",
-      "Seoul",
-      "🇰🇷"
-    ]
+    keywords: ["韩国", "韓國", "South Korea", "Korea", "KR", "Seoul", "🇰🇷"],
   },
   {
     name: "台湾",
-    keywords: [
-      "台湾",
-      "台灣",
-      "Taiwan",
-      "TW",
-      "🇹🇼"
-    ]
-  }
+    keywords: ["台湾", "台灣", "Taiwan", "TW"],
+  },
 ];
 
 // 从 proxy groups 里移除不需要的节点。
@@ -84,10 +50,8 @@ const excludedProxyNameRules = [
   // },
   {
     name: "IPv6",
-    keywords: [
-      "ipv6"
-    ]
-  }
+    keywords: ["ipv6"],
+  },
 ];
 
 // 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
@@ -136,7 +100,7 @@ const directRules = [
 
   // --- 国内兜底 ---
   `GEOSITE,cn,DIRECT`,
-  `GEOIP,CN,DIRECT,no-resolve`
+  `GEOIP,CN,DIRECT,no-resolve`,
 ];
 
 // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
@@ -182,7 +146,7 @@ const proxyRulePrefixes = [
 function buildProxyRules(proxyPolicy) {
   if (!proxyPolicy) return [];
 
-  return proxyRulePrefixes.map(rule => `${rule},${proxyPolicy}`);
+  return proxyRulePrefixes.map((rule) => `${rule},${proxyPolicy}`);
 }
 
 const fakeIpFilterRules = [
@@ -192,7 +156,7 @@ const fakeIpFilterRules = [
   "*.weixin.qq.com",
   "*.wechat.com",
   "*.dingtalk.com",
-  "*.dingtalkapps.com"
+  "*.dingtalkapps.com",
 ];
 
 function uniqueRules(rules) {
@@ -216,9 +180,7 @@ function getProxyGroups(config) {
 function getProxyGroupNames(config) {
   const groups = getProxyGroups(config);
 
-  return groups
-    .map(group => group && group.name)
-    .filter(Boolean);
+  return groups.map((group) => group && group.name).filter(Boolean);
 }
 
 function resolveProxyPolicy(config, profileName) {
@@ -239,9 +201,11 @@ function resolveProxyPolicy(config, profileName) {
 
   // 3. 最后兜底：选第一个看起来像“可出站代理组”的组
   const groups = getProxyGroups(config);
-  const fallbackGroup = groups.find(group => {
+  const fallbackGroup = groups.find((group) => {
     if (!group || !group.name || !group.type) return false;
-    return ["select", "url-test", "fallback", "load-balance"].includes(group.type);
+    return ["select", "url-test", "fallback", "load-balance"].includes(
+      group.type,
+    );
   });
 
   return fallbackGroup ? fallbackGroup.name : null;
@@ -256,16 +220,14 @@ function mergeProxyRules(config, profileName) {
 
   const proxyPolicy = resolveProxyPolicy(config, profileName);
   if (!proxyPolicy) {
-    console.warn("[clash-verge] No proxy policy found. Proxy rules were skipped.");
+    console.warn(
+      "[clash-verge] No proxy policy found. Proxy rules were skipped.",
+    );
   }
 
   const proxyRules = buildProxyRules(proxyPolicy);
 
-  config.rules = uniqueRules(
-    directRules
-      .concat(proxyRules)
-      .concat(oldRules)
-  );
+  config.rules = uniqueRules(directRules.concat(proxyRules).concat(oldRules));
 }
 
 function ensureDns(config) {
@@ -275,9 +237,7 @@ function ensureDns(config) {
 }
 
 function getOldFakeIpFilter(dns) {
-  return Array.isArray(dns["fake-ip-filter"])
-    ? dns["fake-ip-filter"]
-    : [];
+  return Array.isArray(dns["fake-ip-filter"]) ? dns["fake-ip-filter"] : [];
 }
 
 function mergeFakeIpFilter(config) {
@@ -285,7 +245,7 @@ function mergeFakeIpFilter(config) {
   const oldFakeIpFilter = getOldFakeIpFilter(dns);
 
   dns["fake-ip-filter"] = uniqueRules(
-    fakeIpFilterRules.concat(oldFakeIpFilter)
+    fakeIpFilterRules.concat(oldFakeIpFilter),
   );
 }
 
@@ -296,7 +256,9 @@ function getProxyName(proxy) {
 function getProxyRegionRank(proxyName) {
   for (let index = 0; index < proxyRegionOrder.length; index += 1) {
     const region = proxyRegionOrder[index];
-    const matched = region.keywords.some(keyword => proxyName.includes(keyword));
+    const matched = region.keywords.some((keyword) =>
+      proxyName.includes(keyword),
+    );
 
     if (matched) {
       return index;
@@ -311,8 +273,8 @@ function shouldExcludeProxyName(proxyName) {
 
   const normalizedProxyName = proxyName.toLowerCase();
 
-  return excludedProxyNameRules.some(rule => {
-    return rule.keywords.some(keyword => {
+  return excludedProxyNameRules.some((rule) => {
+    return rule.keywords.some((keyword) => {
       return normalizedProxyName.includes(keyword.toLowerCase());
     });
   });
@@ -329,11 +291,7 @@ function compareProxyRegion(left, right) {
 function getProxyNameSet(config) {
   if (!Array.isArray(config.proxies)) return new Set();
 
-  return new Set(
-    config.proxies
-      .map(getProxyName)
-      .filter(Boolean)
-  );
+  return new Set(config.proxies.map(getProxyName).filter(Boolean));
 }
 
 function sortProxyGroupProxiesByRegion(config) {
@@ -343,7 +301,7 @@ function sortProxyGroupProxiesByRegion(config) {
   for (const group of getProxyGroups(config)) {
     if (!group || !Array.isArray(group.proxies)) continue;
 
-    group.proxies = group.proxies.filter(proxyName => {
+    group.proxies = group.proxies.filter((proxyName) => {
       if (!proxyNames.has(proxyName)) return true;
 
       return !shouldExcludeProxyName(proxyName);
@@ -353,16 +311,17 @@ function sortProxyGroupProxiesByRegion(config) {
       .map((proxyName, index) => ({
         proxyName,
         index,
-        rank: typeof proxyName === "string"
-          ? getProxyRegionRank(proxyName)
-          : proxyRegionOrder.length
+        rank:
+          typeof proxyName === "string"
+            ? getProxyRegionRank(proxyName)
+            : proxyRegionOrder.length,
       }))
-      .filter(item => proxyNames.has(item.proxyName))
+      .filter((item) => proxyNames.has(item.proxyName))
       .sort(compareProxyRegion)
-      .map(item => item.proxyName);
+      .map((item) => item.proxyName);
 
     let sortedIndex = 0;
-    group.proxies = group.proxies.map(proxyName => {
+    group.proxies = group.proxies.map((proxyName) => {
       if (!proxyNames.has(proxyName)) {
         return proxyName;
       }
