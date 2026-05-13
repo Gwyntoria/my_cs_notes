@@ -17,7 +17,14 @@
 ### 基础环境
 
 1. 安装 `Node.js`
-2. 在仓库根目录执行
+2. 在仓库根目录执行：
+
+    ```bash
+    npm install # 不指定版本安装依赖
+    npm ci # 指定版本安装依赖
+    ```
+
+    or
 
     ```bash
     npm install -D markdownlint-cli2 textlint \
@@ -42,4 +49,4 @@ npx markdownlint-cli2 --fix --no-globs path/to/file.md
 npx textlint --fix path/to/file.md
 ```
 
-如果使用 VS Code，建议安装 `markdownlint` 和 `textlint` 插件，并在 `settings.json` 中启用保存时检查。更完整的规则说明见 [markdown格式化指南.md](Manual/markdown格式化指南.md)。
+如果使用 VS Code，建议安装 `markdownlint` 和 `textlint` 插件，并在 `settings.json` 中启用保存时检查。更完整的规则说明见 [markdown 格式化指南.md](Manual/markdown格式化指南.md)。
