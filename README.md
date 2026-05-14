@@ -10,7 +10,7 @@
 
 1. *How_to_Ask_Questions.md* 是我从[华蟒用户组](https://groups.google.com/g/python-cn)的提问指南中找到的，英文原文为[How To Ask Questions the Smart Way](http://linuxmafia.com/faq/Essays/smart-questions.html)。
 
-## Format
+## Formatting
 
 本仓库使用 `markdownlint-cli2` 和 `textlint` 统一 Markdown 结构、中文排版与技术术语。
 
@@ -34,11 +34,11 @@
     textlint-rule-zh-half-and-full-width-bracket
     ```
 
-仓库内已提供以下配置文件：
+3. 仓库内已提供以下配置文件：
 
-1. `.markdownlint-cli2.jsonc`（会覆盖掉 VS Code 插件的 setting）
-2. `.textlintrc.json`
-3. `tech-terms.yml`
+- `.markdownlint-cli2.jsonc`：Markdown 格式约束，会覆盖掉 VS Code 插件中的设置。
+- `.textlintrc.json`：其他排版约束，如：对标题和正文的中英文之间添加空格。
+- `tech-terms.yml`：属于替换表。不建议增加英文缩写，有可能会将正常单词替换。
 
 ### 操作流程
 

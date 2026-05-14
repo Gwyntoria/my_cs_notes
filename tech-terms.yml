@@ -34,23 +34,6 @@ rules:
       - from: node.js
         to: Node.js
 
-  - expected: npm
-    patterns:
-      - NPM
-    specs:
-      - from: NPM
-        to: npm
-
-  - expected: pnpm
-    patterns:
-      - PNPM
-      - Pnpm
-    specs:
-      - from: PNPM
-        to: pnpm
-      - from: Pnpm
-        to: pnpm
-
   - expected: VS Code
     patterns:
       - VSCode
@@ -200,13 +183,6 @@ rules:
       - from: https
         to: HTTPS
 
-  - expected: SSH
-    patterns:
-      - ssh
-    specs:
-      - from: ssh
-        to: SSH
-
   - expected: WebSocket
     patterns:
       - websocket
@@ -220,13 +196,6 @@ rules:
     specs:
       - from: json
         to: JSON
-
-  - expected: SDK
-    patterns:
-      - sdk
-    specs:
-      - from: sdk
-        to: SDK
 
   - expected: YAML
     patterns:
@@ -272,13 +241,6 @@ rules:
     specs:
       - from: freetype
         to: FreeType
-
-  - expected: SDL
-    patterns:
-      - sdl
-    specs:
-      - from: sdl
-        to: SDL
 
   - expected: SDL_ttf
     patterns:
@@ -357,13 +319,6 @@ rules:
         to: C++
       - from: Cpp
         to: C++
-
-  - expected: TCP
-    patterns:
-      - tcp
-    specs:
-      - from: tcp
-        to: TCP
 
   - expected: RAII
     patterns:
