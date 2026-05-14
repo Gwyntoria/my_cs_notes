@@ -20,8 +20,8 @@
 2. 在仓库根目录执行：
 
     ```bash
-    npm install # 不指定版本安装依赖
-    npm ci # 指定版本安装依赖
+    npm install # 根据 package.json 安装依赖，不指定版本
+    npm ci # 指定版本安装依赖 # 根据 package-lock.json 安装依赖，指定版本
     ```
 
     or
