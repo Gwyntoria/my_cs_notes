@@ -62,6 +62,7 @@ const directRules = [
   `DOMAIN-SUFFIX,alipay.com,DIRECT`,
   `DOMAIN-SUFFIX,jd.com,DIRECT`,
   `DOMAIN-SUFFIX,taobao.com,DIRECT`,
+  `DOMAIN-SUFFIX,linuxdo.org,DIRECT`,
 
   // --- 微信 / WeChat: Windows ---
   `PROCESS-NAME,Weixin.exe,DIRECT`,
