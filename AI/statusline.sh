@@ -307,4 +307,12 @@ else
 fi
 tokens_part="${BRIGHT_CYAN}${tokens_display}${RESET} ${DIM}used${RESET}"
 
-printf "%b | %b | %b | %b\n" "$model_part" "$location_part" "$window_part" "$tokens_part"
+# 5. Claude Code version (from stdin JSON; avoid forking `claude --version`)
+cc_version=$(printf '%s' "$input" | jq -r '.version // empty' 2>/dev/null)
+if [ -n "$cc_version" ]; then
+  version_part="${DIM}v${cc_version}${RESET}"
+else
+  version_part="${DIM}v?${RESET}"
+fi
+
+printf "%b | %b | %b | %b | %b\n" "$model_part" "$location_part" "$window_part" "$tokens_part" "$version_part"
