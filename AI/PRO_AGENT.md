@@ -1,5 +1,9 @@
 # Repository Guidelines
 
+## Commit Message Guidelines
+
+Use Conventional Commit subjects in the form `type(scope): summary`, matching recent history such as `feat(alarm): support deep sleep RTC wake` and `fix(config): increase TCP window size to 11200`. Common types are `feat`, `fix`, `refactor`, `test`, `docs`, and `chore`. Keep the type and scope lowercase, and write a concise English summary that starts with an imperative verb.
+
 ## Coding Style & Naming Conventions
 
 ### Formatting
