@@ -23,7 +23,7 @@ Stride 的值需要与 4 补齐，补齐方法见[《位数补齐》](../Algorit
 
 ## BMP 文件头、信息头、图片有效数据区
 
-<img src="../assets/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5bCP5bWM5ZCM5a2m,size_20,color_FFFFFF,t_70,g_se,x_16.png" alt="img" style="zoom:50%;" />
+<img src="./assets/Bitmap/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5bCP5bWM5ZCM5a2m,size_20,color_FFFFFF,t_70,g_se,x_16.png" alt="img" style="zoom:50%;" />
 
 ## 代码解析 BMP 步骤
 

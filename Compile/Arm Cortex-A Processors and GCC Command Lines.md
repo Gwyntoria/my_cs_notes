@@ -28,7 +28,7 @@ All Arm Cortex-A processors available today come with a floating-point unit and 
 
 However, the precise set of instructions available depends on the processor that you have and GCC requires a separate option to control this; it doesn't try to work it out from the `-mcpu` option. The choice of **floating-point** and **SIMD** instructions is controlled by the option **`–mfpu`** and the recommended choices for each of the CPUs are given in the table below:
 
-![Table of recommended instruction for Arm CPUs](../assets/6574.blogentry_2D00_103749_2D00_004812900_2B00_1365712953_5F00_thumb.png)
+![Table of recommended instruction for Arm CPUs](./assets/Arm%20Cortex-A%20Processors%20and%20GCC%20Command%20Lines/6574.blogentry_2D00_103749_2D00_004812900_2B00_1365712953_5F00_thumb.png)
 
 - VFPv3 and VFPv4 implementations start with **32 double-precision registers**
 - When NEON is NOT present, the top 16 registers become optional; this is controlled by the d16 component of the option name

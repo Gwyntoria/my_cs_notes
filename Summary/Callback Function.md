@@ -4,7 +4,7 @@ In computer programming, a **callback** or **callback function** is any referenc
 
 A callback is often back on the level of the original caller:
 
-<img src="../assets/1920px-Callback-notitle.svg.png" alt="1920px-Callback-notitle.svg" width="100%" />
+<img src="./assets/Callback%20Function/1920px-Callback-notitle.svg.png" alt="1920px-Callback-notitle.svg" width="100%" />
 
 Firstly, the main function should invoke the registration function to register the callback function with the library function. Subsequently, the library function should be called, and within the library function, the callback function is then executed.
 

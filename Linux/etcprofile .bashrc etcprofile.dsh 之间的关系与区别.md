@@ -20,6 +20,6 @@
 
 但是无论在加载 `~/.bashrc`（实际上是加载了`~/.bashrc`中的`/etc/bashrc`）或 `/etc/profile` 时，都会执行如下代码片段：
 
-![image-20220629120559195](../assets/image-20220629120559195.png)
+![image-20220629120559195](./assets/etcprofile%20.bashrc%20etcprofile.dsh%20之间的关系与区别/image-20220629120559195.png)
 
 所以，无论在 login shell 或 non-login shell 环境中，都会加载`/etc/profile.d/*.sh`文件

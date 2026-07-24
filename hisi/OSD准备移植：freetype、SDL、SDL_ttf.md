@@ -46,7 +46,7 @@
 
 ## 新版本 FreeType 出现的问题
 
-![image-20220929153557732](../assets/image-20220929153557732.png)
+![image-20220929153557732](./assets/OSD准备移植：freetype、SDL、SDL_ttf/image-20220929153557732.png)
 
 ### zlib
 

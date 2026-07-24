@@ -10,7 +10,7 @@
 
 蓝牙协议栈(Bluetooth Protocol Stack)分为两大类：controller 和 host。每个类别都有执行特定角色的子类别。
 
-<img src="../assets/BLE%E5%8D%8F%E8%AE%AE%E6%A0%88%E4%B8%AD%E7%9A%84GAP%E4%B8%8EGATT/ble_stack-16981473070843.svg" alt="ble_stack" style="zoom: 67%;" />
+<img src="./assets/BLE%E5%8D%8F%E8%AE%AE%E6%A0%88%E4%B8%AD%E7%9A%84GAP%E4%B8%8EGATT/ble_stack-16981473070843.svg" alt="ble_stack" style="zoom: 67%;" />
 
 ### 1.1. 控制器(Controller)
 
@@ -135,7 +135,7 @@ Profile 使不同供应商的产品之间实现互操作性成为可能。软件
 
 GATT Profile 结构如下：
 
-<img src="../assets/BLE%E5%8D%8F%E8%AE%AE%E6%A0%88%E4%B8%AD%E7%9A%84GAP%E4%B8%8EGATT/gatt_profile.png" alt="GATT Profile structure"  />
+<img src="./assets/BLE%E5%8D%8F%E8%AE%AE%E6%A0%88%E4%B8%AD%E7%9A%84GAP%E4%B8%8EGATT/gatt_profile.png" alt="GATT Profile structure"  />
 
 一个 profile 中可包含一个或多个服务；一个服务可包含一个或者多个特征；一个特征至少包含两个属性（property 和 value），包括特征声明和特征值。
 

@@ -2,7 +2,7 @@
 
 ## ChatGPT Simple Cheatsheet
 
-![prompt-simple-cheatsheet](../assets/prompt-simple-cheatsheet.jpg)
+![prompt-simple-cheatsheet](./assets/Understand%20Prompt/prompt-simple-cheatsheet.jpg)
 
 ## Reference
 

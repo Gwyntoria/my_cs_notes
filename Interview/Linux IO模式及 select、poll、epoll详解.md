@@ -44,7 +44,7 @@
 
 调用阻塞式`recvfrom`(blocking receive)，流程如下：
 
-<img src="../assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492928416812_4.png" alt="blocking io" />
+<img src="./assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492928416812_4.png" alt="blocking io" />
 
 #### 1.2.2. 非阻塞式 I/O
 
@@ -52,7 +52,7 @@
 
 调用非阻塞式`recvfrom`(nonblocking receive)，流程如下：
 
-![nonblocking io](../assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929000361_5.png)
+![nonblocking io](./assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929000361_5.png)
 
 非阻塞 IO 的特点是，用户进程需要不断的主动询问内核，数据是否处于 ready 状态，由于 CPU 需要处理更多的系统调用，因此这种模型的 CPU 利用率比较低。
 
@@ -64,7 +64,7 @@
 
 使用`select`之后的系统调用流程：
 
-![io multiplexing](../assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929444818_6.png)
+![io multiplexing](./assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929444818_6.png)
 
 #### 1.2.4. 信号驱动 I/O
 
@@ -72,7 +72,7 @@
 
 相比于非阻塞式 I/O 的轮询方式，信号驱动 I/O 的 CPU 利用率更高。
 
-![sig io](../assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929553651_7.png)
+![sig io](./assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492929553651_7.png)
 
 #### 1.2.5. 异步 I/O (AIO)
 
@@ -80,7 +80,7 @@
 
 异步 I/O 与信号驱动 I/O 的区别在于，异步 I/O 的信号是通知应用进程 I/O 完成，而信号驱动 I/O 的信号是通知应用进程可以开始 I/O。
 
-![aio](../assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492930243286_8.png)
+![aio](./assets/Linux%20IO%E6%A8%A1%E5%BC%8F%E5%8F%8A%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/1492930243286_8.png)
 
 ## 2. I/O 复用
 

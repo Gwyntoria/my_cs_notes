@@ -22,13 +22,13 @@
 
 /mnt ----------- 此目录主要是作为挂载点使用。通常包括系统引导后被挂载的文件系统的挂载点。如挂载 Windows 下的某个分区。
 
-![Pasted image 20220623132126](..\assets\Pasted image 20220623132126.png)
+![Pasted image 20220623132126](./assets/Introduction/Pasted%20image%2020220623132126.png)
 
-![Pasted image 20220623155937](..\assets\Pasted image 20220623155937.png)
+![Pasted image 20220623155937](./assets/Introduction/Pasted%20image%2020220623155937.png)
 
 ## Embedded Linux System
 
-![image-20220628150218085](../assets/image-20220628150218085.png)
+![image-20220628150218085](./assets/Introduction/image-20220628150218085.png)
 
 ### 运行顺序
 
