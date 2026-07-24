@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="300" viewBox="0 0 1080 300" role="img" aria-labelledby="title desc">
+  <title id="title">异步消息进入播放器状态机</title>
+  <desc id="desc">网络、音频和定时器回调直接将消息入队，再由播放器状态机按顺序消费。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L8 4 L0 8z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .title { font: 600 20px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #172554; }
+      .label { font: 600 17px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #172554; }
+      .note { font: 14px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #475569; }
+      .small { font: 13px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #64748b; }
+      .node { stroke: #93c5fd; stroke-width: 2; }
+      .flow { fill: none; stroke: #2563eb; stroke-width: 2.5; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1080" height="300" rx="16" fill="#f8fafc"/>
+  <text x="36" y="42" class="title">异步输入收敛为串行处理</text>
+
+  <rect x="36" y="94" width="174" height="40" rx="9" class="node" fill="#eff6ff"/>
+  <text x="123" y="120" text-anchor="middle" class="label">网络回调</text>
+  <rect x="36" y="145" width="174" height="40" rx="9" class="node" fill="#eff6ff"/>
+  <text x="123" y="171" text-anchor="middle" class="label">音频回调</text>
+  <rect x="36" y="196" width="174" height="40" rx="9" class="node" fill="#eff6ff"/>
+  <text x="123" y="222" text-anchor="middle" class="label">定时器回调</text>
+  <text x="123" y="262" text-anchor="middle" class="small">不同线程或 ISR</text>
+
+  <text x="327" y="82" text-anchor="middle" class="note">构造消息并入队</text>
+  <path d="M210 114 H360 V134 H445" class="flow"/>
+  <path d="M210 165 H445" class="flow"/>
+  <path d="M210 216 H360 V196 H445" class="flow"/>
+
+  <rect x="445" y="112" width="200" height="106" rx="12" class="node" fill="#fff7ed"/>
+  <text x="545" y="157" text-anchor="middle" class="label">消息队列</text>
+  <text x="545" y="185" text-anchor="middle" class="note">按顺序取出</text>
+
+  <path d="M645 165 H815" class="flow"/>
+
+  <rect x="815" y="112" width="225" height="106" rx="12" class="node" fill="#f5f3ff"/>
+  <text x="927" y="157" text-anchor="middle" class="label">播放器状态机</text>
+  <text x="927" y="185" text-anchor="middle" class="note">串行消费消息</text>
+</svg>
