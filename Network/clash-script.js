@@ -319,6 +319,7 @@ function hasProxyCode(proxyName, code) {
     const hasLetterBefore = /[A-Z]/.test(previousCharacter);
     const hasLetterAfter = /[A-Z]/.test(nextCharacter);
 
+    // 地区代码两侧不能紧邻英文字母，避免把 "RUS" 之类的片段误判为 "US"。
     if (!hasLetterBefore && !hasLetterAfter) return true;
 
     matchIndex = normalizedProxyName.indexOf(normalizedCode, matchIndex + 1);
@@ -341,6 +342,8 @@ function matchesProxyNameRule(proxyName, rule) {
 
 function shouldIncludeProxyName(proxyName) {
   if (typeof proxyName !== "string") return false;
+
+  // 未配置 include 规则时不限制节点，便于仅使用 exclude 规则。
   if (includedProxyNameRules.length === 0) return true;
 
   return includedProxyNameRules.some((rule) => {
@@ -377,11 +380,13 @@ function filterAndSortProxyGroupProxies(config) {
   for (const group of getProxyGroups(config)) {
     if (!group || !Array.isArray(group.proxies)) continue;
 
+    // 只跟踪订阅节点，策略组引用、DIRECT、REJECT 等固定项不参与筛选。
     const hadProxyNode = group.proxies.some((proxyName) =>
       proxyNames.has(proxyName),
     );
 
     group.proxies = group.proxies.filter((proxyName) => {
+      // 非订阅项必须保留，否则可能破坏代理组之间的引用关系。
       if (!proxyNames.has(proxyName)) return true;
 
       return shouldIncludeProxyName(proxyName);
@@ -396,6 +401,8 @@ function filterAndSortProxyGroupProxies(config) {
     const hasProxyNode = group.proxies.some((proxyName) =>
       proxyNames.has(proxyName),
     );
+
+    // 仅当原组含订阅节点且筛选后清空时告警，避免对纯策略组误报。
     if (hadProxyNode && !hasProxyNode) {
       console.warn(
         `[clash-verge] No proxy nodes remain in group "${group.name || "<unnamed>"}" after include/exclude filtering.`,
@@ -417,6 +424,7 @@ function filterAndSortProxyGroupProxies(config) {
 
     let sortedIndex = 0;
     group.proxies = group.proxies.map((proxyName) => {
+      // 非订阅项保留原位置，只依次替换订阅节点所在的槽位。
       if (!proxyNames.has(proxyName)) {
         return proxyName;
       }
