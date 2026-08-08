@@ -45,6 +45,40 @@ const proxyRegionOrder = [
   },
 ];
 
+// 只保留命中这些规则的订阅节点。空数组表示关闭 include 筛选。
+const includedProxyNameRules = [
+  {
+    name: "香港",
+    keywords: ["香港", "Hong Kong", "🇭🇰"],
+    codes: ["HK"],
+  },
+  {
+    name: "美国",
+    keywords: ["美国", "美國", "United States", "America", "🇺🇸"],
+    codes: ["US", "USA"],
+  },
+  {
+    name: "日本",
+    keywords: ["日本", "Japan", "Tokyo", "Osaka", "🇯🇵"],
+    codes: ["JP"],
+  },
+  {
+    name: "韩国",
+    keywords: ["韩国", "韓國", "South Korea", "Korea", "Seoul", "🇰🇷"],
+    codes: ["KR"],
+  },
+  {
+    name: "新加坡",
+    keywords: ["新加坡", "Singapore", "🇸🇬"],
+    codes: ["SG"],
+  },
+  {
+    name: "台湾",
+    keywords: ["台湾", "台灣", "Taiwan"],
+    codes: ["TW"],
+  },
+];
+
 // 从 proxy groups 里移除不需要的节点。
 const excludedProxyNameRules = [
   // 示例：
@@ -273,15 +307,52 @@ function getProxyRegionRank(proxyName) {
   return proxyRegionOrder.length;
 }
 
+function hasProxyCode(proxyName, code) {
+  const normalizedProxyName = proxyName.toUpperCase();
+  const normalizedCode = code.toUpperCase();
+  let matchIndex = normalizedProxyName.indexOf(normalizedCode);
+
+  while (matchIndex !== -1) {
+    const previousCharacter = normalizedProxyName[matchIndex - 1] || "";
+    const nextCharacter =
+      normalizedProxyName[matchIndex + normalizedCode.length] || "";
+    const hasLetterBefore = /[A-Z]/.test(previousCharacter);
+    const hasLetterAfter = /[A-Z]/.test(nextCharacter);
+
+    if (!hasLetterBefore && !hasLetterAfter) return true;
+
+    matchIndex = normalizedProxyName.indexOf(normalizedCode, matchIndex + 1);
+  }
+
+  return false;
+}
+
+function matchesProxyNameRule(proxyName, rule) {
+  const normalizedProxyName = proxyName.toLowerCase();
+  const keywords = Array.isArray(rule.keywords) ? rule.keywords : [];
+  const codes = Array.isArray(rule.codes) ? rule.codes : [];
+
+  const matchesKeyword = keywords.some((keyword) => {
+    return normalizedProxyName.includes(keyword.toLowerCase());
+  });
+
+  return matchesKeyword || codes.some((code) => hasProxyCode(proxyName, code));
+}
+
+function shouldIncludeProxyName(proxyName) {
+  if (typeof proxyName !== "string") return false;
+  if (includedProxyNameRules.length === 0) return true;
+
+  return includedProxyNameRules.some((rule) => {
+    return matchesProxyNameRule(proxyName, rule);
+  });
+}
+
 function shouldExcludeProxyName(proxyName) {
   if (typeof proxyName !== "string") return false;
 
-  const normalizedProxyName = proxyName.toLowerCase();
-
   return excludedProxyNameRules.some((rule) => {
-    return rule.keywords.some((keyword) => {
-      return normalizedProxyName.includes(keyword.toLowerCase());
-    });
+    return matchesProxyNameRule(proxyName, rule);
   });
 }
 
@@ -299,18 +370,37 @@ function getProxyNameSet(config) {
   return new Set(config.proxies.map(getProxyName).filter(Boolean));
 }
 
-function sortProxyGroupProxiesByRegion(config) {
+function filterAndSortProxyGroupProxies(config) {
   const proxyNames = getProxyNameSet(config);
   if (proxyNames.size === 0) return;
 
   for (const group of getProxyGroups(config)) {
     if (!group || !Array.isArray(group.proxies)) continue;
 
+    const hadProxyNode = group.proxies.some((proxyName) =>
+      proxyNames.has(proxyName),
+    );
+
+    group.proxies = group.proxies.filter((proxyName) => {
+      if (!proxyNames.has(proxyName)) return true;
+
+      return shouldIncludeProxyName(proxyName);
+    });
+
     group.proxies = group.proxies.filter((proxyName) => {
       if (!proxyNames.has(proxyName)) return true;
 
       return !shouldExcludeProxyName(proxyName);
     });
+
+    const hasProxyNode = group.proxies.some((proxyName) =>
+      proxyNames.has(proxyName),
+    );
+    if (hadProxyNode && !hasProxyNode) {
+      console.warn(
+        `[clash-verge] No proxy nodes remain in group "${group.name || "<unnamed>"}" after include/exclude filtering.`,
+      );
+    }
 
     const sortedProxyNames = group.proxies
       .map((proxyName, index) => ({
@@ -340,7 +430,7 @@ function sortProxyGroupProxiesByRegion(config) {
 }
 
 function main(config, profileName) {
-  sortProxyGroupProxiesByRegion(config);
+  filterAndSortProxyGroupProxies(config);
   mergeProxyRules(config, profileName);
   mergeFakeIpFilter(config);
 

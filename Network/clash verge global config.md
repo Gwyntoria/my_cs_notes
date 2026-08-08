@@ -90,9 +90,35 @@ const proxyRegionOrder = [
 
 如果要调整地区优先级，直接调整 `proxyRegionOrder` 中对象的顺序。如果要增加新的地区，就按同样格式新增一个对象。
 
+#### 只保留指定地区的节点
+
+脚本先根据 `includedProxyNameRules` 筛选真实节点，再应用 `excludedProxyNameRules`。include 规则只决定哪些节点可以保留，节点顺序仍由 `proxyRegionOrder` 决定。
+
+默认保留香港、美国、日本、韩国、新加坡和台湾节点。每条规则分为两类匹配条件：
+
+- `keywords` 使用不区分大小写的子串匹配，适合地区全称、城市名和国旗。
+- `codes` 按独立地区代码匹配。数字和分隔符可以作为边界，因此 `HK01`、`US-02` 会命中，`HKG`、`RUSSIA` 不会命中。
+
+```js
+const includedProxyNameRules = [
+  {
+    name: "香港",
+    keywords: ["香港", "Hong Kong", "🇭🇰"],
+    codes: ["HK"],
+  },
+  {
+    name: "美国",
+    keywords: ["美国", "美國", "United States", "America", "🇺🇸"],
+    codes: ["US", "USA"],
+  },
+];
+```
+
+将 `includedProxyNameRules` 设为空数组可以关闭 include 筛选。`DIRECT`、`REJECT` 和其他 proxy group 名称不是真实节点，不参与 include 或 exclude，会保留在原位置。
+
 #### 从 proxy group 中移除指定节点
 
-脚本会根据 `excludedProxyNameRules` 从 `proxy group` 中删除不需要的真实节点，但不会删除 `config.proxies` 里的节点定义。
+include 筛选完成后，脚本会根据 `excludedProxyNameRules` 从 `proxy group` 中删除不需要的真实节点，但不会删除 `config.proxies` 里的节点定义。exclude 拥有最终否决权，例如已经命中 include 的 `Hong Kong IPv6` 仍会被删除。
 
 当前默认会移除节点名包含 `ipv6` 的节点，匹配时不区分大小写：
 
@@ -130,6 +156,8 @@ const excludedProxyNameRules = [
 ```
 
 `keywords` 中任意一个字符串命中节点名，就会从 `proxy group` 中移除该节点。这里只影响策略组里的可选项，不会影响订阅中原始节点定义。
+
+如果筛选后某个 proxy group 没有剩余的真实节点，脚本不会自动放回被过滤的节点，并会通过 `console.warn` 输出对应组名。
 
 #### 自定义 Proxy Rules 和 Direct Rules
 
