@@ -109,6 +109,10 @@ const excludedProxyNameRules = [
     name: "IPv6",
     keywords: ["ipv6"],
   },
+  {
+    name: "unicom",
+    keywords: ["联通"],
+  }
 ];
 
 // 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
