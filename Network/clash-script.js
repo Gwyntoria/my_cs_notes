@@ -20,12 +20,12 @@ const proxyPolicyCandidates = [
 // proxy group 中订阅节点优先顺序。命中这些地区的节点会排在前面，同一地区内保持原订阅顺序。
 const proxyRegionOrder = [
   {
-    name: "美国",
-    keywords: ["美国", "美國", "United States", "USA", "US", "America", "🇺🇸"],
+    name: "香港",
+    keywords: ["香港", "香港", "Hong Kong", "HK", "🇭🇰"],
   },
   {
-    name: "新加坡",
-    keywords: ["新加坡", "Singapore", "SG", "🇸🇬"],
+    name: "美国",
+    keywords: ["美国", "美國", "United States", "USA", "US", "America", "🇺🇸"],
   },
   {
     name: "日本",
@@ -38,6 +38,10 @@ const proxyRegionOrder = [
   {
     name: "台湾",
     keywords: ["台湾", "台灣", "Taiwan", "TW"],
+  },
+  {
+    name: "新加坡",
+    keywords: ["新加坡", "Singapore", "SG", "🇸🇬"],
   },
 ];
 
