@@ -479,7 +479,7 @@ function ensureOpenAiProxyGroup(config, profileName) {
     (group) => group && group.name === openAiProxyGroup.name,
   );
   const proxyPolicy = resolveProxyPolicy(config, profileName);
-  const proxies = Array.from(new Set([usProxyGroup.name, proxyPolicy])).filter(
+  const proxies = Array.from(new Set([proxyPolicy, usProxyGroup.name])).filter(
     (groupName) =>
       groupName &&
       groupName !== openAiProxyGroup.name &&
