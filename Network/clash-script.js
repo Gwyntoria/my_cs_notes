@@ -10,15 +10,16 @@
  * - excludedProxyNameRules：订阅节点黑名单，匹配方式同上；在白名单之后执行，命中后一定移除。空数组表示不排除任何节点。
  * - usProxyGroup：美国节点专用代理组；url 是延迟检测地址，interval 是检测间隔秒数。
  * - usRuleProviderNames：强制使用美国节点组的 rule-provider 名称，必须与合并配置中的名称完全一致。
+ * - openAiProxyGroup：OpenAI 专用代理组，在当前 profile 的普通代理组和 US 之间手动选择。
  * - rejectRuleProviderNames：使用 REJECT 策略的 rule-provider 名称。
  * - directRules：强制直连的完整 Mihomo 规则，每条规则必须包含末尾的 DIRECT。
  * - proxyRulePrefixes：强制代理的 Mihomo 规则前缀，不要填写末尾策略组，脚本会根据 profile 自动补上解析出的代理组名称。
  * - fakeIpFilterRules：追加到 dns.fake-ip-filter 的域名；通配符沿用 Mihomo 配置语法。
  *
- * 规则顺序为 directRules、rejectRuleProviderNames、usRuleProviderNames、
- * proxyRulePrefixes、订阅原规则，Mihomo 按首条匹配规则执行。节点筛选和排序
- * 只处理 config.proxies 中的真实订阅节点，DIRECT、REJECT 以及其他代理组引用
- * 会保留在原位置。上述列表中的 name 仅用于标注，不参与匹配。
+ * 规则顺序为 directRules、rejectRuleProviderNames、OpenAI、
+ * usRuleProviderNames、proxyRulePrefixes、订阅原规则，Mihomo 按首条匹配规则
+ * 执行。节点筛选和排序只处理 config.proxies 中的真实订阅节点，DIRECT、REJECT
+ * 以及其他代理组引用会保留在原位置。上述列表中的 name 仅用于标注，不参与匹配。
  */
 
 // profile 名称 -> 代理组名称
@@ -121,10 +122,15 @@ const excludedProxyNameRules = [
 
 // 只包含命中“美国”规则的真实订阅节点，并按延迟自动选择节点。
 const usProxyGroup = {
-  name: "🇺🇸 美国节点",
+  name: "US",
   type: "url-test",
   url: "https://www.gstatic.com/generate_204",
   interval: 1800,
+};
+
+const openAiProxyGroup = {
+  name: "OpenAI",
+  type: "select",
 };
 
 // 只保留命中这些规则的订阅节点。空数组表示关闭 include 筛选。
@@ -135,7 +141,7 @@ const usProxyNameRule = {
 };
 
 
-const usRuleProviderNames = ["OpenAI", "TikTok", "PayPal", "Gemini"];
+const usRuleProviderNames = ["TikTok", "PayPal", "Gemini"];
 const rejectRuleProviderNames = ["AD"];
 
 // 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
@@ -239,6 +245,12 @@ function buildUsProxyRules(config) {
   );
 }
 
+function buildOpenAiProxyRules(config) {
+  if (!getProxyGroupNames(config).includes(openAiProxyGroup.name)) return [];
+
+  return [`RULE-SET,OpenAI,${openAiProxyGroup.name}`];
+}
+
 function buildRejectRules() {
   return rejectRuleProviderNames.map(
     (providerName) => `RULE-SET,${providerName},REJECT`,
@@ -326,6 +338,7 @@ function mergeProxyRules(config, profileName) {
   config.rules = uniqueRules(
     directRules
       .concat(buildRejectRules())
+      .concat(buildOpenAiProxyRules(config))
       .concat(buildUsProxyRules(config))
       .concat(proxyRules)
       .concat(oldRules),
@@ -461,6 +474,46 @@ function ensureUsProxyGroup(config) {
   config["proxy-groups"] = groups;
 }
 
+function ensureOpenAiProxyGroup(config, profileName) {
+  const groups = getProxyGroups(config);
+  const oldGroup = groups.find(
+    (group) => group && group.name === openAiProxyGroup.name,
+  );
+  const proxyPolicy = resolveProxyPolicy(config, profileName);
+  const proxies = Array.from(
+    new Set([usProxyGroup.name, proxyPolicy]),
+  ).filter(
+    (groupName) =>
+      groupName &&
+      groupName !== openAiProxyGroup.name &&
+      getProxyGroupNames(config).includes(groupName),
+  );
+
+  if (proxies.length === 0) {
+    config["proxy-groups"] = groups.filter(
+      (group) => !group || group.name !== openAiProxyGroup.name,
+    );
+    console.warn(
+      "[clash-verge] No proxy groups found for OpenAI. OpenAI rules were skipped.",
+    );
+    return;
+  }
+
+  const nextGroup = {
+    ...oldGroup,
+    ...openAiProxyGroup,
+    proxies,
+  };
+
+  if (oldGroup) {
+    groups[groups.indexOf(oldGroup)] = nextGroup;
+  } else {
+    groups.push(nextGroup);
+  }
+
+  config["proxy-groups"] = groups;
+}
+
 function compareProxyRegion(left, right) {
   if (left.rank !== right.rank) {
     return left.rank - right.rank;
@@ -541,6 +594,7 @@ function filterAndSortProxyGroupProxies(config) {
 
 function main(config, profileName) {
   ensureUsProxyGroup(config);
+  ensureOpenAiProxyGroup(config, profileName);
   filterAndSortProxyGroupProxies(config);
   mergeProxyRules(config, profileName);
   mergeFakeIpFilter(config);
