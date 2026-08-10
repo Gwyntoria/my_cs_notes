@@ -117,7 +117,7 @@ const excludedProxyNameRules = [
   {
     name: "unicom",
     keywords: ["联通"],
-  }
+  },
 ];
 
 // 只包含命中“美国”规则的真实订阅节点，并按延迟自动选择节点。
@@ -139,7 +139,6 @@ const usProxyNameRule = {
   keywords: ["美国", "美國", "United States", "America", "🇺🇸"],
   codes: ["US", "USA"],
 };
-
 
 const usRuleProviderNames = ["TikTok", "PayPal", "Gemini"];
 const rejectRuleProviderNames = ["AD"];
@@ -480,9 +479,7 @@ function ensureOpenAiProxyGroup(config, profileName) {
     (group) => group && group.name === openAiProxyGroup.name,
   );
   const proxyPolicy = resolveProxyPolicy(config, profileName);
-  const proxies = Array.from(
-    new Set([usProxyGroup.name, proxyPolicy]),
-  ).filter(
+  const proxies = Array.from(new Set([usProxyGroup.name, proxyPolicy])).filter(
     (groupName) =>
       groupName &&
       groupName !== openAiProxyGroup.name &&
