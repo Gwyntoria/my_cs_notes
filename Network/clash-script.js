@@ -8,13 +8,17 @@
  * - proxyRegionOrder：订阅节点的地区排序，越靠前优先级越高；keywords 使用区分大小写的子串匹配，未命中的节点排在末尾，同一地区保持订阅原顺序。
  * - includedProxyNameRules：订阅节点白名单；keywords 使用不区分大小写的子串匹配，codes 只匹配两侧不紧邻英文字母的地区代码。空数组表示关闭白名单筛选。
  * - excludedProxyNameRules：订阅节点黑名单，匹配方式同上；在白名单之后执行，命中后一定移除。空数组表示不排除任何节点。
+ * - usProxyGroup：美国节点专用代理组；url 是延迟检测地址，interval 是检测间隔秒数。
+ * - usRuleProviderNames：强制使用美国节点组的 rule-provider 名称，必须与合并配置中的名称完全一致。
+ * - rejectRuleProviderNames：使用 REJECT 策略的 rule-provider 名称。
  * - directRules：强制直连的完整 Mihomo 规则，每条规则必须包含末尾的 DIRECT。
  * - proxyRulePrefixes：强制代理的 Mihomo 规则前缀，不要填写末尾策略组，脚本会根据 profile 自动补上解析出的代理组名称。
  * - fakeIpFilterRules：追加到 dns.fake-ip-filter 的域名；通配符沿用 Mihomo 配置语法。
  *
- * 规则顺序为 directRules、proxyRulePrefixes、订阅原规则，Mihomo 按首条匹配规则
- * 执行。节点筛选和排序只处理 config.proxies 中的真实订阅节点，DIRECT、REJECT
- * 以及其他代理组引用会保留在原位置。上述列表中的 name 仅用于标注，不参与匹配。
+ * 规则顺序为 directRules、rejectRuleProviderNames、usRuleProviderNames、
+ * proxyRulePrefixes、订阅原规则，Mihomo 按首条匹配规则执行。节点筛选和排序
+ * 只处理 config.proxies 中的真实订阅节点，DIRECT、REJECT 以及其他代理组引用
+ * 会保留在原位置。上述列表中的 name 仅用于标注，不参与匹配。
  */
 
 // profile 名称 -> 代理组名称
@@ -115,6 +119,25 @@ const excludedProxyNameRules = [
   }
 ];
 
+// 只包含命中“美国”规则的真实订阅节点，并按延迟自动选择节点。
+const usProxyGroup = {
+  name: "🇺🇸 美国节点",
+  type: "url-test",
+  url: "https://www.gstatic.com/generate_204",
+  interval: 1800,
+};
+
+// 只保留命中这些规则的订阅节点。空数组表示关闭 include 筛选。
+const usProxyNameRule = {
+  name: "美国",
+  keywords: ["美国", "美國", "United States", "America", "🇺🇸"],
+  codes: ["US", "USA"],
+};
+
+
+const usRuleProviderNames = ["OpenAI", "TikTok", "PayPal", "Gemini"];
+const rejectRuleProviderNames = ["AD"];
+
 // 需要强制直连的规则放在这里，避免国内服务、办公软件和支付场景误走代理。
 const directRules = [
   `DOMAIN-SUFFIX,epic.com,DIRECT`,
@@ -167,9 +190,6 @@ const directRules = [
 
 // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
 const proxyRulePrefixes = [
-  "RULE-SET,Openai",
-  "RULE-SET,Gemini",
-
   // --- Steam: Windows ---
   "PROCESS-NAME,steam.exe",
   "PROCESS-NAME,steamwebhelper.exe",
@@ -209,6 +229,20 @@ function buildProxyRules(proxyPolicy) {
   if (!proxyPolicy) return [];
 
   return proxyRulePrefixes.map((rule) => `${rule},${proxyPolicy}`);
+}
+
+function buildUsProxyRules(config) {
+  if (!getProxyGroupNames(config).includes(usProxyGroup.name)) return [];
+
+  return usRuleProviderNames.map(
+    (providerName) => `RULE-SET,${providerName},${usProxyGroup.name}`,
+  );
+}
+
+function buildRejectRules() {
+  return rejectRuleProviderNames.map(
+    (providerName) => `RULE-SET,${providerName},REJECT`,
+  );
 }
 
 const fakeIpFilterRules = [
@@ -289,7 +323,13 @@ function mergeProxyRules(config, profileName) {
 
   const proxyRules = buildProxyRules(proxyPolicy);
 
-  config.rules = uniqueRules(directRules.concat(proxyRules).concat(oldRules));
+  config.rules = uniqueRules(
+    directRules
+      .concat(buildRejectRules())
+      .concat(buildUsProxyRules(config))
+      .concat(proxyRules)
+      .concat(oldRules),
+  );
 }
 
 function ensureDns(config) {
@@ -382,6 +422,45 @@ function shouldExcludeProxyName(proxyName) {
   });
 }
 
+function ensureUsProxyGroup(config) {
+  if (!Array.isArray(config.proxies)) return;
+
+  const usProxyNames = config.proxies
+    .map(getProxyName)
+    .filter(Boolean)
+    .filter((proxyName) => matchesProxyNameRule(proxyName, usProxyNameRule))
+    .filter((proxyName) => !shouldExcludeProxyName(proxyName));
+
+  const groups = getProxyGroups(config);
+  const oldGroup = groups.find(
+    (group) => group && group.name === usProxyGroup.name,
+  );
+
+  if (usProxyNames.length === 0) {
+    config["proxy-groups"] = groups.filter(
+      (group) => !group || group.name !== usProxyGroup.name,
+    );
+    console.warn(
+      "[clash-verge] No US proxy nodes found. US rules were skipped.",
+    );
+    return;
+  }
+
+  const nextGroup = {
+    ...oldGroup,
+    ...usProxyGroup,
+    proxies: usProxyNames,
+  };
+
+  if (oldGroup) {
+    groups[groups.indexOf(oldGroup)] = nextGroup;
+  } else {
+    groups.push(nextGroup);
+  }
+
+  config["proxy-groups"] = groups;
+}
+
 function compareProxyRegion(left, right) {
   if (left.rank !== right.rank) {
     return left.rank - right.rank;
@@ -461,6 +540,7 @@ function filterAndSortProxyGroupProxies(config) {
 }
 
 function main(config, profileName) {
+  ensureUsProxyGroup(config);
   filterAndSortProxyGroupProxies(config);
   mergeProxyRules(config, profileName);
   mergeFakeIpFilter(config);
