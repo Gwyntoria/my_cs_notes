@@ -122,6 +122,11 @@ sudo apt install -y \
     wget \
     ca-certificates \
     build-essential \
+    make \
+    cmake \
+    clang-format \
+    gcc-arm-none-eabi \
+    direnv \
     procps \
     file \
     unzip \
