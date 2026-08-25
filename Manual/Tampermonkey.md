@@ -7,3 +7,4 @@
 5. [Open the F**king URL Right Now](https://greasyfork.org/en/scripts/412612-open-the-f-king-url-right-now)
 6. [Zhihu enhancement](https://greasyfork.org/en/scripts/419081-zhihu-enhancement)
 7. [AutoPager](https://greasyfork.org/en/scripts/419215-autopager)
+8. [LinkSwift](https://github.com/hmjz100/LinkSwift/)：搭配 [Motrix Next](https://github.com/AnInsomniacy/motrix-next) 下载管理器使用。
