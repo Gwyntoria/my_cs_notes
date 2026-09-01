@@ -4,9 +4,9 @@ Clash Verge Rev 可以通过 global extend config 和 global extend script 实�
 
 ## global extend script
 
-以下 global extend script 仅能实现对 steam、微信、钉钉的代理规则重写：
+以下 global extend script 仅能实现对 Steam、微信、钉钉的代理规则重写：
 
-- steam 的所有流量，无论是商店、社区、下载，全走代理。
+- Steam 网页、商店和社区相关流量走代理；游戏下载相关规则已注释，交给后续订阅规则处理。
 - 微信和钉钉的所有流量全走直连。
 
 脚本具体实现参考[clash-script.js](./clash-script.js)

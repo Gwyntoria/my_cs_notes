@@ -196,35 +196,35 @@ const directRules = [
 // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
 const proxyRulePrefixes = [
   // --- Steam: Windows ---
-  "PROCESS-NAME,steam.exe",
-  "PROCESS-NAME,steamwebhelper.exe",
-  "PROCESS-NAME,steamservice.exe",
+  // "PROCESS-NAME,steam.exe",
+  // "PROCESS-NAME,steamwebhelper.exe",
+  // "PROCESS-NAME,steamservice.exe",
 
   // --- Steam: macOS ---
-  "PROCESS-NAME,Steam",
-  "PROCESS-NAME,steam_osx",
-  "PROCESS-NAME,steamwebhelper",
+  // "PROCESS-NAME,Steam",
+  // "PROCESS-NAME,steam_osx",
+  // "PROCESS-NAME,steamwebhelper",
 
   // --- Steam 核心域名 ---
   "DOMAIN-SUFFIX,steampowered.com",
   "DOMAIN-SUFFIX,steamcommunity.com",
   "DOMAIN-SUFFIX,steamgames.com",
-  "DOMAIN-SUFFIX,steamusercontent.com",
-  "DOMAIN-SUFFIX,steamcontent.com",
   "DOMAIN-SUFFIX,steamstatic.com",
   "DOMAIN-SUFFIX,steamserver.net",
   "DOMAIN-SUFFIX,steam-chat.com",
   "DOMAIN-SUFFIX,valvesoftware.com",
   "DOMAIN-SUFFIX,valve.net",
+  // "DOMAIN-SUFFIX,steamusercontent.com",
+  // "DOMAIN-SUFFIX,steamcontent.com",
 
   // --- 常见下载 / CDN ---
-  "DOMAIN-SUFFIX,steamcdn-a.akamaihd.net",
-  "DOMAIN-SUFFIX,steamstore-a.akamaihd.net",
-  "DOMAIN-SUFFIX,steamusercontent-a.akamaihd.net",
+  // "DOMAIN-SUFFIX,steamcdn-a.akamaihd.net",
+  // "DOMAIN-SUFFIX,steamstore-a.akamaihd.net",
+  // "DOMAIN-SUFFIX,steamusercontent-a.akamaihd.net",
 
   // --- 兜底关键词 ---
-  "DOMAIN-KEYWORD,steam",
-  "DOMAIN-KEYWORD,valve",
+  // "DOMAIN-KEYWORD,steam",
+  // "DOMAIN-KEYWORD,valve",
 
   // --- 其他代理规则 ---
   // 示例："DOMAIN-SUFFIX,example.com"
