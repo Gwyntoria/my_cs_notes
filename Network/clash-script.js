@@ -48,16 +48,16 @@ const proxyRegionOrder = [
     keywords: ["香港", "香港", "Hong Kong", "HK", "🇭🇰"],
   },
   {
-    name: "美国",
-    keywords: ["美国", "美國", "United States", "USA", "US", "America", "🇺🇸"],
-  },
-  {
     name: "日本",
     keywords: ["日本", "Japan", "JP", "Tokyo", "Osaka", "🇯🇵"],
   },
   {
     name: "韩国",
     keywords: ["韩国", "韓國", "South Korea", "Korea", "KR", "Seoul", "🇰🇷"],
+  },
+  {
+    name: "美国",
+    keywords: ["美国", "美國", "United States", "USA", "US", "America", "🇺🇸"],
   },
   {
     name: "台湾",
@@ -105,27 +105,32 @@ const includedProxyNameRules = [
 
 // 从 proxy groups 里移除不需要的节点。
 const excludedProxyNameRules = [
-  // 示例：
-  // {
-  //   name: "测试节点",
-  //   keywords: ["test", "测试"]
-  // },
   {
     name: "IPv6",
     keywords: ["ipv6"],
   },
-  {
-    name: "unicom",
-    keywords: ["联通"],
-  },
+  // {
+  //   name: "移动",
+  //   keywords: ["移动"],
+  // },
+  // {
+  //   name: "电信",
+  //   keywords: ["电信"],
+  // },
+  // {
+  //   name: "联通",
+  //   keywords: ["联通"],
+  // },
 ];
 
 // 只包含命中“美国”规则的真实订阅节点，并按延迟自动选择节点。
 const usProxyGroup = {
   name: "US",
-  type: "url-test",
-  url: "https://www.gstatic.com/generate_204",
-  interval: 1800,
+  type: "select",
+
+  // type: "url-test",
+  // url: "https://www.gstatic.com/generate_204",
+  // interval: 1800,
 };
 
 const openAiProxyGroup = {
@@ -195,16 +200,6 @@ const directRules = [
 
 // 需要强制走代理的规则放在这里，策略组统一使用当前 profile 解析出的 proxyPolicy。
 const proxyRulePrefixes = [
-  // --- Steam: Windows ---
-  // "PROCESS-NAME,steam.exe",
-  // "PROCESS-NAME,steamwebhelper.exe",
-  // "PROCESS-NAME,steamservice.exe",
-
-  // --- Steam: macOS ---
-  // "PROCESS-NAME,Steam",
-  // "PROCESS-NAME,steam_osx",
-  // "PROCESS-NAME,steamwebhelper",
-
   // --- Steam 核心域名 ---
   "DOMAIN-SUFFIX,steampowered.com",
   "DOMAIN-SUFFIX,steamcommunity.com",
@@ -214,17 +209,6 @@ const proxyRulePrefixes = [
   "DOMAIN-SUFFIX,steam-chat.com",
   "DOMAIN-SUFFIX,valvesoftware.com",
   "DOMAIN-SUFFIX,valve.net",
-  // "DOMAIN-SUFFIX,steamusercontent.com",
-  // "DOMAIN-SUFFIX,steamcontent.com",
-
-  // --- 常见下载 / CDN ---
-  // "DOMAIN-SUFFIX,steamcdn-a.akamaihd.net",
-  // "DOMAIN-SUFFIX,steamstore-a.akamaihd.net",
-  // "DOMAIN-SUFFIX,steamusercontent-a.akamaihd.net",
-
-  // --- 兜底关键词 ---
-  // "DOMAIN-KEYWORD,steam",
-  // "DOMAIN-KEYWORD,valve",
 
   // --- 其他代理规则 ---
   // 示例："DOMAIN-SUFFIX,example.com"
