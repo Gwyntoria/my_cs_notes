@@ -67,11 +67,6 @@ main() {
         codex update
 
     run_update \
-        "Claude" \
-        "claude" \
-        claude update
-
-    run_update \
         "Codex Plugin Marketplace" \
         "codex" \
         codex plugin marketplace upgrade
