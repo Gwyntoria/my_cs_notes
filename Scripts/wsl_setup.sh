@@ -89,6 +89,68 @@ append_unless_active_line_contains() {
     fi
 }
 
+remove_exact_line() {
+    local line="$1"
+    local file="$2"
+    local directory
+    local filename
+    local temporary_file
+    local grep_status
+
+    [ -f "$file" ] || return 0
+
+    directory="$(dirname "$file")"
+    filename="$(basename "$file")"
+    temporary_file="$(mktemp "$directory/.${filename}.tmp.XXXXXX")"
+
+    if grep -Fvx -- "$line" "$file" > "$temporary_file"; then
+        :
+    else
+        grep_status="$?"
+
+        if [ "$grep_status" -ne 1 ]; then
+            rm -f -- "$temporary_file"
+            warn "Could not update $file"
+            return 1
+        fi
+    fi
+
+    if cmp -s "$file" "$temporary_file"; then
+        rm -f -- "$temporary_file"
+    else
+        chmod --reference="$file" "$temporary_file"
+        mv -- "$temporary_file" "$file"
+    fi
+}
+
+remove_managed_block() {
+    local start_marker="$1"
+    local end_marker="$2"
+    local file="$3"
+    local directory
+    local filename
+    local temporary_file
+
+    [ -f "$file" ] || return 0
+
+    directory="$(dirname "$file")"
+    filename="$(basename "$file")"
+    temporary_file="$(mktemp "$directory/.${filename}.tmp.XXXXXX")"
+
+    awk -v start="$start_marker" -v end="$end_marker" '
+        $0 == start { removing = 1; next }
+        removing && $0 == end { removing = 0; next }
+        !removing { print }
+    ' "$file" > "$temporary_file"
+
+    if cmp -s "$file" "$temporary_file"; then
+        rm -f -- "$temporary_file"
+    else
+        chmod --reference="$file" "$temporary_file"
+        mv -- "$temporary_file" "$file"
+    fi
+}
+
 
 # ------------------------------------------------------------
 # 1. Check environment
@@ -224,7 +286,29 @@ else
     success "Starship installed"
 fi
 
-append_once 'eval "$(starship init bash)"' "$HOME/.bashrc"
+remove_managed_block \
+    '# >>> wsl_setup.sh Windows Terminal CWD hook >>>' \
+    '# <<< wsl_setup.sh Windows Terminal CWD hook <<<' \
+    "$HOME/.bashrc"
+remove_exact_line 'eval "$(starship init bash)"' "$HOME/.bashrc"
+remove_exact_line 'starship_precmd_user_func="__wt_update_cwd"' "$HOME/.bashrc"
+
+if ! active_line_contains 'function __wt_update_cwd()' "$HOME/.bashrc"; then
+    printf '\n%s\n' \
+        '# >>> wsl_setup.sh Windows Terminal CWD hook >>>' \
+        'function __wt_update_cwd() {' \
+        '    printf '\''\e]9;9;%s\e\\'\'' "$(wslpath -w "$PWD")"' \
+        '}' \
+        '' \
+        'starship_precmd_user_func="__wt_update_cwd"' \
+        '' \
+        'eval "$(starship init bash)"' \
+        '# <<< wsl_setup.sh Windows Terminal CWD hook <<<' \
+        >> "$HOME/.bashrc"
+else
+    append_once 'starship_precmd_user_func="__wt_update_cwd"' "$HOME/.bashrc"
+    append_once 'eval "$(starship init bash)"' "$HOME/.bashrc"
+fi
 
 
 # ------------------------------------------------------------

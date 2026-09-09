@@ -78,6 +78,34 @@ remove_exact_line() {
     fi
 }
 
+remove_managed_block() {
+    local start_marker="$1"
+    local end_marker="$2"
+    local file="$3"
+    local directory
+    local filename
+    local temporary_file
+
+    [ -f "$file" ] || return 0
+
+    directory="$(dirname "$file")"
+    filename="$(basename "$file")"
+    temporary_file="$(mktemp "$directory/.${filename}.tmp.XXXXXX")"
+
+    awk -v start="$start_marker" -v end="$end_marker" '
+        $0 == start { removing = 1; next }
+        removing && $0 == end { removing = 0; next }
+        !removing { print }
+    ' "$file" > "$temporary_file"
+
+    if cmp -s "$file" "$temporary_file"; then
+        rm -f -- "$temporary_file"
+    else
+        chmod --reference="$file" "$temporary_file"
+        mv -- "$temporary_file" "$file"
+    fi
+}
+
 printf '%s\n' \
     "This script will remove:" \
     "  - nvm and every Node.js version installed under ~/.nvm" \
@@ -200,7 +228,12 @@ log "Removing shell configuration"
 
 remove_exact_line 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' "$HOME/.bashrc"
 remove_exact_line 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"
+remove_managed_block \
+    '# >>> wsl_setup.sh Windows Terminal CWD hook >>>' \
+    '# <<< wsl_setup.sh Windows Terminal CWD hook <<<' \
+    "$HOME/.bashrc"
 remove_exact_line 'eval "$(starship init bash)"' "$HOME/.bashrc"
+remove_exact_line 'starship_precmd_user_func="__wt_update_cwd"' "$HOME/.bashrc"
 remove_exact_line 'export NVM_DIR="$HOME/.nvm"' "$HOME/.bashrc"
 remove_exact_line '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' "$HOME/.bashrc"
 remove_exact_line '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' "$HOME/.bashrc"
