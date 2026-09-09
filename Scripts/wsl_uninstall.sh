@@ -111,6 +111,7 @@ printf '%s\n' \
     "  - nvm and every Node.js version installed under ~/.nvm" \
     "  - uv binaries and uv-managed Python ${PYTHON_VERSION}" \
     "  - Starship installed at ~/.local/bin/starship" \
+    "  - toria-up installed at ~/.local/bin/toria-up" \
     "  - lazygit installed by apt or Homebrew" \
     "  - Homebrew and every package installed through Homebrew" \
     "  - Exact ~/.bashrc lines added by wsl_setup.sh" \
@@ -239,6 +240,8 @@ remove_exact_line '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' "$HOME/.bas
 remove_exact_line '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' "$HOME/.bashrc"
 remove_exact_line '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' "$HOME/.bashrc"
 remove_exact_line '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' "$HOME/.bashrc"
+
+rm -f -- "$HOME/.local/bin/toria-up"
 
 rmdir "$HOME/.local/bin" 2>/dev/null || true
 

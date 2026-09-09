@@ -24,6 +24,7 @@ set -euo pipefail
 
 PYTHON_VERSION="${PYTHON_VERSION:-3.14}"
 NODE_VERSION="${NODE_VERSION:-lts/*}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 log() {
     printf '\n\033[1;34m==> %s\033[0m\n' "$1"
@@ -258,11 +259,13 @@ log "Configuring user binary directory"
 
 mkdir -p "$HOME/.local/bin"
 
+install -m 0755 "$SCRIPT_DIR/toria-up.sh" "$HOME/.local/bin/toria-up"
+
 append_once 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-success "~/.local/bin configured"
+success "$HOME/.local/bin configured and toria-up installed"
 
 log "Configuring case-insensitive completion"
 

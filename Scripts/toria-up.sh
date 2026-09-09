@@ -1,6 +1,6 @@
 #!/bin/bash
 
-toria-up() {
+main() {
     local success_count=0
     local failed_count=0
     local skipped_count=0
@@ -127,3 +127,5 @@ toria-up() {
 
     return 0
 }
+
+main "$@"
