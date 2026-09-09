@@ -9,7 +9,7 @@ Clash Verge Rev 可以通过 global extend config 和 global extend script 实�
 - Steam 网页、商店和社区相关流量走代理；游戏下载相关规则已注释，交给后续订阅规则处理。
 - 微信和钉钉的所有流量全走直连。
 
-脚本具体实现参考[clash-script.js](./clash-script.js)
+脚本具体实现参考[clash-script.js](../Config/clash-script.js)
 
 ### 需要自定义的部分
 
@@ -189,7 +189,7 @@ const directRules = [
 
 ### 全局扩展配置里放 `rule-providers`
 
-YAML 具体实现参考[clash-merge.yaml](./clash-merge.yaml)
+YAML 具体实现参考[clash-merge.yaml](../Config/clash-merge.yaml)
 
 这些 `rule-providers` 只负责定义规则集来源。真正决定流量走哪个策略组的是 `rules` 里的 `RULE-SET,规则集名,策略组名`。
 
