@@ -175,43 +175,56 @@ success "WSL/Ubuntu environment detected"
 # 2. System packages
 # ------------------------------------------------------------
 
-log "Installing system packages"
+log "Checking system packages"
 
-sudo apt update
-
-sudo apt install -y \
-    git \
-    curl \
-    wget \
-    ca-certificates \
-    build-essential \
-    make \
-    cmake \
-    clang-format \
-    gcc-arm-none-eabi \
-    direnv \
-    procps \
-    file \
-    unzip \
-    zip \
-    jq \
-    ripgrep \
+SYSTEM_PACKAGES=(
+    git
+    curl
+    wget
+    ca-certificates
+    build-essential
+    make
+    cmake
+    clang-format
+    gcc-arm-none-eabi
+    direnv
+    procps
+    file
+    unzip
+    zip
+    jq
+    ripgrep
     fd-find
+    tree
+)
+MISSING_SYSTEM_PACKAGES=()
 
-success "System packages installed"
+for package in "${SYSTEM_PACKAGES[@]}"; do
+    if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null \
+        | grep -Fqx 'install ok installed'; then
+        MISSING_SYSTEM_PACKAGES+=("$package")
+    fi
+done
+
+if [ "${#MISSING_SYSTEM_PACKAGES[@]}" -eq 0 ]; then
+    success "System packages already installed"
+else
+    sudo apt update
+    sudo apt install -y "${MISSING_SYSTEM_PACKAGES[@]}"
+    success "Missing system packages installed"
+fi
 
 # ------------------------------------------------------------
 # 3. Homebrew
 # ------------------------------------------------------------
 
-log "Installing Homebrew"
+log "Checking Homebrew"
 
 HOMEBREW_BIN="/home/linuxbrew/.linuxbrew/bin/brew"
 
 if [ -x "$HOMEBREW_BIN" ]; then
     eval "$("$HOMEBREW_BIN" shellenv)"
-    brew update
-    success "Homebrew updated: $(brew --version | head -n 1)"
+    success "Homebrew already installed: $(brew --version | head -n 1)"
 else
     NONINTERACTIVE=1 /bin/bash -c \
         "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -259,13 +272,18 @@ log "Configuring user binary directory"
 
 mkdir -p "$HOME/.local/bin"
 
-install -m 0755 "$SCRIPT_DIR/toria-up.sh" "$HOME/.local/bin/toria-up"
+if [ -x "$HOME/.local/bin/toria-up" ]; then
+    success "toria-up already installed"
+else
+    install -m 0755 "$SCRIPT_DIR/toria-up.sh" "$HOME/.local/bin/toria-up"
+    success "toria-up installed"
+fi
 
 append_once 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-success "$HOME/.local/bin configured and toria-up installed"
+success "$HOME/.local/bin configured"
 
 log "Configuring case-insensitive completion"
 
@@ -335,11 +353,14 @@ fi
 # 9. Python
 # ------------------------------------------------------------
 
-log "Installing Python ${PYTHON_VERSION}"
+log "Checking Python ${PYTHON_VERSION}"
 
-uv python install "$PYTHON_VERSION"
-
-success "Python installed"
+if uv python find "$PYTHON_VERSION" >/dev/null 2>&1; then
+    success "Python ${PYTHON_VERSION} already installed"
+else
+    uv python install "$PYTHON_VERSION"
+    success "Python ${PYTHON_VERSION} installed"
+fi
 
 uv python list --only-installed
 
@@ -386,27 +407,29 @@ append_unless_active_line_contains \
 # 11. Node.js
 # ------------------------------------------------------------
 
-log "Installing Node.js ${NODE_VERSION}"
+log "Checking Node.js ${NODE_VERSION}"
 
-nvm install "$NODE_VERSION"
+NODE_INSTALLED_VERSION="$(nvm version "$NODE_VERSION")"
 
-nvm alias default "$NODE_VERSION"
-
-nvm use default
-
-success "Node.js installed: $(node --version)"
-success "npm installed: $(npm --version)"
+if [ "$NODE_INSTALLED_VERSION" != "N/A" ]; then
+    success "Node.js already installed: $NODE_INSTALLED_VERSION"
+else
+    nvm install "$NODE_VERSION"
+    nvm alias default "$NODE_VERSION"
+    nvm use default
+    success "Node.js installed: $(node --version)"
+    success "npm installed: $(npm --version)"
+fi
 
 
 # ------------------------------------------------------------
 # 12. Codex CLI
 # ------------------------------------------------------------
 
-log "Installing Codex CLI"
+log "Checking Codex CLI"
 
 if command_exists codex; then
-    curl -fsSL https://chatgpt.com/codex/install.sh | sh
-    success "Codex updated"
+    success "Codex already installed"
 else
     curl -fsSL https://chatgpt.com/codex/install.sh | sh
     success "Codex installed"
