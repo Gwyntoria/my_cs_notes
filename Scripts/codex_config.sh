@@ -3,11 +3,7 @@
 set -eu
 
 CODEX_INSTRUCTIONS_URL="https://raw.githubusercontent.com/Gwyntoria/skills/refs/heads/main/instructions/global.md"
-WAZA_SKILLS_URL="https://github.com/tw93/waza"
 MATTPOCOCK_SKILLS_URL="https://github.com/mattpocock/skills"
-MATTPOCOCK_ENGINEERING_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/engineering"
-MATTPOCOCK_PRODUCTIVITY_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/productivity"
-MATTPOCOCK_MANIFEST_URL="https://raw.githubusercontent.com/mattpocock/skills/refs/heads/main/.claude-plugin/plugin.json"
 HUMANLAYER_SKILLS_URL="https://github.com/humanlayer/skills"
 
 log() {
@@ -59,10 +55,9 @@ install_codex_skills() {
         --yes
 }
 
-remove_stale_mattpocock_skills() {
-    manifest_file="$1"
-    lock_file="$2"
-    stale_skills_file="$3"
+remove_unwanted_codex_skills() {
+    lock_file="$1"
+    stale_skills_file="$2"
 
     if [ ! -f "$lock_file" ]; then
         return
@@ -70,29 +65,15 @@ remove_stale_mattpocock_skills() {
 
     node -e '
         const fs = require("fs");
-        const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-        const lock = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-        const desiredSkills = new Set();
-
-        for (const skillPath of manifest.skills ?? []) {
-            const match = skillPath.match(/^\.\/skills\/(?:engineering|productivity)\/([a-z0-9][a-z0-9-]*)$/);
-
-            if (!match) {
-                throw new Error("Unexpected Mattpocock skill path: " + skillPath);
-            }
-
-            desiredSkills.add(match[1]);
-        }
-
-        if (desiredSkills.size === 0) {
-            throw new Error("Mattpocock skill manifest is empty");
-        }
+        const lock = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
 
         for (const [skillName, metadata] of Object.entries(lock.skills ?? {})) {
             const isMattpocockSkill = metadata.source === "mattpocock/skills" ||
                 metadata.sourceUrl === "https://github.com/mattpocock/skills.git";
+            const isWazaSkill = metadata.source === "tw93/waza" ||
+                metadata.sourceUrl === "https://github.com/tw93/waza.git";
 
-            if (isMattpocockSkill && !desiredSkills.has(skillName)) {
+            if ((isMattpocockSkill && skillName !== "grilling") || isWazaSkill) {
                 if (!/^[a-z0-9][a-z0-9-]*$/.test(skillName)) {
                     throw new Error("Unexpected installed skill name: " + skillName);
                 }
@@ -100,7 +81,7 @@ remove_stale_mattpocock_skills() {
                 process.stdout.write(skillName + "\n");
             }
         }
-    ' "$manifest_file" "$lock_file" >"$stale_skills_file"
+    ' "$lock_file" >"$stale_skills_file"
 
     set --
 
@@ -169,18 +150,10 @@ success "rtk initialized for Codex"
 
 log "Installing Codex skills"
 
-# Install all Waza skills.
+# Install the Mattpocock grilling skill, then remove other Mattpocock and Waza skills.
 
-install_codex_skills "$WAZA_SKILLS_URL"
-
-# Install and synchronize Mattpocock skills.
-
-curl -fsSL "$MATTPOCOCK_MANIFEST_URL" \
-    -o "$temporary_dir/mattpocock-plugin.json"
-install_codex_skills "$MATTPOCOCK_ENGINEERING_URL"
-install_codex_skills "$MATTPOCOCK_PRODUCTIVITY_URL"
-remove_stale_mattpocock_skills \
-    "$temporary_dir/mattpocock-plugin.json" \
+install_codex_skills "$MATTPOCOCK_SKILLS_URL" --skill grilling
+remove_unwanted_codex_skills \
     "$HOME/.agents/.skill-lock.json" \
     "$temporary_dir/stale-mattpocock-skills.txt"
 
