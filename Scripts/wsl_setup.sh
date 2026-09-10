@@ -272,12 +272,8 @@ log "Configuring user binary directory"
 
 mkdir -p "$HOME/.local/bin"
 
-if [ -x "$HOME/.local/bin/toria-up" ]; then
-    success "toria-up already installed"
-else
-    install -m 0755 "$SCRIPT_DIR/toria-up.sh" "$HOME/.local/bin/toria-up"
-    success "toria-up installed"
-fi
+install -m 0755 "$SCRIPT_DIR/toria-up.sh" "$HOME/.local/bin/toria-up"
+success "toria-up installed"
 
 append_once 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"
 
