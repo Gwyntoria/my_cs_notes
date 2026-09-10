@@ -1,6 +1,17 @@
 #!/bin/bash
 
+PROGRAM_NAME="${0##*/}"
+
+usage() {
+    printf 'Usage: %s [options]\n' "$PROGRAM_NAME"
+    printf '\n'
+    printf 'Options:\n'
+    printf '  -c, --clean  Run brew cleanup after updates\n'
+    printf '  -h, --help   Show this help message\n'
+}
+
 main() {
+    local clean_homebrew=0
     local success_count=0
     local failed_count=0
     local skipped_count=0
@@ -8,6 +19,25 @@ main() {
     local -a success_items=()
     local -a failed_items=()
     local -a skipped_items=()
+
+    while (( $# > 0 )); do
+        case "$1" in
+            -c|--clean)
+                clean_homebrew=1
+                ;;
+            -h|--help)
+                usage
+                return 0
+                ;;
+            *)
+                printf 'Error: unknown option: %s\n\n' "$1" >&2
+                usage >&2
+                return 2
+                ;;
+        esac
+
+        shift
+    done
 
     # Run a single update task.
     #
@@ -72,19 +102,16 @@ main() {
         codex plugin marketplace upgrade
 
     run_update \
-        "Homebrew Repository Metadata" \
-        "brew" \
-        brew update
-
-    run_update \
         "Homebrew Packages" \
         "brew" \
         brew upgrade
 
-    run_update \
-        "Homebrew Cleanup" \
-        "brew" \
-        brew cleanup
+    if (( clean_homebrew )); then
+        run_update \
+            "Homebrew Cleanup" \
+            "brew" \
+            brew cleanup
+    fi
 
     echo
     echo "##################################################"
