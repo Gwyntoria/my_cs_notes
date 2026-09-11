@@ -100,6 +100,11 @@ main() {
         codex plugin marketplace upgrade
 
     run_update \
+        "Claude Code" \
+        "claude" \
+        claude update
+
+    run_update \
         "Homebrew Packages" \
         "brew" \
         brew upgrade
