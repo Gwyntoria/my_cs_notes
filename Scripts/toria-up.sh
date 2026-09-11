@@ -25,7 +25,8 @@ run_update() {
 
     if ! command -v "$executable" >/dev/null 2>&1; then
         printf '⚠️  Skipped: command '\''%s'\'' not found\n' "$executable"
-        skipped_items="${skipped_items}  ⚠️  ${name}: missing ${executable}"
+        printf -v skipped_items '%s  ⚠️  %s: missing %s\n' \
+            "$skipped_items" "$name" "$executable"
         skipped_count=$((skipped_count + 1))
         return 0
     fi
@@ -35,12 +36,13 @@ run_update() {
 
     if [ "$rc" -eq 0 ]; then
         printf '✅ Completed: %s\n' "$name"
-        success_items="${success_items}  ✅ ${name}"
+        printf -v success_items '%s  ✅ %s\n' "$success_items" "$name"
         success_count=$((success_count + 1))
     else
         printf '❌ Failed: %s\n' "$name"
         printf 'Exit code: %s\n' "$rc"
-        failed_items="${failed_items}  ❌ ${name} (exit code ${rc})"
+        printf -v failed_items '%s  ❌ %s (exit code %s)\n' \
+            "$failed_items" "$name" "$rc"
         failed_count=$((failed_count + 1))
     fi
 
