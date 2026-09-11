@@ -4,6 +4,8 @@ set -eu
 
 CODEX_INSTRUCTIONS_URL="https://raw.githubusercontent.com/Gwyntoria/skills/refs/heads/main/instructions/global.md"
 MATTPOCOCK_SKILLS_URL="https://github.com/mattpocock/skills"
+MATTPOCOCK_ENGINEERING_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/engineering"
+MATTPOCOCK_PRODUCTIVITY_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/productivity"
 HUMANLAYER_SKILLS_URL="https://github.com/humanlayer/skills"
 
 log() {
@@ -55,46 +57,26 @@ install_codex_skills() {
         --yes
 }
 
-remove_unwanted_codex_skills() {
-    lock_file="$1"
-    stale_skills_file="$2"
-
-    if [ ! -f "$lock_file" ]; then
-        return
+remove_installed_codex_skills() {
+    if [ -z "${HOME:-}" ] || [ "$HOME" = "/" ]; then
+        printf '%s\n' "Error: HOME does not identify a safe user directory." >&2
+        exit 1
     fi
 
-    node -e '
-        const fs = require("fs");
-        const lock = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+    case "$HOME" in
+        /*) ;;
+        *)
+            printf '%s\n' "Error: HOME must be an absolute path." >&2
+            exit 1
+            ;;
+    esac
 
-        for (const [skillName, metadata] of Object.entries(lock.skills ?? {})) {
-            const isMattpocockSkill = metadata.source === "mattpocock/skills" ||
-                metadata.sourceUrl === "https://github.com/mattpocock/skills.git";
-            const isWazaSkill = metadata.source === "tw93/waza" ||
-                metadata.sourceUrl === "https://github.com/tw93/waza.git";
+    agents_dir="$HOME/.agents"
+    skills_dir="$agents_dir/skills"
+    lock_file="$agents_dir/.skill-lock.json"
 
-            if ((isMattpocockSkill && skillName !== "grilling") || isWazaSkill) {
-                if (!/^[a-z0-9][a-z0-9-]*$/.test(skillName)) {
-                    throw new Error("Unexpected installed skill name: " + skillName);
-                }
-
-                process.stdout.write(skillName + "\n");
-            }
-        }
-    ' "$lock_file" >"$stale_skills_file"
-
-    set --
-
-    while IFS= read -r skill_name; do
-        set -- "$@" "$skill_name"
-    done <"$stale_skills_file"
-
-    if [ "$#" -gt 0 ]; then
-        npx skills remove "$@" \
-            --global \
-            --agent codex \
-            --yes
-    fi
+    rm -rf "$skills_dir"
+    rm -f "$lock_file"
 }
 
 # Stage 1: Check required commands.
@@ -146,16 +128,22 @@ fi
 
 success "rtk initialized for Codex"
 
-# Stage 5: Install global Codex skills.
+# Stage 5: Remove existing global Codex skills.
+
+log "Removing existing Codex skills"
+
+remove_installed_codex_skills
+
+success "Existing Codex skills removed"
+
+# Stage 6: Install global Codex skills.
 
 log "Installing Codex skills"
 
-# Install the Mattpocock grilling skill, then remove other Mattpocock and Waza skills.
+# Install the Mattpocock engineering and productivity skills.
 
-install_codex_skills "$MATTPOCOCK_SKILLS_URL" --skill grilling
-remove_unwanted_codex_skills \
-    "$HOME/.agents/.skill-lock.json" \
-    "$temporary_dir/stale-mattpocock-skills.txt"
+install_codex_skills "$MATTPOCOCK_ENGINEERING_URL"
+install_codex_skills "$MATTPOCOCK_PRODUCTIVITY_URL"
 
 # Install the Humanlayer show-me skill.
 
