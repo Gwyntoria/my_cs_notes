@@ -2,12 +2,15 @@
 
 set -eu
 
-CODEX_INSTRUCTIONS_URL="https://raw.githubusercontent.com/Gwyntoria/skills/refs/heads/main/instructions/global.md"
+GLOBAL_INSTRUCTIONS_URL="https://raw.githubusercontent.com/Gwyntoria/skills/refs/heads/main/instructions/global.md"
+
+WAZA_SKILLS_URL="https://github.com/tw93/waza"
+KAMI_SKILLS_URL="https://github.com/tw93/kami"
 MATTPOCOCK_SKILLS_URL="https://github.com/mattpocock/skills"
 MATTPOCOCK_ENGINEERING_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/engineering"
 MATTPOCOCK_PRODUCTIVITY_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/productivity"
 HUMANLAYER_SKILLS_URL="https://github.com/humanlayer/skills"
-UNWANTED_CODEX_SKILLS=()
+UNWANTED_AGENT_SKILLS=()
 PI_EXTENSIONS=(
     "npm:pi-web-access"
 )
@@ -29,42 +32,22 @@ require_command() {
     fi
 }
 
-find_brew() {
-    if command -v brew >/dev/null 2>&1; then
-        command -v brew
-        return
-    fi
-
-    for brew_path in \
-        /opt/homebrew/bin/brew \
-        /usr/local/bin/brew \
-        /home/linuxbrew/.linuxbrew/bin/brew
-    do
-        if [ -x "$brew_path" ]; then
-            printf '%s\n' "$brew_path"
-            return
-        fi
-    done
-
-    printf '%s\n' "Error: Homebrew was not found." >&2
-    exit 1
-}
-
-install_codex_skills() {
+install_agent_skills() {
     local source_url="$1"
     shift
 
     npx skills add "$source_url" \
         "$@" \
+        --agent codex claude-code \
         --global \
-        --agent codex \
         --yes
 }
 
-remove_installed_codex_skills() {
+remove_installed_agent_skills() {
     local agents_dir
     local skills_dir
     local lock_file
+    local claude_skills_dir
 
     if [ -z "${HOME:-}" ] || [ "$HOME" = "/" ]; then
         printf '%s\n' "Error: HOME does not identify a safe user directory." >&2
@@ -82,32 +65,39 @@ remove_installed_codex_skills() {
     agents_dir="$HOME/.agents"
     skills_dir="$agents_dir/skills"
     lock_file="$agents_dir/.skill-lock.json"
+    claude_skills_dir="$HOME/.claude/skills"
 
     rm -rf "$skills_dir"
     rm -f "$lock_file"
+
+    if [ -d "$claude_skills_dir" ]; then
+        find "$claude_skills_dir" -maxdepth 1 -type l -exec rm -f {} +
+    elif [ -L "$claude_skills_dir" ]; then
+        rm -f "$claude_skills_dir"
+    fi
 }
 
-remove_unwanted_codex_skills() {
+remove_unwanted_agent_skills() {
     local lock_file="$HOME/.agents/.skill-lock.json"
     local skill_name
 
-    if (( ${#UNWANTED_CODEX_SKILLS[@]} == 0 )); then
-        log "No unwanted Codex skills configured; skipping cleanup"
+    if (( ${#UNWANTED_AGENT_SKILLS[@]} == 0 )); then
+        log "No unwanted agent skills configured; skipping cleanup"
         return 0
     fi
 
-    for skill_name in "${UNWANTED_CODEX_SKILLS[@]}"; do
+    for skill_name in "${UNWANTED_AGENT_SKILLS[@]}"; do
         if [[ ! "$skill_name" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
             printf 'Error: unexpected skill name: %s\n' "$skill_name" >&2
             exit 1
         fi
     done
 
-    npx skills remove "${UNWANTED_CODEX_SKILLS[@]}" \
+    npx skills remove "${UNWANTED_AGENT_SKILLS[@]}" \
         --global \
         --yes
 
-    for skill_name in "${UNWANTED_CODEX_SKILLS[@]}"; do
+    for skill_name in "${UNWANTED_AGENT_SKILLS[@]}"; do
         rm -rf "$HOME/.agents/skills/$skill_name"
     done
 
@@ -123,10 +113,11 @@ remove_unwanted_codex_skills() {
             }
 
             fs.writeFileSync(lockPath, JSON.stringify(lock, null, 2) + "\n");
-        ' "$lock_file" "${UNWANTED_CODEX_SKILLS[@]}"
+        ' "$lock_file" "${UNWANTED_AGENT_SKILLS[@]}"
     fi
 }
 
+main() {
 # Stage 1: Check required commands and coding agents.
 
 if ! command -v codex >/dev/null 2>&1; then
@@ -136,6 +127,15 @@ if ! command -v codex >/dev/null 2>&1; then
     success "Codex installed"
 else
     log "Codex has been installed"
+fi
+
+if ! command -v claude >/dev/null 2>&1; then
+    log "Installing Claude Code"
+    curl -fsSL https://claude.ai/install.sh | bash
+    require_command claude
+    success "Claude Code installed"
+else
+    log "Claude Code has been installed"
 fi
 
 if ! command -v pi >/dev/null 2>&1; then
@@ -151,81 +151,59 @@ require_command curl
 require_command node
 require_command npx
 
-# Stage 2: Detect an existing rtk installation.
+# Stage 2: Install the global instructions for Codex and Claude Code.
 
-if command -v rtk >/dev/null 2>&1; then
-    RTK_BIN="$(command -v rtk)"
-else
-    RTK_BIN=""
-fi
-
-# Stage 3: Install the global Codex instructions.
-
-log "Installing global Codex instructions"
+log "Installing global instructions for Codex and Claude Code"
 
 mkdir -p "$HOME/.codex"
+mkdir -p "$HOME/.claude"
 temporary_dir="$(mktemp -d)"
 instructions_file="$temporary_dir/AGENTS.md"
 trap 'rm -rf "$temporary_dir"' 0 HUP INT TERM
 
-curl -fsSL "$CODEX_INSTRUCTIONS_URL" -o "$instructions_file"
+curl -fsSL "$GLOBAL_INSTRUCTIONS_URL" -o "$instructions_file"
 install -m 0644 "$instructions_file" "$HOME/.codex/AGENTS.md"
+install -m 0644 "$instructions_file" "$HOME/.claude/CLAUDE.md"
 
-success "Global instructions installed at ~/.codex/AGENTS.md"
+success "Global instructions installed for Codex and Claude Code"
 
-# Stage 4: Install rtk and initialize its Codex integration.
+# Stage 3: Remove existing global agent skills.
 
-log "Installing and initializing rtk for Codex"
+log "Removing existing agent skills"
 
-if [ -n "$RTK_BIN" ]; then
-    log "rtk is already installed at $RTK_BIN; skipping installation"
-else
-    BREW_BIN="$(find_brew)"
-    "$BREW_BIN" install rtk
-    RTK_BIN="$("$BREW_BIN" --prefix rtk)/bin/rtk"
-fi
+remove_installed_agent_skills
 
-if [ ! -x "$RTK_BIN" ]; then
-    printf 'Error: rtk executable was not found after installation: %s\n' "$RTK_BIN" >&2
-    exit 1
-fi
+success "Existing agent skills removed"
 
-"$RTK_BIN" init -g --codex
+# Stage 4: Install global skills for Codex and Claude Code.
 
-success "rtk initialized for Codex"
+log "Installing skills for Codex and Claude Code"
 
-# Stage 5: Remove existing global Codex skills.
+# Install the Waza engineering workflow skills and the Kami document skill.
 
-log "Removing existing Codex skills"
-
-remove_installed_codex_skills
-
-success "Existing Codex skills removed"
-
-# Stage 6: Install global Codex skills.
-
-log "Installing Codex skills"
+install_agent_skills "$WAZA_SKILLS_URL"
+install_agent_skills "$KAMI_SKILLS_URL"
 
 # Install the Mattpocock engineering and productivity skills.
 
-install_codex_skills "$MATTPOCOCK_ENGINEERING_URL"
-install_codex_skills "$MATTPOCOCK_PRODUCTIVITY_URL"
+install_agent_skills "$MATTPOCOCK_ENGINEERING_URL"
+install_agent_skills "$MATTPOCOCK_PRODUCTIVITY_URL"
 
 # Install the Humanlayer show-me skill.
 
 npx skills add "$HUMANLAYER_SKILLS_URL" \
     --skill show-me \
+    --agent codex claude-code \
     --global \
-    --agent codex \
     --yes
 
 # Remove skills that are not part of the desired setup.
 
-remove_unwanted_codex_skills
+remove_unwanted_agent_skills
 
-success "Codex skills installed"
+success "Agent skills installed"
 
-# Stage 7: Install Pi extensions.
+# Stage 5: Install Pi extensions.
 
 require_command pi
 
@@ -236,3 +214,8 @@ for extension in "${PI_EXTENSIONS[@]}"; do
 done
 
 success "Pi extensions installed"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi
