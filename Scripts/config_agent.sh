@@ -8,6 +8,9 @@ MATTPOCOCK_ENGINEERING_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/engineering"
 MATTPOCOCK_PRODUCTIVITY_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/productivity"
 HUMANLAYER_SKILLS_URL="https://github.com/humanlayer/skills"
 UNWANTED_CODEX_SKILLS=()
+PI_EXTENSIONS=(
+    "npm:pi-web-access"
+)
 
 log() {
     printf '\n\033[1;34m==> %s\033[0m\n' "$1"
@@ -203,3 +206,15 @@ npx skills add "$HUMANLAYER_SKILLS_URL" \
 remove_unwanted_codex_skills
 
 success "Codex skills installed"
+
+# Stage 7: Install Pi extensions.
+
+require_command pi
+
+log "Installing Pi extensions"
+
+for extension in "${PI_EXTENSIONS[@]}"; do
+    pi install "$extension"
+done
+
+success "Pi extensions installed"

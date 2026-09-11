@@ -111,6 +111,16 @@ main() {
             brew cleanup
     fi
 
+    run_update \
+        "Pi" \
+        "pi" \
+        pi update
+
+    run_update \
+        "Pi Extension Packages" \
+        "pi" \
+        pi update --extensions
+
     printf '\n'
     printf '%s\n' "##################################################"
     printf 'Update finished: %s\n' "$(date '+%Y-%m-%d %H:%M:%S')"
