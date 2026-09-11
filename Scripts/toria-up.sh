@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 PROGRAM_NAME="${0##*/}"
 
@@ -10,17 +10,57 @@ usage() {
     printf '  -h, --help   Show this help message\n'
 }
 
+run_update() {
+    name="$1"
+    executable="$2"
+    shift 2
+
+    printf '\n'
+    printf '%s\n' "=================================================="
+    printf '[%s] Starting: %s\n' "$(date '+%H:%M:%S')" "$name"
+    printf 'Command:'
+    printf ' %s' "$@"
+    printf '\n'
+    printf '%s\n' "=================================================="
+
+    if ! command -v "$executable" >/dev/null 2>&1; then
+        printf '⚠️  Skipped: command '\''%s'\'' not found\n' "$executable"
+        skipped_items="${skipped_items}  ⚠️  ${name}: missing ${executable}
+"
+        skipped_count=$((skipped_count + 1))
+        return 0
+    fi
+
+    "$@"
+    rc=$?
+
+    if [ "$rc" -eq 0 ]; then
+        printf '✅ Completed: %s\n' "$name"
+        success_items="${success_items}  ✅ ${name}
+"
+        success_count=$((success_count + 1))
+    else
+        printf '❌ Failed: %s\n' "$name"
+        printf 'Exit code: %s\n' "$rc"
+        failed_items="${failed_items}  ❌ ${name} (exit code ${rc})
+"
+        failed_count=$((failed_count + 1))
+    fi
+
+    # Continue with subsequent tasks whether this task succeeds or fails.
+    return 0
+}
+
 main() {
-    local clean_homebrew=0
-    local success_count=0
-    local failed_count=0
-    local skipped_count=0
+    clean_homebrew=0
+    success_count=0
+    failed_count=0
+    skipped_count=0
+    success_items=""
+    failed_items=""
+    skipped_items=""
 
-    local -a success_items=()
-    local -a failed_items=()
-    local -a skipped_items=()
-
-    while (( $# > 0 )); do
+    while [ "$#" -gt 0 ]; do
         case "$1" in
             -c|--clean)
                 clean_homebrew=1
@@ -39,52 +79,10 @@ main() {
         shift
     done
 
-    # Run a single update task.
-    #
-    # Arguments:
-    #   $1: Task name
-    #   $2: Executable whose availability should be checked
-    #   $3...: Command and arguments to execute
-    run_update() {
-        local name="$1"
-        local executable="$2"
-        shift 2
-
-        echo
-        echo "=================================================="
-        echo "[$(date '+%H:%M:%S')] Starting: ${name}"
-        echo "Command: $*"
-        echo "=================================================="
-
-        if ! command -v "$executable" >/dev/null 2>&1; then
-            echo "⚠️  Skipped: command '${executable}' not found"
-            skipped_items+=("$name: missing ${executable}")
-            ((skipped_count++))
-            return 0
-        fi
-
-        "$@"
-        local rc=$?
-
-        if (( rc == 0 )); then
-            echo "✅ Completed: ${name}"
-            success_items+=("$name")
-            ((success_count++))
-        else
-            echo "❌ Failed: ${name}"
-            echo "Exit code: ${rc}"
-            failed_items+=("$name (exit code ${rc})")
-            ((failed_count++))
-        fi
-
-        # Continue with subsequent tasks whether this task succeeds or fails.
-        return 0
-    }
-
-    echo
-    echo "##################################################"
-    echo "Update started: $(date '+%Y-%m-%d %H:%M:%S')"
-    echo "##################################################"
+    printf '\n'
+    printf '%s\n' "##################################################"
+    printf 'Update started: %s\n' "$(date '+%Y-%m-%d %H:%M:%S')"
+    printf '%s\n' "##################################################"
 
     run_update \
         "Skills" \
@@ -106,44 +104,41 @@ main() {
         "brew" \
         brew upgrade
 
-    if (( clean_homebrew )); then
+    if [ "$clean_homebrew" -eq 1 ]; then
         run_update \
             "Homebrew Cleanup" \
             "brew" \
             brew cleanup
     fi
 
-    echo
-    echo "##################################################"
-    echo "Update finished: $(date '+%Y-%m-%d %H:%M:%S')"
-    echo "Succeeded: ${success_count}"
-    echo "Failed: ${failed_count}"
-    echo "Skipped: ${skipped_count}"
-    echo "##################################################"
+    printf '\n'
+    printf '%s\n' "##################################################"
+    printf 'Update finished: %s\n' "$(date '+%Y-%m-%d %H:%M:%S')"
+    printf 'Succeeded: %s\n' "$success_count"
+    printf 'Failed: %s\n' "$failed_count"
+    printf 'Skipped: %s\n' "$skipped_count"
+    printf '%s\n' "##################################################"
 
-    if (( ${#success_items[@]} > 0 )); then
-        echo
-        echo "Successful updates:"
-        printf '  ✅ %s\n' "${success_items[@]}"
+    if [ -n "$success_items" ]; then
+        printf '\nSuccessful updates:\n'
+        printf '%s' "$success_items"
     fi
 
-    if (( ${#failed_items[@]} > 0 )); then
-        echo
-        echo "Failed updates:"
-        printf '  ❌ %s\n' "${failed_items[@]}"
+    if [ -n "$failed_items" ]; then
+        printf '\nFailed updates:\n'
+        printf '%s' "$failed_items"
     fi
 
-    if (( ${#skipped_items[@]} > 0 )); then
-        echo
-        echo "Skipped updates:"
-        printf '  ⚠️  %s\n' "${skipped_items[@]}"
+    if [ -n "$skipped_items" ]; then
+        printf '\nSkipped updates:\n'
+        printf '%s' "$skipped_items"
     fi
 
-    echo
+    printf '\n'
 
     # Return 1 if any task fails.
     # Return 0 if tasks are skipped only because their executables are unavailable.
-    if (( failed_count > 0 )); then
+    if [ "$failed_count" -gt 0 ]; then
         return 1
     fi
 
