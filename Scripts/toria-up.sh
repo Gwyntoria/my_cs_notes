@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PROGRAM_NAME="${0##*/}"
 
