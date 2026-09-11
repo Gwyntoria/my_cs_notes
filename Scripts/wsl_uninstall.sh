@@ -58,7 +58,7 @@ remove_exact_line() {
     filename="$(basename "$file")"
     temporary_file="$(mktemp "$directory/.${filename}.tmp.XXXXXX")"
 
-    if grep -Fvx -- "$line" "$file" > "$temporary_file"; then
+    if grep -Fvx -- "$line" "$file" >"$temporary_file"; then
         :
     else
         grep_status="$?"
@@ -96,7 +96,7 @@ remove_managed_block() {
         $0 == start { removing = 1; next }
         removing && $0 == end { removing = 0; next }
         !removing { print }
-    ' "$file" > "$temporary_file"
+    ' "$file" >"$temporary_file"
 
     if cmp -s "$file" "$temporary_file"; then
         rm -f -- "$temporary_file"
@@ -130,7 +130,6 @@ if [ "$ASSUME_YES" != "1" ]; then
     fi
 fi
 
-
 # ------------------------------------------------------------
 # 1. nvm and Node.js
 # ------------------------------------------------------------
@@ -144,7 +143,6 @@ else
     warn "nvm was not found"
 fi
 
-
 # ------------------------------------------------------------
 # 2. uv and Python
 # ------------------------------------------------------------
@@ -152,7 +150,7 @@ fi
 log "Removing uv-managed Python ${PYTHON_VERSION} and uv"
 
 if [ -x "$HOME/.local/bin/uv" ]; then
-    "$HOME/.local/bin/uv" python uninstall "$PYTHON_VERSION" || \
+    "$HOME/.local/bin/uv" python uninstall "$PYTHON_VERSION" ||
         warn "uv could not uninstall Python ${PYTHON_VERSION}"
 
     rm -f -- \
@@ -164,7 +162,6 @@ if [ -x "$HOME/.local/bin/uv" ]; then
 else
     warn "uv installed at ~/.local/bin was not found"
 fi
-
 
 # ------------------------------------------------------------
 # 3. Starship
@@ -178,7 +175,6 @@ if [ -e "$HOME/.local/bin/starship" ] || [ -L "$HOME/.local/bin/starship" ]; the
 else
     warn "Starship installed at ~/.local/bin was not found"
 fi
-
 
 # ------------------------------------------------------------
 # 4. lazygit
@@ -202,7 +198,6 @@ else
     warn "lazygit was not found"
 fi
 
-
 # ------------------------------------------------------------
 # 5. Homebrew
 # ------------------------------------------------------------
@@ -210,8 +205,8 @@ fi
 log "Removing Homebrew"
 
 if [ -x "$HOMEBREW_BIN" ]; then
-    if curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh \
-        | NONINTERACTIVE=1 /bin/bash; then
+    if curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh |
+        NONINTERACTIVE=1 /bin/bash; then
         success "Homebrew removed"
     else
         warn "Homebrew uninstaller reported an error"
@@ -219,7 +214,6 @@ if [ -x "$HOMEBREW_BIN" ]; then
 else
     warn "Homebrew was not found"
 fi
-
 
 # ------------------------------------------------------------
 # 6. Shell configuration
@@ -246,7 +240,6 @@ rm -f -- "$HOME/.local/bin/toria-up"
 rmdir "$HOME/.local/bin" 2>/dev/null || true
 
 success "Shell configuration removed"
-
 
 # ------------------------------------------------------------
 # 7. Optional apt packages
@@ -277,7 +270,6 @@ if [ "$REMOVE_APT_PACKAGES" = "1" ]; then
 else
     warn "apt system packages were preserved"
 fi
-
 
 # ------------------------------------------------------------
 # Done

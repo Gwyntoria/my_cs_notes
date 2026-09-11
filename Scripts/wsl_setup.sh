@@ -49,7 +49,7 @@ append_once() {
     touch "$file"
 
     if ! grep -Fqx "$line" "$file"; then
-        printf '\n%s\n' "$line" >> "$file"
+        printf '\n%s\n' "$line" >>"$file"
     fi
 }
 
@@ -65,15 +65,15 @@ active_line_contains() {
         trimmed="${line#"${line%%[![:space:]]*}"}"
 
         case "$trimmed" in
-            "" | \#*)
-                continue
-                ;;
+        "" | \#*)
+            continue
+            ;;
         esac
 
         if [[ "$trimmed" == *"$fragment"* ]]; then
             return 0
         fi
-    done < "$file"
+    done <"$file"
 
     return 1
 }
@@ -86,7 +86,7 @@ append_unless_active_line_contains() {
     touch "$file"
 
     if ! active_line_contains "$fragment" "$file"; then
-        printf '\n%s\n' "$line" >> "$file"
+        printf '\n%s\n' "$line" >>"$file"
     fi
 }
 
@@ -104,7 +104,7 @@ remove_exact_line() {
     filename="$(basename "$file")"
     temporary_file="$(mktemp "$directory/.${filename}.tmp.XXXXXX")"
 
-    if grep -Fvx -- "$line" "$file" > "$temporary_file"; then
+    if grep -Fvx -- "$line" "$file" >"$temporary_file"; then
         :
     else
         grep_status="$?"
@@ -142,7 +142,7 @@ remove_managed_block() {
         $0 == start { removing = 1; next }
         removing && $0 == end { removing = 0; next }
         !removing { print }
-    ' "$file" > "$temporary_file"
+    ' "$file" >"$temporary_file"
 
     if cmp -s "$file" "$temporary_file"; then
         rm -f -- "$temporary_file"
@@ -151,7 +151,6 @@ remove_managed_block() {
         mv -- "$temporary_file" "$file"
     fi
 }
-
 
 # ------------------------------------------------------------
 # 1. Check environment
@@ -169,7 +168,6 @@ if ! command_exists apt; then
 fi
 
 success "WSL/Ubuntu environment detected"
-
 
 # ------------------------------------------------------------
 # 2. System packages
@@ -200,8 +198,8 @@ SYSTEM_PACKAGES=(
 MISSING_SYSTEM_PACKAGES=()
 
 for package in "${SYSTEM_PACKAGES[@]}"; do
-    if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null \
-        | grep -Fqx 'install ok installed'; then
+    if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null |
+        grep -Fqx 'install ok installed'; then
         MISSING_SYSTEM_PACKAGES+=("$package")
     fi
 done
@@ -235,7 +233,6 @@ fi
 
 append_once 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' "$HOME/.bashrc"
 
-
 # ------------------------------------------------------------
 # 4. Git
 # ------------------------------------------------------------
@@ -245,7 +242,6 @@ log "Checking Git"
 git --version
 
 success "Git installed"
-
 
 # ------------------------------------------------------------
 # 5. lazygit
@@ -262,7 +258,6 @@ else
     brew install lazygit
     success "lazygit installed with Homebrew"
 fi
-
 
 # ------------------------------------------------------------
 # 6. User shell configuration
@@ -285,8 +280,7 @@ log "Configuring case-insensitive completion"
 
 append_once 'set completion-ignore-case on' "$HOME/.inputrc"
 
-success "~/.inputrc configured"
-
+success "$HOME/.inputrc configured"
 
 # ------------------------------------------------------------
 # 7. Starship
@@ -297,8 +291,8 @@ log "Installing Starship"
 if command_exists starship; then
     success "Starship already installed: $(starship --version)"
 else
-    curl -sS https://starship.rs/install.sh \
-        | sh -s -- -y -b "$HOME/.local/bin"
+    curl -sS https://starship.rs/install.sh |
+        sh -s -- -y -b "$HOME/.local/bin"
 
     success "Starship installed"
 fi
@@ -321,12 +315,11 @@ if ! active_line_contains 'function __wt_update_cwd()' "$HOME/.bashrc"; then
         '' \
         'eval "$(starship init bash)"' \
         '# <<< wsl_setup.sh Windows Terminal CWD hook <<<' \
-        >> "$HOME/.bashrc"
+        >>"$HOME/.bashrc"
 else
     append_once 'starship_precmd_user_func="__wt_update_cwd"' "$HOME/.bashrc"
     append_once 'eval "$(starship init bash)"' "$HOME/.bashrc"
 fi
-
 
 # ------------------------------------------------------------
 # 8. uv
@@ -344,7 +337,6 @@ else
     success "uv installed"
 fi
 
-
 # ------------------------------------------------------------
 # 9. Python
 # ------------------------------------------------------------
@@ -360,7 +352,6 @@ fi
 
 uv python list --only-installed
 
-
 # ------------------------------------------------------------
 # 10. nvm
 # ------------------------------------------------------------
@@ -373,8 +364,8 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
     success "nvm already installed"
 else
     curl -o- \
-        https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh \
-        | bash
+        https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh |
+        bash
 
     success "nvm installed"
 fi
@@ -398,7 +389,6 @@ append_unless_active_line_contains \
 # shellcheck disable=SC1090
 [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 
-
 # ------------------------------------------------------------
 # 11. Node.js
 # ------------------------------------------------------------
@@ -417,7 +407,6 @@ else
     success "npm installed: $(npm --version)"
 fi
 
-
 # ------------------------------------------------------------
 # 12. Codex CLI
 # ------------------------------------------------------------
@@ -430,7 +419,6 @@ else
     curl -fsSL https://chatgpt.com/codex/install.sh | sh
     success "Codex installed"
 fi
-
 
 # ------------------------------------------------------------
 # 13. Verification
@@ -466,7 +454,6 @@ npm --version
 
 printf "Codex:     "
 codex --version
-
 
 # ------------------------------------------------------------
 # Done
