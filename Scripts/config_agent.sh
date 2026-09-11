@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
@@ -7,6 +7,7 @@ MATTPOCOCK_SKILLS_URL="https://github.com/mattpocock/skills"
 MATTPOCOCK_ENGINEERING_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/engineering"
 MATTPOCOCK_PRODUCTIVITY_URL="$MATTPOCOCK_SKILLS_URL/tree/main/skills/productivity"
 HUMANLAYER_SKILLS_URL="https://github.com/humanlayer/skills"
+UNWANTED_CODEX_SKILLS=()
 
 log() {
     printf '\n\033[1;34m==> %s\033[0m\n' "$1"
@@ -47,7 +48,7 @@ find_brew() {
 }
 
 install_codex_skills() {
-    source_url="$1"
+    local source_url="$1"
     shift
 
     npx skills add "$source_url" \
@@ -58,6 +59,10 @@ install_codex_skills() {
 }
 
 remove_installed_codex_skills() {
+    local agents_dir
+    local skills_dir
+    local lock_file
+
     if [ -z "${HOME:-}" ] || [ "$HOME" = "/" ]; then
         printf '%s\n' "Error: HOME does not identify a safe user directory." >&2
         exit 1
@@ -77,6 +82,46 @@ remove_installed_codex_skills() {
 
     rm -rf "$skills_dir"
     rm -f "$lock_file"
+}
+
+remove_unwanted_codex_skills() {
+    local lock_file="$HOME/.agents/.skill-lock.json"
+    local skill_name
+
+    if (( ${#UNWANTED_CODEX_SKILLS[@]} == 0 )); then
+        log "No unwanted Codex skills configured; skipping cleanup"
+        return 0
+    fi
+
+    for skill_name in "${UNWANTED_CODEX_SKILLS[@]}"; do
+        if [[ ! "$skill_name" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+            printf 'Error: unexpected skill name: %s\n' "$skill_name" >&2
+            exit 1
+        fi
+    done
+
+    npx skills remove "${UNWANTED_CODEX_SKILLS[@]}" \
+        --global \
+        --yes
+
+    for skill_name in "${UNWANTED_CODEX_SKILLS[@]}"; do
+        rm -rf "$HOME/.agents/skills/$skill_name"
+    done
+
+    if [ -f "$lock_file" ]; then
+        node -e '
+            const fs = require("fs");
+            const lockPath = process.argv[1];
+            const unwantedSkills = process.argv.slice(2);
+            const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
+
+            for (const skillName of unwantedSkills) {
+                delete lock.skills?.[skillName];
+            }
+
+            fs.writeFileSync(lockPath, JSON.stringify(lock, null, 2) + "\n");
+        ' "$lock_file" "${UNWANTED_CODEX_SKILLS[@]}"
+    fi
 }
 
 # Stage 1: Check required commands.
@@ -152,5 +197,9 @@ npx skills add "$HUMANLAYER_SKILLS_URL" \
     --global \
     --agent codex \
     --yes
+
+# Remove skills that are not part of the desired setup.
+
+remove_unwanted_codex_skills
 
 success "Codex skills installed"
