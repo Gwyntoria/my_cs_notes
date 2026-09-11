@@ -7,9 +7,9 @@ CACHE_DIR="$HOME/.cache/waza-statusline"
 CACHE_FILE="$CACHE_DIR/last.json"
 HIGHWATER_FILE="$CACHE_DIR/highwater.json"
 HIGHWATER_LOCK_DIR="$CACHE_DIR/highwater.lock"
-CACHE_MAX_AGE=21600  # 6 hours: one full rate_limit window
+CACHE_MAX_AGE=21600 # 6 hours: one full rate_limit window
 HIGHWATER_LOCK_MAX_AGE=10
-HIGHWATER_RESET_SKEW_MAX=7200  # tolerate session jitter, reject crossed windows
+HIGHWATER_RESET_SKEW_MAX=7200 # tolerate session jitter, reject crossed windows
 
 input=$(cat)
 
@@ -45,9 +45,9 @@ cache_file_mtime() {
 
 is_uint() {
   case "$1" in
-    ''|null) return 1 ;;
-    *[!0-9]*) return 1 ;;
-    *) return 0 ;;
+  '' | null) return 1 ;;
+  *[!0-9]*) return 1 ;;
+  *) return 0 ;;
   esac
 }
 
@@ -157,8 +157,8 @@ write_highwater() {
         printf '  "seven_day": {"used_percentage": %s, "resets_at": %s}\n' "$new_hw_7d_pct" "$r7"
       fi
       printf '}\n'
-    } > "${HIGHWATER_FILE}.tmp" 2>/dev/null \
-      && mv "${HIGHWATER_FILE}.tmp" "$HIGHWATER_FILE" 2>/dev/null
+    } >"${HIGHWATER_FILE}.tmp" 2>/dev/null &&
+      mv "${HIGHWATER_FILE}.tmp" "$HIGHWATER_FILE" 2>/dev/null
   }; then
     :
   fi
@@ -197,7 +197,7 @@ seven_reset="${live_seven_reset:-}"
 if [ "$five_pct" = "null" ] || [ -z "$five_pct" ]; then
   if [ -f "$CACHE_FILE" ]; then
     cache_mtime=$(cache_file_mtime "$CACHE_FILE")
-    cache_age=$(( $(date +%s) - cache_mtime ))
+    cache_age=$(($(date +%s) - cache_mtime))
     if [ "$cache_age" -lt "$CACHE_MAX_AGE" ]; then
       cached=$(jq -r "$jq_rl" "$CACHE_FILE" 2>/dev/null)
       IFS="$tab" read -r five_pct five_reset seven_pct seven_reset <<EOF
@@ -212,8 +212,8 @@ if [ "${live_five_pct:-}" != "null" ] && [ -n "${live_five_pct:-}" ] && [ -n "$i
   mkdir -p "$CACHE_DIR"
   if ! {
     printf '%s' "$input" | jq '{rate_limits: .rate_limits}' \
-      > "${CACHE_FILE}.tmp" 2>/dev/null \
-      && mv "${CACHE_FILE}.tmp" "$CACHE_FILE" 2>/dev/null
+      >"${CACHE_FILE}.tmp" 2>/dev/null &&
+      mv "${CACHE_FILE}.tmp" "$CACHE_FILE" 2>/dev/null
   }; then
     :
   fi
