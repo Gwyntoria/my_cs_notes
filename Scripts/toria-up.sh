@@ -25,8 +25,7 @@ run_update() {
 
     if ! command -v "$executable" >/dev/null 2>&1; then
         printf '⚠️  Skipped: command '\''%s'\'' not found\n' "$executable"
-        skipped_items="${skipped_items}  ⚠️  ${name}: missing ${executable}
-"
+        skipped_items="${skipped_items}  ⚠️  ${name}: missing ${executable}"
         skipped_count=$((skipped_count + 1))
         return 0
     fi
@@ -36,14 +35,12 @@ run_update() {
 
     if [ "$rc" -eq 0 ]; then
         printf '✅ Completed: %s\n' "$name"
-        success_items="${success_items}  ✅ ${name}
-"
+        success_items="${success_items}  ✅ ${name}"
         success_count=$((success_count + 1))
     else
         printf '❌ Failed: %s\n' "$name"
         printf 'Exit code: %s\n' "$rc"
-        failed_items="${failed_items}  ❌ ${name} (exit code ${rc})
-"
+        failed_items="${failed_items}  ❌ ${name} (exit code ${rc})"
         failed_count=$((failed_count + 1))
     fi
 
@@ -62,18 +59,18 @@ main() {
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
-            -c|--clean)
-                clean_homebrew=1
-                ;;
-            -h|--help)
-                usage
-                return 0
-                ;;
-            *)
-                printf 'Error: unknown option: %s\n\n' "$1" >&2
-                usage >&2
-                return 2
-                ;;
+        -c | --clean)
+            clean_homebrew=1
+            ;;
+        -h | --help)
+            usage
+            return 0
+            ;;
+        *)
+            printf 'Error: unknown option: %s\n\n' "$1" >&2
+            usage >&2
+            return 2
+            ;;
         esac
 
         shift
