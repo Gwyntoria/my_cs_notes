@@ -127,7 +127,25 @@ remove_unwanted_codex_skills() {
     fi
 }
 
-# Stage 1: Check required commands.
+# Stage 1: Check required commands and coding agents.
+
+if ! command -v codex >/dev/null 2>&1; then
+    log "Installing Codex"
+    curl -fsSL https://chatgpt.com/codex/install.sh | sh
+    require_command codex
+    success "Codex installed"
+else
+    log "Codex has been installed"
+fi
+
+if ! command -v pi >/dev/null 2>&1; then
+    log "Installing Pi"
+    curl -fsSL https://pi.dev/install.sh | sh
+    require_command pi
+    success "Pi installed"
+else
+    log "Pi has been installed"
+fi
 
 require_command curl
 require_command node
