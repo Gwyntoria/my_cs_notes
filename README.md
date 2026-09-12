@@ -12,41 +12,11 @@
 
 ## Formatting
 
-本仓库使用 `markdownlint-cli2` 和 `textlint` 统一 Markdown 结构、中文排版与技术术语。
-
-### 基础环境
-
-1. 安装 `Node.js`
-2. 在仓库根目录执行：
-
-    ```bash
-    npm install # 根据 package.json 安装依赖，不指定版本
-    npm ci # 指定版本安装依赖 # 根据 package-lock.json 安装依赖，指定版本
-    ```
-
-    or
-
-    ```bash
-    npm install -D markdownlint-cli2 textlint \
-    textlint-rule-ja-space-between-half-and-full-width \
-    textlint-rule-no-todo \
-    textlint-rule-prh \
-    textlint-rule-zh-half-and-full-width-bracket
-    ```
-
-3. 仓库内已提供以下配置文件：
-
-- `.markdownlint-cli2.jsonc`：Markdown 格式约束，会覆盖掉 VS Code 插件中的设置。
-- `.textlintrc.json`：其他排版约束，如：对标题和正文的中英文之间添加空格。
-- `tech-terms.yml`：属于替换表。不建议增加英文缩写，有可能会将正常单词替换。
-
-### 操作流程
-
-完成对 Markdown 文件的编辑后，使用 `markdownlint-cli2` 对文件进行格式化，然后使用 `textlint` 完成排版修复和术语替换。
+本仓库使用 `markdownlint-cli2` 和 `textlint` 检查 Markdown 格式、中文排版与技术术语。安装依赖后，对修改过的文件执行：
 
 ```bash
 npx markdownlint-cli2 --fix --no-globs path/to/file.md
 npx textlint --fix path/to/file.md
 ```
 
-如果使用 VS Code，建议安装 `markdownlint` 和 `textlint` 插件，并在 `settings.json` 中启用保存时检查。更完整的规则说明见 [markdown 格式化指南.md](Manual/markdown格式化指南.md)。
+详细规则见 [Markdown 格式化指南](Manual/markdown格式化指南.md)。
