@@ -10,6 +10,10 @@
 
 1. *How_to_Ask_Questions.md* 是我从[华蟒用户组](https://groups.google.com/g/python-cn)的提问指南中找到的，英文原文为[How To Ask Questions the Smart Way](http://linuxmafia.com/faq/Essays/smart-questions.html)。
 
+## Migration
+
+`Scripts` 目录和 `Config/statusline.sh` 的内容将迁移到 [gwyntoria/skills 的 scripts 目录](https://github.com/gwyntoria/skills/tree/main/scripts)，此仓库中不再更新。
+
 ## Formatting
 
 本仓库使用 `markdownlint-cli2` 和 `textlint` 检查 Markdown 格式、中文排版与技术术语。安装依赖后，对修改过的文件执行：
